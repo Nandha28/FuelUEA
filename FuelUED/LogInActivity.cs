@@ -28,7 +28,7 @@ namespace FuelUED
              {
                  if (email.Text == "admin" && password.Text == "admin")
                  {
-                     StartActivity(typeof(FuelActivity));
+                     StartActivity(typeof(MainScreenActivity));
                  }
                  else
                  {

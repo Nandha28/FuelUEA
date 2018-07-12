@@ -68,9 +68,12 @@ namespace FuelUED
             }
 
             vehicleNumber = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
-            var adapter = new ArrayAdapter<String>(this, Resource.Layout.select_dialog_item_material, myVehiclelist);
-            vehicleNumber.Adapter = adapter;
-            vehicleNumber.ItemClick += VehicleNumber_ItemClick; ;
+            if (myVehiclelist != null)
+            {
+                var adapter = new ArrayAdapter<String>(this, Resource.Layout.select_dialog_item_material, myVehiclelist);
+                vehicleNumber.Adapter = adapter;
+                vehicleNumber.ItemClick += VehicleNumber_ItemClick;
+            }
 
             billNumber = FindViewById<EditText>(Resource.Id.txtBillNumber);
 
@@ -176,7 +179,7 @@ namespace FuelUED
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
 
                 VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
-                vehicleTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, VehicleType);                
+                vehicleTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, VehicleType);
             }
         }
     }
