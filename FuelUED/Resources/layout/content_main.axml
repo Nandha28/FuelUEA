@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:textColor="@android:color/black"
+        android:id="@+id/txtField"
+        android:layout_margin="10dp"
+        android:text="Vehicle Number" />
+<!--<TextView
+        android:layout_width="match_parent"
+        android:background="@drawable/bottomborder"
+        android:layout_height="40dp"
+        android:id="@+id/lblNumber"
+        android:paddingLeft="5dp"
+        android:layout_margin="10dp"
+        android:text="KMPL" />
+
+  <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"        
+        android:paddingLeft="5dp"
+        android:layout_margin="10dp"
+        android:text="DriverName : " />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:background="@drawable/bottomborder"
+      android:id="@+id/lblName"
+      android:paddingLeft="5dp"
+      android:layout_margin="10dp"
+      android:text="KMPL" />
+
+  <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:paddingLeft="5dp"
+       android:layout_margin="10dp"
+       android:text="DriverName : " />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:background="@drawable/bottomborder"
+      android:id="@+id/lblName"
+      android:paddingLeft="5dp"
+      android:layout_margin="10dp"
+      android:text="KMPL" />
+
+  <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:paddingLeft="5dp"
+       android:layout_margin="10dp"
+       android:text="DriverName : " />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:background="@drawable/bottomborder"
+      android:id="@+id/lblName"
+      android:paddingLeft="5dp"
+      android:layout_margin="10dp"
+      android:text="KMPL" />-->
+</LinearLayout>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="@android:color/white"
+        android:text="Fuel Entry"
+        android:gravity="center"
+        android:textSize="18dp"
+        android:background="@android:color/holo_blue_dark" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C4C4C4"
+                android:textSize="14dp"
+                android:paddingLeft="10dp"
+                android:text="Number" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Number"
+                android:layout_margin="10dp"
+                android:maxLines="1"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:background="@drawable/bottomborder"
+                android:id="@+id/txtBillNumber" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C4C4C4"
+                android:textSize="14dp"
+                android:paddingLeft="10dp"
+                android:text="Date" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder"
+                android:id="@+id/lbldateTime" />
+        <!--<TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="@string/planet_prompt"/>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/fuelSpinner"
+                    android:textSize="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/fuelFormSpinner"
+                    android:layout_width="match_parent"
+                    android:textSize="15dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        <!--Vehicle Number-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C4C4C4"
+                android:textSize="14dp"
+                android:paddingLeft="10dp"
+                android:text="Vehicle Number" />
+            <AutoCompleteTextView
+                android:id="@+id/vehicleNumber"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:textSize="14dp"
+                android:inputType="text"
+                android:paddingLeft="15dp"
+                android:theme="@style/Autocomplete"
+                android:background="@drawable/bottomborder"
+                android:layout_height="40dp" />
+        <!--Vehicle Type Eg: lorry, van-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/vehicleType"
+                    android:layout_width="match_parent"
+                    android:textSize="15dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        <!--Driver Name-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C4C4C4"
+                android:textSize="14dp"
+                android:paddingLeft="10dp"
+                android:text="Driver Name" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/driverName"
+                    android:textSize="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        <!--Fuel liters-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C4C4C4"
+                android:textSize="14dp"
+                android:paddingLeft="10dp"
+                android:text="Fuel Details" />
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent">
+                <EditText
+                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    android:textSize="15dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="15dp"
+                    android:background="@drawable/bottomborder"
+                    android:id="@+id/fuelToFill" />
+                <TextView
+                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:text="200lts"
+                    android:textSize="15dp"
+                    android:textColor="#C4C4C4"
+                    android:paddingRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:id="@+id/fuelAvailable" />
+            </LinearLayout>
+            <View
+                android:layout_height="10dp"
+                android:layout_width="match_parent"
+                android:background="#CCCCCC" />
+        <!--Check Box-->
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Meter Fault"
+                android:textSize="15dp"
+                android:id="@+id/chckMeterFault"
+                android:layout_margin="10dp"
+                android:textStyle="bold"
+                android:checked="false" />
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:id="@+id/layMeterFault"
+                android:orientation="vertical"
+                android:layout_width="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#C4C4C4"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:text="Opening KMS" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:maxLines="1"
+                    android:id="@+id/txtOpeningKMS"
+                    android:textSize="15dp"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/bottomborder"
+                    android:inputType="numberDecimal"
+                    android:layout_margin="10dp"
+                    android:text="0" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#C4C4C4"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:text="Closing KMS" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:maxLines="1"
+                    android:textSize="15dp"
+                    android:id="@+id/txtClosingKMS"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/bottomborder"
+                    android:inputType="numberDecimal"
+                    android:layout_margin="10dp" />
+            <!--KMPL-->
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/lblkmpl"
+                    android:paddingLeft="10dp"
+                    android:textSize="15dp"
+                    android:background="@drawable/bottomborder"
+                    android:layout_margin="10dp"
+                    android:text="KMPL" />
+            </LinearLayout>
+        <!--Bunk Show Details-->
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                android:id="@+id/layBunkDetails">
+                <View
+                    android:layout_height="10dp"
+                    android:layout_width="match_parent"
+                    android:background="#CCCCCC" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#C4C4C4"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:text="Filled By" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:id="@+id/txtFilledBy"
+                    android:inputType="text"
+                    android:textSize="15dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder" />
+            <!--Payment Mode-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder">
+                    <Spinner
+                        android:id="@+id/paymentMode"
+                        android:textSize="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#C4C4C4"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:text="Rate/Liter" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="15dp"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:layout_margin="10dp"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/txtRate"
+                    android:background="@drawable/bottomborder" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="15dp"
+                    android:text="Amount"
+                    android:paddingLeft="10dp"
+                    android.textAlignment="center"
+                    android:layout_margin="10dp"
+                    android:id="@+id/lblTotalPrice"
+                    android:background="@drawable/bottomborder" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="15dp"
+                    android:hint="Remaks"
+                    android:id="@+id/txtRemarks"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder" />
+            </LinearLayout>
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="STORE"
+                android:id="@+id/btnStore"
+                android:layout_margin="10dp"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_blue_bright" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

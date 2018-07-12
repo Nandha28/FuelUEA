@@ -1,0 +1,24 @@
+﻿using System;
+
+namespace FuelUED.Modal
+{
+    public class FuelEntryDetails
+    {
+        public string BillNumber { get; set; }
+        public string CurrentDate { get; set; }
+        public string FuelType { get; set; }
+        public string FuelStockType { get; set; }
+        public string VehicleNumber { get; set; }
+        public string VehicleType { get; set; }
+        public string DriverName { get; set; }
+        public string FuelInLtrs { get; set; }
+        public string OpeningKMS { get; set; }
+        public string ClosingKMS { get; set; }
+        public string Kmpl { get; set; }
+        public string FilledBy { get; set; }
+        public string PaymentType { get; set; }
+        public string RatePerLtr { get; set; }
+        public string Price { get; set; }
+        public string Remarks { get; set; }
+    }
+}
