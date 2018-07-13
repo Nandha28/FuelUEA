@@ -7,23 +7,26 @@
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main">
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:textColor="@android:color/black"
-        android:id="@+id/txtField"
-        android:layout_margin="10dp"
-        android:text="Vehicle Number" />
-    <Button android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="@android:color/black"
+            android:id="@+id/txtField"
+            android:layout_margin="10dp"
+            android:text="Vehicle Number" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Print Bill"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:id="@+id/btnPrint"
             android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_bright"/>
-  </LinearLayout>
+            android:background="@android:color/holo_blue_bright" />
+    </LinearLayout>
 </ScrollView>
