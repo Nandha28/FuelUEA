@@ -23,6 +23,9 @@ namespace FuelUED
 
         public string[] VehicleNumber;
         private List<VehicleDetails> VehicleList;
+
+        public List<Fuel> FuelLiters;
+
         private string[] myVehiclelist;
 
         public string[] VehicleType;
@@ -57,6 +60,7 @@ namespace FuelUED
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
+                FuelLiters = FuelDB.Singleton.GetFuel().ToList();
             }
             catch (Exception w)
             {
@@ -73,6 +77,7 @@ namespace FuelUED
                 var adapter = new ArrayAdapter<String>(this, Resource.Layout.select_dialog_item_material, myVehiclelist);
                 vehicleNumber.Adapter = adapter;
                 vehicleNumber.ItemClick += VehicleNumber_ItemClick;
+                vehicleNumber.TextChanged += VehicleNumber_TextChanged;
             }
 
             billNumber = FindViewById<EditText>(Resource.Id.txtBillNumber);
@@ -88,7 +93,7 @@ namespace FuelUED
             var bunkDetailsLayout = FindViewById<LinearLayout>(Resource.Id.layBunkDetails);
 
             cashModeSpinner = FindViewById<Spinner>(Resource.Id.paymentMode);
-            cashModeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Card", "Credit" });
+            cashModeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Cash", "Credit" });
 
 
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
@@ -112,6 +117,13 @@ namespace FuelUED
             lblTotalPrice = FindViewById<TextView>(Resource.Id.lblTotalPrice);
             txtRemarks = FindViewById<EditText>(Resource.Id.txtRemarks);
 
+            fuelToFill.TextChanged += (s, e) => CalculateFuelTotalAmount();
+            txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
+
+            if (FuelLiters != null)
+            {
+                fuelAvailable.Text = $"({FuelLiters.FirstOrDefault().FuelLtts})";
+            }
 
             var btnStore = FindViewById<Button>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
@@ -170,12 +182,28 @@ namespace FuelUED
                 };
         }
 
+        private void CalculateFuelTotalAmount()
+        {
+            if (!fuelToFill.Text.Equals(string.Empty) && !txtRate.Text.Equals(string.Empty))
+            {
+                lblTotalPrice.Text = (float.Parse(fuelToFill.Text) * float.Parse(txtRate.Text)).ToString();
+            }
+        }
+
+        private void VehicleNumber_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
+        {
+            if (vehicleNumber.Text.Equals(string.Empty))
+            {
+                driverNameSpinner.Adapter = null;
+                vehicleTypeSpinner.Adapter = null;
+            }
+        }
 
         private void VehicleNumber_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             if (VehicleList != null)
             {
-                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).ToArray();
+                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
 
                 VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();

@@ -32,6 +32,14 @@ namespace FuelUED
             }
             //GetValue();
         }
+        public void InsertFuelValues(List<Fuel> fuels)
+        {
+            foreach (var item in fuels)
+            {
+                localDB.Insert(item);
+            }
+            //GetValue();
+        }
         public void InsertFuelEntryValues(FuelEntryDetails fuelEntryDetails)
         {
             localDB.Insert(fuelEntryDetails);            
@@ -48,6 +56,21 @@ namespace FuelUED
                     Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
                 }
                return table;
+            }
+            return null;
+        }
+
+        public TableQuery<Fuel> GetFuel()
+        {
+            if (DBExists())
+            {
+                localDB = new SQLiteConnection(DBPath);
+                var table = localDB.Table<Fuel>();
+                foreach (var s in table)
+                {
+                   // Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
+                }
+                return table;
             }
             return null;
         }

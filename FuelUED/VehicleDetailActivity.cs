@@ -58,13 +58,16 @@ namespace FuelUED
                                   "\n\nFilledBy :\t" + item.FilledBy +
                                   "\n\nPaymentType    :\t" + item.PaymentType +
                                   "\n\nRatePerLtr :\t" + item.RatePerLtr +
-                                  "\n\nPrice :\t" + item.FilledBy +
-                                  "\n\nRemarks \t" + item.Remarks;
+                                  "\n\nPrice :\t" + item.Price +
+                                  "\n\nRemarks \t" + item.Remarks+"\n\n";
             }
             btnPrint.Click += (s, e) =>
             {
-                nGXPrinter.AddText(textField.Text);
-                nGXPrinter.Print();
+                //nGXPrinter.AddText(textField.Text);
+                //nGXPrinter.LineFeed(2);
+                //nGXPrinter.Print();
+                nGXPrinter.PrintText(textField.Text);
+                nGXPrinter.PrintText("\n");
             };
         }
     }

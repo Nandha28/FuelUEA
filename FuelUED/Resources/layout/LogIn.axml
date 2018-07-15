@@ -5,28 +5,36 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:layout_margin="15dp"
+    android:background="#247185"
     android:layout_height="match_parent">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
+        android:textColor="@android:color/white"
         android:id="@+id/txtEmail"
-        android:hint="Email" />
+        android:backgroundTint="@android:color/white"
+        android:hint="Email"
+        android:textColorHint="#FFFFFF" />
+<!--android:textColorHint="android:textColorHint"-->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
+        android:textColorHint="#FFFFFF"
+        android:textColor="@android:color/white"
         android:id="@+id/txtPassword"
+        android:backgroundTint="@android:color/white"
         android:inputType="textPassword"
         android:hint="Password" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@android:color/holo_blue_bright"
-        android:textColor="@android:color/white"
+        android:layout_margin="10dp"
+        android:textAllCaps="false"
+        android:background="@android:color/white"
+        android:textColor="@android:color/darker_gray"
         android:id="@+id/btnLogin"
-        android:text="log in" />
+        android:text="Sign In" />
 </LinearLayout>

@@ -25,8 +25,9 @@
             android:text="Print Bill"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textAllCaps="false"
             android:id="@+id/btnPrint"
             android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_bright" />
+            android:background="@color/borderColor" />
     </LinearLayout>
 </ScrollView>

@@ -61,6 +61,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainActivity1.cs" />
     <Compile Include="MainScreenActivity.cs" />
+    <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
     <Compile Include="Modal\VehicleDetails.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -144,6 +145,9 @@
       <Project>{80be7c94-a8b4-4670-8975-e6eea17e4b2b}</Project>
       <Name>PrinterBinding</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TransformFile Include="Resources\drawable\white_border.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
