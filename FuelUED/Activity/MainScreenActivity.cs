@@ -6,6 +6,7 @@ using FuelApp.Modal;
 using FuelUED.Modal;
 using FuelUED.Service;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,22 +42,21 @@ namespace FuelUED
             syncButton = FindViewById<Button>(Resource.Id.btnSync);
             syncButton.Click += (s, e) =>
             {
-
                 SyncButton_Click();
             };
         }
 
-        private async Task SyncButton_Click()
+        private void SyncButton_Click()
         {
             RunOnUiThread(() =>
             {
-               //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
-               //    mainHolder.Alpha = 0.5f;
-               //    loader.Visibility = Android.Views.ViewStates.Visible;
-               //    syncButton.Clickable = false;
+                //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
+                //    mainHolder.Alpha = 0.5f;
+                //    loader.Visibility = Android.Views.ViewStates.Visible;
+                //    syncButton.Clickable = false;
 
-               //    pd.Show();
-               pd = new ProgressDialog(this);
+                //    pd.Show();
+                pd = new ProgressDialog(this);
                 pd.SetMessage("loading");
                 pd.SetCanceledOnTouchOutside(false);
                 pd.SetCancelable(false);
@@ -67,25 +67,26 @@ namespace FuelUED
             {
                 var resposeString = WebService.GetDataFromWebService("LoadVD");
                 var fuelStockRes = WebService.GetDataFromWebService("LoadFStock");
-                var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
-                System.Console.WriteLine(fuelStoc);
-                //if (FuelDB.Singleton.DBExists())
-                //{
-                //    //DeleteDatabase(FuelDB.Singleton.DBPath);                        
-                //    FuelDB.Singleton.DeleteTable<>();
-                //}
-                FuelDB.Singleton.CreateDatabase<VehicleDetails>();
-                FuelDB.Singleton.CreateDatabase<Fuel>();
+                try
+                {
+                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
+                    var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
+                    System.Console.WriteLine(fuelStoc);
 
-                //var vehicleList = new VehicleDetails
-                //{
-                //    DriverName = driverNameSpinner.SelectedItem.ToString(),
-                //    TypeName = vehicleTypeSpinner.SelectedItem.ToString(),
-                //    RegNo = vehicleNumber.Text,
-                //};
-                FuelDB.Singleton.InsertValues(VehicleList);
-                FuelDB.Singleton.InsertFuelValues(fuelStoc);
+                    FuelDB.Singleton.CreateDatabase<VehicleDetails>();
+                    FuelDB.Singleton.CreateDatabase<Fuel>();
+
+                    FuelDB.Singleton.InsertValues(VehicleList);
+                    FuelDB.Singleton.InsertFuelValues(fuelStoc);
+                }
+                catch(Exception ec)
+                {
+                    Console.WriteLine(ec.Message);
+                    RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(this, "Something wrong ...Check connectivity..", ToastLength.Short).Show();
+                    });
+                }
                 RunOnUiThread(() =>
                 {
                     pd.Hide();

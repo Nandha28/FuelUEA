@@ -55,19 +55,20 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="Database\FuelDB.cs" />
-    <Compile Include="FuelActivity.cs" />
-    <Compile Include="LogInActivity.cs" />
-    <Compile Include="MainActivity.cs" />
-    <Compile Include="MainActivity1.cs" />
-    <Compile Include="MainScreenActivity.cs" />
+    <Compile Include="Activity\FuelActivity.cs" />
+    <Compile Include="Activity\LogInActivity.cs" />
+    <Compile Include="Activity\MainActivity.cs" />
+    <Compile Include="Activity\MainActivity1.cs" />
+    <Compile Include="Activity\MainScreenActivity.cs" />
     <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
     <Compile Include="Modal\VehicleDetails.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\WebService.cs" />
-    <Compile Include="VehicleDetailActivity.cs" />
+    <Compile Include="Activity\VehicleDetailActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -154,6 +155,9 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\gas.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

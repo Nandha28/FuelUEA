@@ -1,9 +1,11 @@
 ﻿using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Preferences;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelApp.Modal;
+using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using FuelUED.Service;
 using Newtonsoft.Json;
@@ -129,13 +131,57 @@ namespace FuelUED
             txtRemarks = FindViewById<EditText>(Resource.Id.txtRemarks);
             imgFuel = FindViewById<ImageView>(Resource.Id.imgFuel);
 
-            fuelToFill.TextChanged += (s, e) => CalculateFuelTotalAmount();
+            fuelToFill.TextChanged += (s, e) => CheckFuelAvailbility();
             txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
+            txtOpeningKMS.TextChanged += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(txtOpeningKMS.Text))
+                {
+
+                }
+            };
+
+            txtClosingKMS.TextChanged += (s, e) =>
+            {
+                if (string.IsNullOrEmpty(txtOpeningKMS.Text))
+                {
+                    var alertDialog1 = new Android.App.AlertDialog.Builder(this);
+                    alertDialog1.SetTitle("Enter start KM first");
+                    alertDialog1.SetPositiveButton("OK", (ss, se) =>
+                    {
+                        txtOpeningKMS.RequestFocus();
+                    });
+                    alertDialog1.Show();
+                }
+                else if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text) && !string.IsNullOrEmpty(fuelToFill.Text))
+                {
+                    if (Convert.ToDecimal(txtClosingKMS.Text) > Convert.ToDecimal(txtOpeningKMS.Text))
+                    {
+                        var start = Convert.ToDecimal(txtOpeningKMS?.Text);
+                        var end = Convert.ToDecimal(txtClosingKMS?.Text);
+                        lblkmpl.Text = ((end - start) / Convert.ToDecimal(fuelToFill?.Text)).ToString();
+                    }
+                }
+            };
 
             if (FuelLiters != null)
             {
                 fuelAvailable.Text = $"({FuelLiters.FirstOrDefault().FuelLtts})";
             }
+
+            var pref = PreferenceManager.GetDefaultSharedPreferences(this);
+            var billnumber = pref.GetInt("billnumber", 0);
+            if (billnumber == 0)
+            {
+                billNumber.Text = Utilities.BILL_NUMBER.ToString();
+                //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber.Text));
+            }
+            else
+            {
+                ++billnumber;
+                billNumber.Text = billnumber.ToString();
+            }
+
 
             var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
@@ -149,7 +195,25 @@ namespace FuelUED
                 //{
                 //    Toast.MakeText(this, "Please enter all the values..", ToastLength.Short).Show();
                 //}
-                alertDialog.Show();
+                //if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text))
+                //{
+                //    if (Convert.ToDecimal(txtClosingKMS.Text) < Convert.ToDecimal(txtOpeningKMS.Text))
+                //    {
+                //        var alertDialog = new Android.App.AlertDialog.Builder(this);
+                //        alertDialog.SetTitle("Enter valid destination KM");
+                //        alertDialog.SetMessage("Please check starting KM and closing KM");
+                //        alertDialog.SetPositiveButton("OK", (ss, se) => { });
+                //        alertDialog.Show();
+                //    }
+                //}
+                if (fuelFormSpinner.SelectedItem.Equals("Stock"))
+                {
+                    StoreDetils();
+                }
+                else
+                {
+                    alertDialog.Show();
+                }
             };
 
             fuelFormSpinner.ItemSelected += (s, e) =>
@@ -170,6 +234,32 @@ namespace FuelUED
                         //btnStore.SetCompoundDrawables(Resources.GetDrawable(Resource.Drawable.ic_launcher), null, null, null);
                     }
                 };
+        }
+
+
+        private void CheckFuelAvailbility()
+        {
+            if (string.IsNullOrEmpty(fuelToFill.Text))
+            {
+                return;
+            }
+            if (Convert.ToDecimal(fuelToFill.Text) <= Convert.ToDecimal(FuelLiters?.FirstOrDefault().FuelLtts))
+            {
+                CalculateFuelTotalAmount();
+            }
+            else
+            {
+                //Toast.MakeText(this, "No stock available..", ToastLength.Short).Show();
+                var alertDialog = new Android.App.AlertDialog.Builder(this);
+                alertDialog.SetTitle("Fuel exceeds stock");
+                alertDialog.SetMessage("Please note fuel availability");
+                alertDialog.SetPositiveButton("OK", (s, e) =>
+                {
+                    fuelToFill.Text = string.Empty;
+                });
+                //alertDialog.SetNegativeButton("Cancel", (s, e) => { });
+                alertDialog.Show();
+            }
         }
 
         private void StoreDetils()

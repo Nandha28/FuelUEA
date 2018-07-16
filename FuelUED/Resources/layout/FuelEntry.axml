@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:layout_height="match_parent">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:orientation="vertical"  
+              android:descendantFocusability="beforeDescendants"
+              android:background="@android:color/white"
+              android:focusable="true" 
+              android:focusableInTouchMode="true"
+              android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -50,7 +53,7 @@
                 android:text="Date" />-->
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:textSize="15dp"
                 android:textColor="@android:color/black"
                 android:paddingLeft="15dp"
@@ -164,7 +167,7 @@
                 <TextView
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"
-                    android:text="(200lts)"
+                    android:text="(0lts)"
                     android:textSize="15dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
@@ -338,15 +341,16 @@
                 android:id="@+id/btnStore"
                 android:gravity="center">
                 <ImageView
-                    android:layout_height="25dp"
-                    android:layout_width="25dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
                     android:id="@+id/imgFuel"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/gas" />
                 <TextView
                     android:layout_height="30dp"
                     android:text="STORE"
-                    android:gravity="center"
+                    android:gravity="center" 
+                    android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
                     android:textAlignment="center"
                     android:layout_gravity="center"

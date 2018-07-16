@@ -27,15 +27,20 @@ namespace FuelUED.Service
 
         public static string Between(string Text, string FirstString, string LastString)
         {
-            string STR = Text;
-            string STRFirst = FirstString;
-            string STRLast = LastString;
-            string FinalString;
-            string TempString;
-            int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
-            int Pos2 = STR.IndexOf(LastString);
-            FinalString = STR.Substring(Pos1, Pos2 - Pos1);
-            return FinalString;
+            try
+            {
+                string STR = Text;
+                string STRFirst = FirstString;
+                string STRLast = LastString;
+                string FinalString;
+                string TempString;
+                int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
+                int Pos2 = STR.IndexOf(LastString);
+                FinalString = STR.Substring(Pos1, Pos2 - Pos1);
+                return FinalString;
+            }
+            catch { }
+            return null;
         }
         public static void PostDataToWebService()
         {
