@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -25,10 +26,9 @@ namespace FuelUED
         private List<VehicleDetails> VehicleList;
 
         public List<Fuel> FuelLiters;
+        Android.App.AlertDialog.Builder alertDialog;
 
         private string[] myVehiclelist;
-
-        public string[] VehicleType;
         private string[] DriverNames;
         private Spinner cashModeSpinner;
         private Spinner driverNameSpinner;
@@ -41,6 +41,8 @@ namespace FuelUED
         private EditText txtRate;
         private TextView lblTotalPrice;
         private EditText txtRemarks;
+        private ImageView imgFuel;
+        private TextView lblTitle;
         private AutoCompleteTextView vehicleNumber;
         private EditText billNumber;
         private string dateTimeNow;
@@ -56,6 +58,14 @@ namespace FuelUED
             // Create your application here
             SetContentView(Resource.Layout.FuelEntry);
 
+            alertDialog = new Android.App.AlertDialog.Builder(this);
+            alertDialog.SetTitle("Fuel is from petrol bunk");
+            alertDialog.SetMessage("Do you want to proceed ?");
+            alertDialog.SetPositiveButton("OK", (s, e) =>
+             {
+                 StoreDetils();
+             });
+            alertDialog.SetNegativeButton("Cancel", (s, e) => { });
             // var resposeString = WebService.GetDataFromWebService("LoadVD");
             try
             {
@@ -71,6 +81,7 @@ namespace FuelUED
                 myVehiclelist = VehicleList.Select(I => I.RegNo).Distinct().ToArray();
             }
 
+            lblTitle = FindViewById<TextView>(Resource.Id.lblTittle);
             vehicleNumber = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
             if (myVehiclelist != null)
             {
@@ -116,6 +127,7 @@ namespace FuelUED
             txtRate = FindViewById<EditText>(Resource.Id.txtRate);
             lblTotalPrice = FindViewById<TextView>(Resource.Id.lblTotalPrice);
             txtRemarks = FindViewById<EditText>(Resource.Id.txtRemarks);
+            imgFuel = FindViewById<ImageView>(Resource.Id.imgFuel);
 
             fuelToFill.TextChanged += (s, e) => CalculateFuelTotalAmount();
             txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
@@ -125,7 +137,7 @@ namespace FuelUED
                 fuelAvailable.Text = $"({FuelLiters.FirstOrDefault().FuelLtts})";
             }
 
-            var btnStore = FindViewById<Button>(Resource.Id.btnStore);
+            var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
             {
                 //if (fuelSpinner.SelectedItem.ToString() != null && fuelFormSpinner.SelectedItem.ToString() != null
@@ -137,36 +149,7 @@ namespace FuelUED
                 //{
                 //    Toast.MakeText(this, "Please enter all the values..", ToastLength.Short).Show();
                 //}
-                try
-                {
-                    fuelDetails = new FuelEntryDetails
-                    {
-                        BillNumber = billNumber.Text,
-                        CurrentDate = dateTimeNow,
-                        FuelType = fuelSpinner.SelectedItem.ToString(),
-                        FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
-                        VehicleNumber = vehicleNumber.Text,
-                        VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
-                        DriverName = driverNameSpinner.SelectedItem.ToString(),
-                        FuelInLtrs = fuelToFill.Text,
-                        FilledBy = txtFilledBy.Text,
-                        ClosingKMS = txtClosingKMS.Text,
-                        Kmpl = lblkmpl.Text,
-                        OpeningKMS = txtOpeningKMS.Text,
-                        PaymentType = cashModeSpinner.SelectedItem?.ToString(),
-                        Price = lblTotalPrice.Text,
-                        RatePerLtr = txtRate.Text,
-                        Remarks = txtRemarks.Text
-                    };
-                }
-                catch (Exception ec)
-                {
-                    Console.WriteLine(ec.Message);
-                }
-                FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-                FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-
-                StartActivity(typeof(VehicleDetailActivity));
+                alertDialog.Show();
             };
 
             fuelFormSpinner.ItemSelected += (s, e) =>
@@ -174,12 +157,53 @@ namespace FuelUED
                     if (fuelFormSpinner.SelectedItem.Equals("Stock"))
                     {
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Gone;
+                        btnStore.SetBackgroundResource(Resource.Color.borderColor);
+                        lblTitle.SetBackgroundResource(Resource.Color.borderColor);
+                        imgFuel.Visibility = Android.Views.ViewStates.Gone;
                     }
                     else
                     {
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Visible;
+                        btnStore.SetBackgroundColor(Color.Red);
+                        lblTitle.SetBackgroundColor(Color.Red);
+                        imgFuel.Visibility = Android.Views.ViewStates.Visible;
+                        //btnStore.SetCompoundDrawables(Resources.GetDrawable(Resource.Drawable.ic_launcher), null, null, null);
                     }
                 };
+        }
+
+        private void StoreDetils()
+        {
+            try
+            {
+                fuelDetails = new FuelEntryDetails
+                {
+                    BillNumber = billNumber.Text,
+                    CurrentDate = dateTimeNow,
+                    FuelType = fuelSpinner.SelectedItem.ToString(),
+                    FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
+                    VehicleNumber = vehicleNumber.Text,
+                    VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
+                    DriverName = driverNameSpinner.SelectedItem.ToString(),
+                    FuelInLtrs = fuelToFill.Text,
+                    FilledBy = txtFilledBy.Text,
+                    ClosingKMS = txtClosingKMS.Text,
+                    Kmpl = lblkmpl.Text,
+                    OpeningKMS = txtOpeningKMS.Text,
+                    PaymentType = cashModeSpinner.SelectedItem?.ToString(),
+                    Price = lblTotalPrice.Text,
+                    RatePerLtr = txtRate.Text,
+                    Remarks = txtRemarks.Text
+                };
+            }
+            catch (Exception ec)
+            {
+                Console.WriteLine(ec.Message);
+            }
+            FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
+
+            StartActivity(typeof(VehicleDetailActivity));
         }
 
         private void CalculateFuelTotalAmount()
@@ -206,8 +230,8 @@ namespace FuelUED
                 DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
 
-                VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
-                vehicleTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, VehicleType);
+                //VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
+                vehicleTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Line Vehicle", "InterCard", "Loader" });
             }
         }
     }

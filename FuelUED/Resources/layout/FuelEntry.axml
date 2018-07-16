@@ -12,8 +12,9 @@
         android:textColor="@android:color/white"
         android:text="Fuel Entry"
         android:gravity="center"
+        android:id="@+id/lblTittle"
         android:textSize="18dp"
-        android:background="#247185" />
+        android:background="@color/borderColor" />
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
@@ -327,14 +328,39 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/bottomborder" />
             </LinearLayout>
-            <Button
+            <LinearLayout
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:background="@color/borderColor"
+                android:id="@+id/btnStore"
+                android:gravity="center">
+                <ImageView
+                    android:layout_height="25dp"
+                    android:layout_width="25dp"
+                    android:id="@+id/imgFuel"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_launcher" />
+                <TextView
+                    android:layout_height="30dp"
+                    android:text="STORE"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content" />
+            </LinearLayout>
+        <!--<Button
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="STORE"
                 android:id="@+id/btnStore"
+                android:textAllCaps="true"
                 android:layout_margin="10dp"
                 android:textColor="@android:color/white"
-                android:background="@color/borderColor" />
+                android:background="@color/borderColor" />-->
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
