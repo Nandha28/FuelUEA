@@ -34,7 +34,7 @@
         android:layout_margin="10dp"
         android:textAllCaps="false"
         android:background="@android:color/white"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/borderColor"
         android:id="@+id/btnLogin"
         android:text="Sign In" />
 </LinearLayout>

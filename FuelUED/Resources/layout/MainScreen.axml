@@ -26,7 +26,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textAllCaps="false"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/borderColor"
             android:id="@+id/btnFuelEntry"
             android:text="Fuel Entry" />
         <Button
@@ -37,7 +37,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:id="@+id/btnSync"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/borderColor"
             android:text="SYNC" />
     </LinearLayout>
 </RelativeLayout>
