@@ -155,7 +155,8 @@ namespace FuelUED
                 }
                 else if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text) && !string.IsNullOrEmpty(fuelToFill.Text))
                 {
-                    if (Convert.ToDecimal(txtClosingKMS.Text) > Convert.ToDecimal(txtOpeningKMS.Text))
+                    if (Convert.ToDecimal(txtClosingKMS.Text) > Convert.ToDecimal(txtOpeningKMS.Text) &&
+                    Convert.ToDecimal(fuelToFill.Text) > 0)
                     {
                         var start = Convert.ToDecimal(txtOpeningKMS?.Text);
                         var end = Convert.ToDecimal(txtClosingKMS?.Text);

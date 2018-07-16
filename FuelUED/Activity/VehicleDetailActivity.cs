@@ -16,7 +16,9 @@ namespace FuelUED
     {
         private NGXPrinter nGXPrinter;
         private string billNumber;
+        private string fuelStockType;
         private FuelEntryDetails enterdvalues;
+        private TextView textField;
 
         public void OnRaiseException(int p0, string p1)
         {
@@ -48,14 +50,14 @@ namespace FuelUED
             {
                 System.Console.WriteLine(ex.Message);
             }
-            var textField = FindViewById<TextView>(Resource.Id.txtField);
+            textField = FindViewById<TextView>(Resource.Id.txtField);
             var details = FuelDB.Singleton.GetFuelValues();
             var btnPrint = FindViewById<Button>(Resource.Id.btnPrint);
             try
             {
                 enterdvalues = details?.Last();
             }
-            catch(Exception em)
+            catch (Exception em)
             {
                 Console.WriteLine(em.Message);
             }
@@ -75,39 +77,45 @@ namespace FuelUED
                               "\n\nPrice :\t" + enterdvalues?.Price +
                               "\n\nRemarks \t" + enterdvalues?.Remarks + "\n\n";
             billNumber = enterdvalues?.BillNumber;
+            fuelStockType = enterdvalues?.FuelStockType;
             //}
             btnPrint.Click += (s, e) =>
             {
                 //nGXPrinter.AddText(textField.Text);
                 //nGXPrinter.LineFeed(2);
                 //nGXPrinter.Print();
-                try
+                if (fuelStockType.Equals("Bunk"))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
                     alertDialog.SetTitle("Fuel is from petrol bunk");
                     alertDialog.SetMessage("Do you want to proceed ?");
                     alertDialog.SetPositiveButton("OK", (ss, se) =>
                     {
-                        if (nGXPrinter != null)
-                        {
-                            nGXPrinter.PrintText(textField.Text);
-                            nGXPrinter.PrintText("\n");
-                        }
-                        else
-                        {
-                            Toast.MakeText(this, "Printer not connected", ToastLength.Short).Show();
-                        }
+                        Print();
 
-                        var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-                        pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
                     });
+                    alertDialog.Show();
                 }
-                catch
+                else
                 {
-
+                    Print();
                 }
-
+                var pref = PreferenceManager.GetDefaultSharedPreferences(this);
+                pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
             };
+        }
+
+        private void Print()
+        {
+            if (nGXPrinter != null)
+            {
+                nGXPrinter.PrintText(textField.Text);
+                nGXPrinter.PrintText("\n");
+            }
+            else
+            {
+                Toast.MakeText(this, "Printer not connected", ToastLength.Short).Show();
+            }
         }
     }
 }
