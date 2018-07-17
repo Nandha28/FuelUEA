@@ -55,6 +55,8 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activity\ConfigActivity.cs" />
+    <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="Database\FuelDB.cs" />
     <Compile Include="Activity\FuelActivity.cs" />
@@ -158,6 +160,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\gas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\config.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

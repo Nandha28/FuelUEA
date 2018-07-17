@@ -46,7 +46,7 @@ namespace FuelUED
         private ImageView imgFuel;
         private TextView lblTitle;
         private AutoCompleteTextView vehicleNumber;
-        private EditText billNumber;
+        private TextView billNumber;
         private string dateTimeNow;
         private Spinner fuelSpinner;
         private Spinner fuelFormSpinner;
@@ -93,7 +93,7 @@ namespace FuelUED
                 vehicleNumber.TextChanged += VehicleNumber_TextChanged;
             }
 
-            billNumber = FindViewById<EditText>(Resource.Id.txtBillNumber);
+            billNumber = FindViewById<TextView>(Resource.Id.txtBillNumber);
 
             dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString();
 
@@ -170,8 +170,11 @@ namespace FuelUED
                 fuelAvailable.Text = $"({FuelLiters.FirstOrDefault().FuelLtts})";
             }
 
-            var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-            var billnumber = pref.GetInt("billnumber", 0);
+            //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
+            //var billnumber = pref.GetInt(Utilities.BILLNUMBER, 0);
+
+            var billnumber = AppPreferences.GetInt(this, Utilities.BILLNUMBER);
+
             if (billnumber == 0)
             {
                 billNumber.Text = Utilities.BILL_NUMBER.ToString();

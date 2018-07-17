@@ -15,7 +15,7 @@
         android:textColor="@android:color/white"
         android:id="@+id/txtEmail"
         android:backgroundTint="@android:color/white"
-        android:hint="Email"
+        android:hint="User Name"
         android:textColorHint="#FFFFFF" />
 <!--android:textColorHint="android:textColorHint"-->
     <EditText

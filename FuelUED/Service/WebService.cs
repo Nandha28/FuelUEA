@@ -1,21 +1,18 @@
-﻿using FuelApp.Modal;
-using Newtonsoft.Json;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
+﻿using RestSharp;
 
 namespace FuelUED.Service
 {
     public static class WebService
     {
-        const string BaseURL = "http://49.207.180.49/GenIT/GenData.asmx/";
+        //= "49.207.180.49";
+        public static string IPADDRESS;
+        const string BASEURL = "http://";
+        const string METHOD = "/GenIT/GenData.asmx/";
+
 
         public static string GetDataFromWebService(string subURl)
         {
-            var client = new RestClient(BaseURL + subURl);
+            var client = new RestClient(BASEURL + IPADDRESS + METHOD + subURl);
             var request = new RestRequest(Method.GET);
             // request.AddHeader("postman-token", "6e4a4235-cc51-e3fb-79df-3c66df033c77");
             //request.AddHeader("cache-control", "no-cache");

@@ -3,14 +3,7 @@
     android:background="#247185"
     android:layout_width="match_parent"
     android:id="@+id/mainRelativeHolder"
-    android:layout_height="match_parent">
-    <ProgressBar
-        android:id="@+id/loader"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+    android:layout_height="match_parent">   
     <LinearLayout
         android:orientation="vertical"
         android:gravity="center"
@@ -40,4 +33,11 @@
             android:textColor="@color/borderColor"
             android:text="SYNC" />
     </LinearLayout>
+  <ProgressBar
+         android:id="@+id/loader"
+         android:visibility="invisible"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerVertical="true"
+         android:layout_centerHorizontal="true" />
 </RelativeLayout>

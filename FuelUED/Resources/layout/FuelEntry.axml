@@ -33,8 +33,8 @@
                 android:textSize="14dp"
                 android:paddingLeft="10dp"
                 android:text="Number" />-->
-            <EditText
-                android:layout_width="match_parent"
+          <TextView
+              android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Number"
                 android:layout_margin="10dp"

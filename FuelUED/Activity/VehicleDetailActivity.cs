@@ -5,6 +5,7 @@ using Android.Support.V7.App;
 using Android.Widget;
 using Com.Ngx.Mp100sdk;
 using Com.Ngx.Mp100sdk.Intefaces;
+using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using System;
 using System.Linq;
@@ -100,8 +101,10 @@ namespace FuelUED
                 {
                     Print();
                 }
-                var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-                pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
+                //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
+                //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
+
+                AppPreferences.SaveInt(this,Utilities.BILLNUMBER, Convert.ToInt32(billNumber));
             };
         }
 
