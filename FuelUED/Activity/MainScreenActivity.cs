@@ -12,6 +12,7 @@ using FuelUED.Service;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,10 +24,10 @@ namespace FuelUED
         private LinearLayout mainLayout;
         private ProgressBar loader;
         private RelativeLayout mainHolder;
-        private ProgressDialog pd;
         private Button syncButton;
 
         public string Ipadress { get; private set; }
+        public List<VehicleDetails> VehicleList;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,7 +46,19 @@ namespace FuelUED
 
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
-                 StartActivity(typeof(FuelActivity));
+                 //VehicleList = FuelDB.Singleton.GetValue().ToList();
+                 
+                 if (FuelDB.Singleton.DBExists())
+                 {
+                     StartActivity(typeof(FuelActivity));
+                 }
+                 else
+                 {
+                     var alertDialog1 = new Android.App.AlertDialog.Builder(this);
+                     alertDialog1.SetTitle("you need to sync first");
+                     alertDialog1.SetPositiveButton("OK", (ss, se) => { });
+                     alertDialog1.Show();
+                 }
                  // SyncButton_Click();
              };
 

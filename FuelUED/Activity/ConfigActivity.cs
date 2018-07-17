@@ -19,17 +19,19 @@ namespace FuelUED.Activity
             SetContentView(Resource.Layout.config);
 
             var txtIpAddress = FindViewById<EditText>(Resource.Id.txtIP);
+            var txtDeviceID = FindViewById<EditText>(Resource.Id.txtDeviceId);
+
             //txtIpAddress.TextChanged += (s, e) =>
             //{
             //};
             FindViewById<Button>(Resource.Id.btnConfig).Click += (s, e) =>
             {
-                if (txtIpAddress.Text.Equals(string.Empty))
+                if (txtIpAddress.Text.Equals(string.Empty) || txtDeviceID.Text.Equals(string.Empty))
                 {
-                    Toast.MakeText(this, "Enter valid IPAdress..", ToastLength.Short).Show();
+                    Toast.MakeText(this, "Enter all fields..", ToastLength.Short).Show();
                     return;
                 }
-                Toast.MakeText(this, "Success", ToastLength.Short).Show();         
+                Toast.MakeText(this, "Success", ToastLength.Short).Show();
                 AppPreferences.SaveString(this, Utilities.IPAddress, txtIpAddress.Text.Replace(" ", ""));
                 StartActivity(typeof(LogInActivity));
             };

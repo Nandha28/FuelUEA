@@ -9,7 +9,7 @@ namespace FuelUED
 {
     public class FuelDB
     {
-        private SQLiteConnection localDB;
+        public SQLiteConnection localDB;
         public string DBPath;
         static FuelDB singleton;
 

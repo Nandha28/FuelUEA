@@ -22,9 +22,13 @@ namespace FuelUED
         public FuelActivity()
         {
             VehicleNumber = new string[50];
+            StockList = new string[] { "Stock", "Bunk" };
         }
 
         public string[] VehicleNumber;
+
+        public string[] StockList;
+
         private List<VehicleDetails> VehicleList;
 
         public List<Fuel> FuelLiters;
@@ -52,6 +56,7 @@ namespace FuelUED
         private Spinner fuelFormSpinner;
         private Spinner vehicleTypeSpinner;
         private FuelEntryDetails fuelDetails;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -101,7 +106,7 @@ namespace FuelUED
             fuelSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards" });
 
             fuelFormSpinner = FindViewById<Spinner>(Resource.Id.fuelFormSpinner);
-            fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
+            fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, StockList);
 
             var bunkDetailsLayout = FindViewById<LinearLayout>(Resource.Id.layBunkDetails);
 
@@ -220,6 +225,24 @@ namespace FuelUED
                 }
             };
 
+            fuelSpinner.ItemSelected += (s, e) =>
+            {
+                fuelFormSpinner.Adapter = null;
+                //StockList = null;
+                if (fuelSpinner.SelectedItem.Equals("Inwards"))
+                {
+                    fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Bunk" });
+                    //StockList = new string[] { "Bunk" }; 
+                }
+                else
+                {
+                    fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
+                    // StockList = new string[] { "Stock", "Bunk" };
+                }
+                //fuelFormSpinnerAdapter.NotifyDataSetChanged();
+            };
+
+
             fuelFormSpinner.ItemSelected += (s, e) =>
                 {
                     if (fuelFormSpinner.SelectedItem.Equals("Stock"))
@@ -325,7 +348,9 @@ namespace FuelUED
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
 
                 //VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
-                vehicleTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Line Vehicle", "InterCard", "Loader" });
+                vehicleTypeSpinner.Adapter = new ArrayAdapter(this,
+                    Resource.Layout.select_dialog_item_material,
+                    new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
             }
         }
     }

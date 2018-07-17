@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:gravity="center" 
-              android:layout_width="match_parent" 
-              android:layout_gravity="center" 
-              android:orientation="vertical"                 
-              android:layout_height="match_parent" 
-              android:background="@color/borderColor"> 
-  
-  <EditText    android:layout_height="wrap_content"
-               android:layout_width="match_parent"
-               android:layout_margin="10dp"              
-               android:maxLines="1"
-               android:singleLine="true"
-               android:inputType="text"
-               android:textSize="15dp"
-               android:hint="IP Address"
-               android:textColorHint="@color/grey"                                             
-               android:textColor="@color/grey"                              
-               android:paddingLeft="15dp"               
-               android:id="@+id/txtIP" />
-  
-  <Button   android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Config" 
-            android:layout_margin="10dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:id="@+id/btnConfig"
-            android:background="@android:color/white"
-            android:textColor="@color/borderColor"/>
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@color/borderColor">
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:inputType="text"
+        android:textSize="15dp"
+        android:hint="Device ID"
+        android:textColorHint="@color/grey"
+        android:textColor="@color/grey"
+        android:paddingLeft="15dp"
+        android:id="@+id/txtDeviceId" />
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:inputType="text"
+        android:textSize="15dp"
+        android:hint="IP Address"
+        android:textColorHint="@color/grey"
+        android:textColor="@color/grey"
+        android:paddingLeft="15dp"
+        android:id="@+id/txtIP" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Config"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:id="@+id/btnConfig"
+        android:background="@android:color/white"
+        android:textColor="@color/borderColor" />
 </LinearLayout>
