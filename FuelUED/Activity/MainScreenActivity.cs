@@ -61,7 +61,7 @@ namespace FuelUED
             if (Ipadress.Equals(string.Empty))
             {
                 Toast.MakeText(this, "Please Configure IPAdress..", ToastLength.Short).Show();
-                StartActivity(typeof(ConfigActivity));
+                //StartActivity(typeof(ConfigActivity));
                 return;
             }
             WebService.IPADDRESS = Ipadress;

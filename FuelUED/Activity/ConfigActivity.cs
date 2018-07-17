@@ -24,9 +24,12 @@ namespace FuelUED.Activity
             //};
             FindViewById<Button>(Resource.Id.btnConfig).Click += (s, e) =>
             {
-                Toast.MakeText(this, "Success", ToastLength.Short).Show();
-                //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-                //pref.Edit().PutString(Utilities.IPAddress, ).Apply();
+                if (txtIpAddress.Text.Equals(string.Empty))
+                {
+                    Toast.MakeText(this, "Enter valid IPAdress..", ToastLength.Short).Show();
+                    return;
+                }
+                Toast.MakeText(this, "Success", ToastLength.Short).Show();         
                 AppPreferences.SaveString(this, Utilities.IPAddress, txtIpAddress.Text.Replace(" ", ""));
                 StartActivity(typeof(LogInActivity));
             };
