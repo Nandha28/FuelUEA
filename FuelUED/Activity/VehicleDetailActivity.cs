@@ -104,12 +104,23 @@ namespace FuelUED
                 //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
                 //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
 
-                AppPreferences.SaveInt(this,Utilities.BILLNUMBER, Convert.ToInt32(billNumber));
+                //AppPreferences.SaveInt(this,Utilities.BILLNUMBER, Convert.ToInt32(billNumber));
             };
         }
 
         private void Print()
         {
+            var bill = FuelDB.Singleton.GetBillDetails().FirstOrDefault();
+            var billDetails = new BillDetails
+            {
+                AvailableLiters = bill.AvailableLiters,
+                BillCurrentNumber = (Convert.ToInt32(bill.BillCurrentNumber) + 1).ToString(),
+                BillPrefix = bill.BillPrefix,
+                DeviceStatus = bill.DeviceStatus
+            };
+            FuelDB.Singleton.DeleteTable<BillDetails>();
+            FuelDB.Singleton.CreateTable<BillDetails>();
+            FuelDB.Singleton.InsertBillDetails(billDetails);
             if (nGXPrinter != null)
             {
                 nGXPrinter.PrintText(textField.Text);

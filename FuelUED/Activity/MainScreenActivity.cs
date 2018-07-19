@@ -1,11 +1,8 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Preferences;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelApp.Modal;
-using FuelUED.Activity;
 using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using FuelUED.Service;
@@ -14,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FuelUED
 {
@@ -24,10 +20,15 @@ namespace FuelUED
         private LinearLayout mainLayout;
         private ProgressBar loader;
         private RelativeLayout mainHolder;
-        private Button syncButton;
+        private Button btnDownloadData;
 
-        public string Ipadress { get; private set; }
+        public string ipadress { get; private set; }
+        public bool IsDeviceAvailable { get; private set; }
+
+        private string siteId;
+        private string deviceId;
         public List<VehicleDetails> VehicleList;
+        private Button btnUploadData;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,15 +43,24 @@ namespace FuelUED
             //Ipadress = pref.GetString(Utilities.IPAddress, string.Empty);
 
             //Get IPAdress for preference
-            Ipadress = AppPreferences.GetString(this, Utilities.IPAddress);
+            ipadress = AppPreferences.GetString(this, Utilities.IPAddress);
+            siteId = AppPreferences.GetString(this, Utilities.SITEID);
+            deviceId = AppPreferences.GetString(this, Utilities.DEVICEID);
 
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
                  //VehicleList = FuelDB.Singleton.GetValue().ToList();
-                 
-                 if (FuelDB.Singleton.DBExists())
+
+                 if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
                  {
-                     StartActivity(typeof(FuelActivity));
+                     if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals("1"))
+                     {
+                         StartActivity(typeof(FuelActivity));
+                     }
+                     else
+                     {
+                         Toast.MakeText(this, "Device not avalable", ToastLength.Short).Show();
+                     }
                  }
                  else
                  {
@@ -62,22 +72,28 @@ namespace FuelUED
                  // SyncButton_Click();
              };
 
-            syncButton = FindViewById<Button>(Resource.Id.btnSync);
-            syncButton.Click += (s, e) =>
+            btnDownloadData = FindViewById<Button>(Resource.Id.btnDownloadData);
+            btnDownloadData.Click += (s, e) =>
             {
                 SyncButton_Click();
+            };
+
+            btnUploadData = FindViewById<Button>(Resource.Id.btnUploadData);
+            btnUploadData.Click += (s, e) =>
+            {
+                // SyncButton_Click();
             };
         }
 
         private void SyncButton_Click()
         {
-            if (Ipadress.Equals(string.Empty))
+            if (ipadress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
             {
                 Toast.MakeText(this, "Please Configure IPAdress..", ToastLength.Short).Show();
                 //StartActivity(typeof(ConfigActivity));
                 return;
             }
-            WebService.IPADDRESS = Ipadress;
+            WebService.IPADDRESS = ipadress;
             RunOnUiThread(() =>
             {
                 //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
@@ -97,19 +113,35 @@ namespace FuelUED
 
             var thread = new Thread(new ThreadStart(delegate
             {
-                var resposeString = WebService.GetDataFromWebService("LoadVD");
-                var fuelStockRes = WebService.GetDataFromWebService("LoadFStock");
+                var resposeString = WebService.PostDeviceAndSiteIDToWebService("GetVD", deviceId, siteId);
+                //var fuelStockRes = WebService.GetDataFromWebService("LoadFStock");
                 try
                 {
                     var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                    var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
-                    Console.WriteLine(fuelStoc);
+                    //var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
+                    //Console.WriteLine(fuelStoc);
 
-                    FuelDB.Singleton.CreateDatabase<VehicleDetails>();
-                    FuelDB.Singleton.CreateDatabase<Fuel>();
+                    FuelDB.Singleton.CreateTable<VehicleDetails>();
+                    FuelDB.Singleton.CreateTable<BillDetails>();
 
+                    //FuelDB.Singleton.CreateDatabase<Fuel>();
+
+                    var details = VehicleList?.First();
+                    VehicleList.RemoveAt(0);
+                    var billDetails = new BillDetails
+                    {
+                        AvailableLiters = details.VID,
+                        BillCurrentNumber = details.DriverID_PK,
+                        BillPrefix = details.RegNo,
+                        DeviceStatus = details.DriverName
+                    };
+                    IsDeviceAvailable = (details.DriverName == "1") ? true : false;
+                    //  var suffix = Convert.ToInt32(billDetails.BillCurrentNumber) - 1;
+                    // var billNum = string.Concat(billDetails.BillPrefix, suffix);
+                    AppPreferences.SaveString(this, Utilities.DEVICESTATUS, billDetails.DeviceStatus);
                     FuelDB.Singleton.InsertValues(VehicleList);
-                    FuelDB.Singleton.InsertFuelValues(fuelStoc);
+                    FuelDB.Singleton.InsertBillDetails(billDetails);
+                    //FuelDB.Singleton.InsertFuelValues(fuelStoc);
                 }
                 catch (Exception ec)
                 {

@@ -19,7 +19,12 @@ namespace FuelUED
         {
             DBPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "fuel.db");
         }
-        public void CreateDatabase<T>()
+        //public void CreateDatabase<T>()
+        //{
+        //    localDB = new SQLiteConnection(DBPath);
+        //    localDB.CreateTable<T>();
+        //}
+        public void CreateTable<T>()
         {
             localDB = new SQLiteConnection(DBPath);
             localDB.CreateTable<T>();
@@ -42,7 +47,7 @@ namespace FuelUED
         }
         public void InsertFuelEntryValues(FuelEntryDetails fuelEntryDetails)
         {
-            localDB.Insert(fuelEntryDetails);            
+            localDB.Insert(fuelEntryDetails);
         }
 
         public TableQuery<FuelEntryDetails> GetFuelValues()
@@ -55,7 +60,7 @@ namespace FuelUED
                 {
                     Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
                 }
-               return table;
+                return table;
             }
             return null;
         }
@@ -68,7 +73,7 @@ namespace FuelUED
                 var table = localDB.Table<Fuel>();
                 foreach (var s in table)
                 {
-                   // Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
+                    // Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
                 }
                 return table;
             }
@@ -98,10 +103,24 @@ namespace FuelUED
             localDB = new SQLiteConnection(DBPath);
             localDB.DeleteAll<T>();
         }
-        public void CreateTable<T>()
+
+        public void InsertBillDetails(BillDetails value)
         {
-            localDB = new SQLiteConnection(DBPath);
-            localDB.CreateTable<T>();
+            localDB.Insert(value);
+        }
+        public TableQuery<BillDetails> GetBillDetails()
+        {
+            if (DBExists())
+            {
+                localDB = new SQLiteConnection(DBPath);
+                var table = localDB.Table<BillDetails>();
+                foreach (var s in table)
+                {
+                    Console.WriteLine(s.AvailableLiters + " " + s.BillPrefix);
+                }
+                return table;
+            }
+            return null;
         }
     }
 }

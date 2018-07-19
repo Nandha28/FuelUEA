@@ -64,6 +64,7 @@
     <Compile Include="Activity\MainActivity.cs" />
     <Compile Include="Activity\MainActivity1.cs" />
     <Compile Include="Activity\MainScreenActivity.cs" />
+    <Compile Include="Modal\BillDetails.cs" />
     <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
     <Compile Include="Modal\VehicleDetails.cs" />

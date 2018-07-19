@@ -29,9 +29,19 @@
             android:layout_margin="10dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:id="@+id/btnSync"
+            android:id="@+id/btnDownloadData"
             android:textColor="@color/borderColor"
-            android:text="SYNC" />
+            android:text="Download Data" />
+     <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_margin="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/btnUploadData"
+            android:textColor="@color/borderColor"
+            android:text="Upload Data" />
     </LinearLayout>
   <ProgressBar
          android:id="@+id/loader"

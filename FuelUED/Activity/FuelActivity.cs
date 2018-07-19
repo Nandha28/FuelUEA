@@ -1,14 +1,10 @@
 ﻿using Android.App;
 using Android.Graphics;
 using Android.OS;
-using Android.Preferences;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelApp.Modal;
-using FuelUED.CommonFunctions;
 using FuelUED.Modal;
-using FuelUED.Service;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +26,7 @@ namespace FuelUED
         public string[] StockList;
 
         private List<VehicleDetails> VehicleList;
-
-        public List<Fuel> FuelLiters;
+        private BillDetails billDetailsList;
         Android.App.AlertDialog.Builder alertDialog;
 
         private string[] myVehiclelist;
@@ -77,7 +72,8 @@ namespace FuelUED
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
-                FuelLiters = FuelDB.Singleton.GetFuel().ToList();
+                billDetailsList = FuelDB.Singleton.GetBillDetails().ToList().FirstOrDefault();
+                // FuelLiters = FuelDB.Singleton.GetFuel().ToList();
             }
             catch (Exception w)
             {
@@ -99,6 +95,7 @@ namespace FuelUED
             }
 
             billNumber = FindViewById<TextView>(Resource.Id.txtBillNumber);
+            billNumber.Text = billDetailsList?.BillPrefix + billDetailsList?.BillCurrentNumber;
 
             dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString();
 
@@ -170,26 +167,29 @@ namespace FuelUED
                 }
             };
 
-            if (FuelLiters != null)
+            if (billDetailsList != null)
             {
-                fuelAvailable.Text = $"({FuelLiters.FirstOrDefault().FuelLtts})";
+                fuelAvailable.Text = $"({billDetailsList.AvailableLiters})" + "ltrs";
             }
 
             //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
             //var billnumber = pref.GetInt(Utilities.BILLNUMBER, 0);
 
-            var billnumber = AppPreferences.GetInt(this, Utilities.BILLNUMBER);
+            //var billnumber = AppPreferences.GetInt(this, Utilities.BILLNUMBER);
+            // var billnumber = FuelDB.Singleton.GetBillDetails().First()?.BillCurrentNumber;
 
-            if (billnumber == 0)
-            {
-                billNumber.Text = Utilities.BILL_NUMBER.ToString();
-                //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber.Text));
-            }
-            else
-            {
-                ++billnumber;
-                billNumber.Text = billnumber.ToString();
-            }
+            //Console.WriteLine(billnumber);
+
+            //if (billnumber == 0)
+            //{
+            //    billNumber.Text = Utilities.BILL_NUMBER.ToString();
+            //    //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber.Text));
+            //}
+            //else
+            //{
+            //    ++billnumber;
+            //    billNumber.Text = billnumber.ToString();
+            //}
 
 
             var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
@@ -270,7 +270,7 @@ namespace FuelUED
             {
                 return;
             }
-            if (Convert.ToDecimal(fuelToFill.Text) <= Convert.ToDecimal(FuelLiters?.FirstOrDefault().FuelLtts))
+            if (Convert.ToDecimal(fuelToFill.Text) <= Convert.ToDecimal(billDetailsList.AvailableLiters))
             {
                 CalculateFuelTotalAmount();
             }
@@ -311,15 +311,14 @@ namespace FuelUED
                     Price = lblTotalPrice.Text,
                     RatePerLtr = txtRate.Text,
                     Remarks = txtRemarks.Text
-                };
+                };               
             }
             catch (Exception ec)
             {
                 Console.WriteLine(ec.Message);
             }
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-
+            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);            
             StartActivity(typeof(VehicleDetailActivity));
         }
 
