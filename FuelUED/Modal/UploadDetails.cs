@@ -2,29 +2,30 @@
 {
     public class UploadDetails
     {
-        public string DID { get; set; }
-        public string SID { get; set; }
-        public string CID { get; set; }
-        public string CStock { get; set; }
-        public string FuelNo { get; set; }
-        public string FuelDate { get; set; }
-        public string TransType { get; set; }
-        public string FuelSource { get; set; }
-        public string VehicleID { get; set; }
-        public string RegNo { get; set; }
-        public string VType { get; set; }
-        public string DriverID { get; set; }
-        public string DriverName { get; set; }
-        public string OpeningKM { get; set; }
-        public string ClosingKM { get; set; }
-        public string FuelLts { get; set; }
-        public string KMPL { get; set; }
-        public string FilledBy { get; set; }
-        public string TotalKM { get; set; }
-        public string Mode { get; set; }
-        public string Rate { get; set; }
-        public string TAmount { get; set; }
-        public string Remarks { get; set; }
-        public string MeterFault { get; set; }
+        const string DEFAULTVALUE = "0";
+        public string DID { get; set; } = DEFAULTVALUE;
+        public string SID { get; set; } = DEFAULTVALUE;
+        public string CID { get; set; } = DEFAULTVALUE;
+        public string CStock { get; set; } = DEFAULTVALUE;
+        public string FuelNo { get; set; } = DEFAULTVALUE;
+        public string FuelDate { get; set; } = DEFAULTVALUE;
+        public string TransType { get; set; } = DEFAULTVALUE;
+        public string FuelSource { get; set; } = DEFAULTVALUE;
+        public string VehicleID { get; set; } = DEFAULTVALUE;
+        public string RegNo { get; set; } = DEFAULTVALUE;
+        public string VType { get; set; } = DEFAULTVALUE;
+        public string DriverID { get; set; } = DEFAULTVALUE;
+        public string DriverName { get; set; } = DEFAULTVALUE;
+        public string OpeningKM { get; set; } = DEFAULTVALUE;
+        public string ClosingKM { get; set; } = DEFAULTVALUE;
+        public string FuelLts { get; set; } = DEFAULTVALUE;
+        public string KMPL { get; set; } = DEFAULTVALUE;
+        public string FilledBy { get; set; } = DEFAULTVALUE;
+        public string TotalKM { get; set; } = DEFAULTVALUE;
+        public string Mode { get; set; } = DEFAULTVALUE;
+        public string Rate { get; set; } = DEFAULTVALUE;
+        public string TAmount { get; set; } = DEFAULTVALUE;
+        public string Remarks { get; set; } = DEFAULTVALUE;
+        public string MeterFault { get; set; } = DEFAULTVALUE;
     }
 }

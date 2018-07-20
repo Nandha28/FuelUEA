@@ -4,6 +4,7 @@ namespace FuelUED.Modal
 {
     public class FuelEntryDetails
     {
+        public string VID { get; set; }
         public string BillNumber { get; set; }
         public string CurrentDate { get; set; }
         public string FuelType { get; set; }
@@ -21,5 +22,7 @@ namespace FuelUED.Modal
         public string RatePerLtr { get; set; }
         public string Price { get; set; }
         public string Remarks { get; set; }
+        public string MeterFault { get; set; }
+        public string TotalKM { get; set; }
     }
 }

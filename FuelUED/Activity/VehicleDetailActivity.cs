@@ -47,9 +47,9 @@ namespace FuelUED
                 nGXPrinter = NGXPrinter.NgxPrinterInstance;
                 nGXPrinter.InitService(this, this);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                System.Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
             }
             textField = FindViewById<TextView>(Resource.Id.txtField);
             var details = FuelDB.Singleton.GetFuelValues();

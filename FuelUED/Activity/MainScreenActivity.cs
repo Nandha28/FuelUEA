@@ -7,6 +7,7 @@ using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using FuelUED.Service;
 using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,8 @@ namespace FuelUED
 
         private string siteId;
         private string deviceId;
-        public List<VehicleDetails> VehicleList;
         private Button btnUploadData;
+        private TableQuery<FuelEntryDetails> fuelDetails;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -47,6 +48,8 @@ namespace FuelUED
             ipadress = AppPreferences.GetString(this, Utilities.IPAddress);
             siteId = AppPreferences.GetString(this, Utilities.SITEID);
             deviceId = AppPreferences.GetString(this, Utilities.DEVICEID);
+
+            WebService.IPADDRESS = ipadress;
 
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
@@ -88,64 +91,74 @@ namespace FuelUED
 
         private void UploadDataToServer()
         {
-            var fuelDetails = FuelDB.Singleton.GetFuelValues();
+            try
+            {
+                fuelDetails = FuelDB.Singleton.GetFuelValues();
+            }
+            catch { }
+            if (fuelDetails == null)
+            {
+                return;
+            }
             var billDetails = FuelDB.Singleton.GetBillDetails()?.First();
             var list = new List<UploadDetails>();
             foreach (var item in fuelDetails)
             {
                 list.Add(new UploadDetails
                 {
-                    CID = billDetails.BillCurrentNumber,
-                    DID = AppPreferences.GetString(this, Utilities.DEVICEID),
-                    SID = AppPreferences.GetString(this, Utilities.SITEID),
-                    CStock = billDetails.AvailableLiters,
-                    ClosingKM = item.ClosingKMS,
-                    DriverID = item.DriverID_PK,
-                    DriverName = item.DriverName,
-                    FilledBy = item.FilledBy,
-                    FuelDate = item.CurrentDate,
-                    FuelLts = item.FuelInLtrs,
-                    FuelNo = billDetails.BillPrefix + billDetails.BillCurrentNumber,
-                    FuelSource = item.FuelStockType,
-                    KMPL = item.Kmpl,
-                    OpeningKM = item.OpeningKMS,
-                    RegNo = item.VehicleNumber,
-                    VType = item.VehicleType,
-                    Rate = item.RatePerLtr,
-                    TAmount = item.Price,
-                    Remarks = item.Remarks,
-                    TransType = item.FuelType,
-                    Mode = item.PaymentType
-
+                    CID = billDetails.BillCurrentNumber == string.Empty ? "0" : billDetails.BillCurrentNumber,
+                    DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
+                    SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
+                    CStock = billDetails.AvailableLiters == string.Empty ? "0" : billDetails.AvailableLiters,
+                    ClosingKM = item.ClosingKMS == string.Empty ? "0" : item.ClosingKMS,
+                    DriverID = item.DriverID_PK == string.Empty ? "0" : item.DriverID_PK,
+                    DriverName = item.DriverName == string.Empty ? "0" : item.DriverName,
+                    FilledBy = item.FilledBy == string.Empty ? "0" : item.FilledBy,
+                    FuelDate = item.CurrentDate == string.Empty ? "0" : item.CurrentDate,
+                    FuelLts = item.FuelInLtrs == string.Empty ? "0" : item.FuelInLtrs,
+                    FuelNo = item.BillNumber == string.Empty ? "0" : item.BillNumber,
+                    FuelSource = item.FuelStockType == string.Empty ? "0" : item.FuelStockType,
+                    KMPL = item.Kmpl == string.Empty ? "0" : item.Kmpl,
+                    OpeningKM = item.OpeningKMS == string.Empty ? "0" : item.OpeningKMS,
+                    RegNo = item.VehicleNumber == string.Empty ? "0" : item.VehicleNumber,
+                    VType = item.VehicleType == string.Empty ? "0" : item.VehicleType,
+                    Rate = item.RatePerLtr == string.Empty ? "0" : item.RatePerLtr,
+                    TAmount = item.Price == string.Empty ? "0" : item.Price,
+                    Remarks = item.Remarks == string.Empty ? "0" : item.Remarks,
+                    TransType = item.FuelType == string.Empty ? "0" : item.FuelType,
+                    Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
+                    VehicleID = item.VID == string.Empty ? "0" : item.VID,
+                    MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
+                    TotalKM = item.TotalKM == string.Empty ? "0" : item.Kmpl
                 });
             }
-
+            Console.WriteLine(list);
+            var deserializedData = JsonConvert.SerializeObject(list);
+            Console.WriteLine(deserializedData);
+            var resposeAfterPost = WebService.PostAllDataToWebService("UPFStock", deserializedData);
+            try
+            {
+                var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
+                CreateDatabaseOrModifyDatabase(vehicleList);
+            }
+            catch { }
+            Console.WriteLine(resposeAfterPost);
         }
 
         private void SyncButton_Click()
         {
             if (ipadress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
             {
-                Toast.MakeText(this, "Please Configure IPAdress..", ToastLength.Short).Show();
+                Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
                 //StartActivity(typeof(ConfigActivity));
                 return;
             }
-            WebService.IPADDRESS = ipadress;
             RunOnUiThread(() =>
             {
                 //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
                 mainHolder.Alpha = 0.5f;
                 loader.Visibility = Android.Views.ViewStates.Visible;
                 Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
-
-                //    syncButton.Clickable = false;
-
-                //    pd.Show();
-                //pd = new ProgressDialog(this);
-                //pd.SetMessage("loading");
-                //pd.SetCanceledOnTouchOutside(false);
-                //pd.SetCancelable(false);
-                //pd.Show();
             });
 
             var thread = new Thread(new ThreadStart(delegate
@@ -157,28 +170,8 @@ namespace FuelUED
                     var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
                     //var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
                     //Console.WriteLine(fuelStoc);
+                    CreateDatabaseOrModifyDatabase(VehicleList);
 
-                    FuelDB.Singleton.CreateTable<VehicleDetails>();
-                    FuelDB.Singleton.CreateTable<BillDetails>();
-
-                    //FuelDB.Singleton.CreateDatabase<Fuel>();
-
-                    var details = VehicleList?.First();
-                    VehicleList.RemoveAt(0);
-                    var billDetails = new BillDetails
-                    {
-                        AvailableLiters = details.VID,
-                        BillCurrentNumber = details.DriverID_PK,
-                        BillPrefix = details.RegNo,
-                        DeviceStatus = details.DriverName
-                    };
-                    IsDeviceAvailable = (details.DriverName == "1") ? true : false;
-                    //  var suffix = Convert.ToInt32(billDetails.BillCurrentNumber) - 1;
-                    // var billNum = string.Concat(billDetails.BillPrefix, suffix);
-                    AppPreferences.SaveString(this, Utilities.DEVICESTATUS, billDetails.DeviceStatus);
-                    FuelDB.Singleton.InsertValues(VehicleList);
-                    FuelDB.Singleton.InsertBillDetails(billDetails);
-                    //FuelDB.Singleton.InsertFuelValues(fuelStoc);
                 }
                 catch (Exception ec)
                 {
@@ -201,6 +194,29 @@ namespace FuelUED
             thread.Start();
             // loader.Visibility = Android.Views.ViewStates.Visible;
             // loader.Visibility = Android.Views.ViewStates.Gone;
+        }
+
+        private void CreateDatabaseOrModifyDatabase(List<VehicleDetails> vehicleList)
+        {
+            DeleteDatabase(FuelDB.Singleton.DBPath);
+            FuelDB.Singleton.CreateTable<VehicleDetails>();
+            FuelDB.Singleton.CreateTable<BillDetails>();
+
+            //FuelDB.Singleton.CreateDatabase<Fuel>();
+
+            var details = vehicleList?.First();
+            vehicleList.RemoveAt(0);
+            var billDetails = new BillDetails
+            {
+                AvailableLiters = details.VID,
+                BillCurrentNumber = details.DriverID_PK,
+                BillPrefix = details.RegNo,
+                DeviceStatus = details.DriverName
+            };
+
+            AppPreferences.SaveString(this, Utilities.DEVICESTATUS, billDetails.DeviceStatus);
+            FuelDB.Singleton.InsertValues(vehicleList);
+            FuelDB.Singleton.InsertBillDetails(billDetails);
         }
     }
 }

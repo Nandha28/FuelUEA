@@ -7,6 +7,7 @@ using FuelApp.Modal;
 using FuelUED.Modal;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace FuelUED
@@ -52,6 +53,7 @@ namespace FuelUED
         private Spinner vehicleTypeSpinner;
         private FuelEntryDetails fuelDetails;
         private float availableFuel;
+        private CheckBox checkBox;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -97,7 +99,7 @@ namespace FuelUED
             billNumber = FindViewById<TextView>(Resource.Id.txtBillNumber);
             billNumber.Text = billDetailsList?.BillPrefix + billDetailsList?.BillCurrentNumber;
 
-            dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString();
+            dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
             fuelSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
             fuelSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards" });
@@ -115,7 +117,7 @@ namespace FuelUED
 
             var layMeterFault = FindViewById<LinearLayout>(Resource.Id.layMeterFault);
 
-            var checkBox = FindViewById<CheckBox>(Resource.Id.chckMeterFault);
+            checkBox = FindViewById<CheckBox>(Resource.Id.chckMeterFault);
             checkBox.CheckedChange += (s, e) =>
             {
                 if (fuelSpinner.SelectedItem.ToString() == "Outward")
@@ -147,6 +149,10 @@ namespace FuelUED
                 }
             };
 
+            if (billDetailsList != null)
+            {
+                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}";
+            }
             txtClosingKMS.TextChanged += (s, e) =>
             {
                 if (string.IsNullOrEmpty(txtOpeningKMS.Text))
@@ -168,11 +174,6 @@ namespace FuelUED
                     }
                 }
             };
-
-            if (billDetailsList != null)
-            {
-                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + "ltrs";
-            }
 
             //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
             //var billnumber = pref.GetInt(Utilities.BILLNUMBER, 0);
@@ -271,7 +272,7 @@ namespace FuelUED
         private void ClearAllFields()
         {
             fuelToFill.Text = string.Empty;
-            fuelAvailable.Text = string.Empty;
+            // fuelAvailable.Text = string.Empty;
             txtOpeningKMS.Text = string.Empty;
             // txtClosingKMS.Text = string.Empty;
             txtFilledBy.Text = string.Empty;
@@ -284,7 +285,8 @@ namespace FuelUED
         {
             var start = Convert.ToDecimal(txtOpeningKMS?.Text);
             var end = Convert.ToDecimal(txtClosingKMS?.Text);
-            lblkmpl.Text = ((end - start) / Convert.ToDecimal(fuelToFill?.Text)).ToString();
+            var result = ((end - start) / Convert.ToDecimal(fuelToFill?.Text));
+            lblkmpl.Text = Math.Round(result, 2).ToString();
         }
 
         private void CheckFuelAvailbility()
@@ -337,7 +339,7 @@ namespace FuelUED
                 fuelDetails = new FuelEntryDetails
                 {
                     BillNumber = billNumber.Text,
-                    CurrentDate = dateTimeNow,
+                    CurrentDate = dateTimeNow.ToString(),
                     FuelType = fuelSpinner.SelectedItem.ToString(),
                     FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
                     VehicleNumber = vehicleNumber.Text,
@@ -351,9 +353,15 @@ namespace FuelUED
                     PaymentType = cashModeSpinner.SelectedItem?.ToString(),
                     Price = lblTotalPrice.Text,
                     RatePerLtr = txtRate.Text,
-                    Remarks = txtRemarks.Text
+                    Remarks = txtRemarks.Text,
+                    VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
+                    DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
+                    MeterFault = checkBox.Checked == true ? "1" : "0",
+                    TotalKM = txtClosingKMS.Text != string.Empty && txtOpeningKMS.Text != string.Empty ?
+                    (Convert.ToDouble(txtClosingKMS.Text) - Convert.ToDouble(txtOpeningKMS.Text)).ToString() : "0"
                 };
             }
+
             catch (Exception ec)
             {
                 Console.WriteLine(ec.Message);
@@ -361,7 +369,7 @@ namespace FuelUED
             //var fuelBalance = new BillDetails
             //{
             //    AvailableLiters = availableFuel.ToString()
-            //};
+            //};         
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
             FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
             FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
