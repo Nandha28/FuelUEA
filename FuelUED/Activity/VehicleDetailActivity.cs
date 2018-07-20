@@ -110,13 +110,14 @@ namespace FuelUED
 
         private void Print()
         {
-            var bill = FuelDB.Singleton.GetBillDetails().FirstOrDefault();
+            var bill = FuelDB.Singleton.GetBillDetails();
+            var billall = bill.First();
             var billDetails = new BillDetails
             {
-                AvailableLiters = bill.AvailableLiters,
-                BillCurrentNumber = (Convert.ToInt32(bill.BillCurrentNumber) + 1).ToString(),
-                BillPrefix = bill.BillPrefix,
-                DeviceStatus = bill.DeviceStatus
+                AvailableLiters = billall.AvailableLiters,
+                BillCurrentNumber = (Convert.ToInt32(billall.BillCurrentNumber) + 1).ToString(),
+                BillPrefix = billall.BillPrefix,
+                DeviceStatus = billall.DeviceStatus
             };
             FuelDB.Singleton.DeleteTable<BillDetails>();
             FuelDB.Singleton.CreateTable<BillDetails>();

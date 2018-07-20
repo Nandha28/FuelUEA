@@ -49,7 +49,13 @@ namespace FuelUED
         {
             localDB.Insert(fuelEntryDetails);
         }
-
+        public void UpdateFuel(string value)
+        {
+            var sa = localDB.Table<BillDetails>().First();
+            sa.AvailableLiters = value;
+            localDB.Update(sa);
+        }
+        
         public TableQuery<FuelEntryDetails> GetFuelValues()
         {
             if (DBExists())

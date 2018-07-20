@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:orientation="vertical"  
-              android:descendantFocusability="beforeDescendants"
-              android:background="@android:color/white"
-              android:focusable="true" 
-              android:focusableInTouchMode="true"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:background="@android:color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -33,8 +33,8 @@
                 android:textSize="14dp"
                 android:paddingLeft="10dp"
                 android:text="Number" />-->
-          <TextView
-              android:layout_width="match_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Number"
                 android:layout_margin="10dp"
@@ -181,6 +181,17 @@
                 android:layout_width="match_parent"
                 android:background="#CCCCCC" />-->
         <!--Check Box-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:id="@+id/txtFilledBy"
+                android:inputType="text"
+                android:textSize="15dp"
+                android:hint="Filled By"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder" />
             <CheckBox
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -214,6 +225,7 @@
                         android:layout_weight="1"
                         android:id="@+id/txtOpeningKMS"
                         android:textSize="15dp"
+                        android:text="0"
                         android:hint="Opening KMS"
                         android:paddingLeft="5dp"
                         android:background="@drawable/bottomborder"
@@ -268,17 +280,6 @@
                     android:textSize="14dp"
                     android:paddingLeft="10dp"
                     android:text="Filled By" />-->
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:maxLines="1"
-                    android:paddingLeft="15dp"
-                    android:id="@+id/txtFilledBy"
-                    android:inputType="text"
-                    android:textSize="15dp"
-                    android:hint="Filled By"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bottomborder" />
             <!--Payment Mode-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -349,7 +350,7 @@
                 <TextView
                     android:layout_height="30dp"
                     android:text="STORE"
-                    android:gravity="center" 
+                    android:gravity="center"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
                     android:textAlignment="center"

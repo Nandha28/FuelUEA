@@ -51,7 +51,7 @@ namespace FuelUED
         private Spinner fuelFormSpinner;
         private Spinner vehicleTypeSpinner;
         private FuelEntryDetails fuelDetails;
-
+        private float availableFuel;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -118,7 +118,10 @@ namespace FuelUED
             var checkBox = FindViewById<CheckBox>(Resource.Id.chckMeterFault);
             checkBox.CheckedChange += (s, e) =>
             {
-                layMeterFault.Visibility = checkBox.Checked ? Android.Views.ViewStates.Gone : Android.Views.ViewStates.Visible;
+                if (fuelSpinner.SelectedItem.ToString() == "Outward")
+                {
+                    layMeterFault.Visibility = checkBox.Checked ? Android.Views.ViewStates.Gone : Android.Views.ViewStates.Visible;
+                }
             };
 
             driverNameSpinner = FindViewById<Spinner>(Resource.Id.driverName);
@@ -137,9 +140,10 @@ namespace FuelUED
             txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
             txtOpeningKMS.TextChanged += (s, e) =>
             {
-                if (!string.IsNullOrEmpty(txtOpeningKMS.Text))
+                if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text)
+                && string.IsNullOrEmpty(fuelToFill.Text))
                 {
-
+                    GetKMPL();
                 }
             };
 
@@ -160,16 +164,14 @@ namespace FuelUED
                     if (Convert.ToDecimal(txtClosingKMS.Text) > Convert.ToDecimal(txtOpeningKMS.Text) &&
                     Convert.ToDecimal(fuelToFill.Text) > 0)
                     {
-                        var start = Convert.ToDecimal(txtOpeningKMS?.Text);
-                        var end = Convert.ToDecimal(txtClosingKMS?.Text);
-                        lblkmpl.Text = ((end - start) / Convert.ToDecimal(fuelToFill?.Text)).ToString();
+                        GetKMPL();
                     }
                 }
             };
 
             if (billDetailsList != null)
             {
-                fuelAvailable.Text = $"({billDetailsList.AvailableLiters})" + "ltrs";
+                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + "ltrs";
             }
 
             //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
@@ -232,13 +234,16 @@ namespace FuelUED
                 if (fuelSpinner.SelectedItem.Equals("Inwards"))
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Bunk" });
+                    layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     //StockList = new string[] { "Bunk" }; 
                 }
                 else
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
+                    layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     // StockList = new string[] { "Stock", "Bunk" };
                 }
+                ClearAllFields();
                 //fuelFormSpinnerAdapter.NotifyDataSetChanged();
             };
 
@@ -263,30 +268,66 @@ namespace FuelUED
                 };
         }
 
+        private void ClearAllFields()
+        {
+            fuelToFill.Text = string.Empty;
+            fuelAvailable.Text = string.Empty;
+            txtOpeningKMS.Text = string.Empty;
+            // txtClosingKMS.Text = string.Empty;
+            txtFilledBy.Text = string.Empty;
+            txtRate.Text = string.Empty;
+            lblTotalPrice.Text = string.Empty;
+            txtRemarks.Text = string.Empty;
+        }
+
+        private void GetKMPL()
+        {
+            var start = Convert.ToDecimal(txtOpeningKMS?.Text);
+            var end = Convert.ToDecimal(txtClosingKMS?.Text);
+            lblkmpl.Text = ((end - start) / Convert.ToDecimal(fuelToFill?.Text)).ToString();
+        }
 
         private void CheckFuelAvailbility()
         {
             if (string.IsNullOrEmpty(fuelToFill.Text))
             {
+                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + "ltrs";
                 return;
             }
-            if (Convert.ToDecimal(fuelToFill.Text) <= Convert.ToDecimal(billDetailsList.AvailableLiters))
+            if (fuelSpinner.SelectedItem.Equals("Outward"))
             {
-                CalculateFuelTotalAmount();
+                if (!fuelToFill.Text.Equals("."))
+                {
+                    if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters))
+                    {
+                        availableFuel = float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text);
+                    }
+                    else
+                    {
+                        var alertDialog = new Android.App.AlertDialog.Builder(this);
+                        alertDialog.SetTitle("Fuel exceeds stock");
+                        alertDialog.SetMessage("Please note fuel availability");
+                        alertDialog.SetCancelable(false);
+                        alertDialog.SetPositiveButton("OK", (s, e) =>
+                        {
+                            fuelToFill.Text = string.Empty;
+                        });
+                        //alertDialog.SetNegativeButton("Cancel", (s, e) => { });
+                        alertDialog.Show();
+                    }
+                }
             }
             else
             {
                 //Toast.MakeText(this, "No stock available..", ToastLength.Short).Show();
-                var alertDialog = new Android.App.AlertDialog.Builder(this);
-                alertDialog.SetTitle("Fuel exceeds stock");
-                alertDialog.SetMessage("Please note fuel availability");
-                alertDialog.SetPositiveButton("OK", (s, e) =>
-                {
-                    fuelToFill.Text = string.Empty;
-                });
-                //alertDialog.SetNegativeButton("Cancel", (s, e) => { });
-                alertDialog.Show();
+                availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
             }
+            if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text)
+                && string.IsNullOrEmpty(fuelToFill.Text))
+            {
+                GetKMPL();
+            }
+            fuelAvailable.Text = $"{availableFuel.ToString()}" + "ltrs";
         }
 
         private void StoreDetils()
@@ -311,14 +352,19 @@ namespace FuelUED
                     Price = lblTotalPrice.Text,
                     RatePerLtr = txtRate.Text,
                     Remarks = txtRemarks.Text
-                };               
+                };
             }
             catch (Exception ec)
             {
                 Console.WriteLine(ec.Message);
             }
+            //var fuelBalance = new BillDetails
+            //{
+            //    AvailableLiters = availableFuel.ToString()
+            //};
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);            
+            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
+            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
             StartActivity(typeof(VehicleDetailActivity));
         }
 
@@ -345,6 +391,9 @@ namespace FuelUED
             {
                 DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
+
+                txtOpeningKMS.Text = VehicleList.Where((a => a.DriverName == driverNameSpinner.SelectedItem.ToString()))
+                    .Distinct().Select(i => i.OpeningKM).Distinct().First();
 
                 //VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
                 vehicleTypeSpinner.Adapter = new ArrayAdapter(this,

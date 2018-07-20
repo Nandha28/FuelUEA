@@ -67,6 +67,7 @@
     <Compile Include="Modal\BillDetails.cs" />
     <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
+    <Compile Include="Modal\UploadDetails.cs" />
     <Compile Include="Modal\VehicleDetails.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

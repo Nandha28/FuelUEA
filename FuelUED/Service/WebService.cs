@@ -46,14 +46,14 @@ namespace FuelUED.Service
                 " </soap:Body>\r\n" +
                 "</soap:Envelope>", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
-            var resp = new string("<GetVDResult>"+
+            var resp = new string("<GetVDResult>" +
                 "[{\"VID\":\"5000.00\",\"RegNo\":\"FE\",\"DriverID_PK\":\"1\",\"DriverName\":\"1\",\"TypeName\":\"1A\",\"OpeningKM\":\"0\"}," +
                 "{\"VID\":\"1635\",\"RegNo\":\"TN21AX4273\",\"DriverID_PK\":\"159\",\"DriverName\":\"TULLU\",\"TypeName\":\"Line Vehicle\"}," +
                 "{\"VID\":\"1636\",\"RegNo\":\"TN19K1207\",\"DriverID_PK\":\"160\",\"DriverName\":\"AMYAJENA\",\"TypeName\":\"Line Vehicle\"}," +
                 "{\"VID\":\"1637\",\"RegNo\":\"TN19H3430\",\"DriverID_PK\":\"161\",\"DriverName\":\"PRADEEPGOUD\",\"TypeName\":\"Line Vehicle\"}]" +
                 "</GetVDResult>");
 
-            return Between(resp, "<GetVDResult>", "</GetVDResult>");
+            return Between(response.Content, "<GetVDResult>", "</GetVDResult>");
         }
         public static string Between(string Text, string FirstString, string LastString)
         {

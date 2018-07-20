@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace FuelUED
@@ -81,8 +82,44 @@ namespace FuelUED
             btnUploadData = FindViewById<Button>(Resource.Id.btnUploadData);
             btnUploadData.Click += (s, e) =>
             {
-                // SyncButton_Click();
+                UploadDataToServer();
             };
+        }
+
+        private void UploadDataToServer()
+        {
+            var fuelDetails = FuelDB.Singleton.GetFuelValues();
+            var billDetails = FuelDB.Singleton.GetBillDetails()?.First();
+            var list = new List<UploadDetails>();
+            foreach (var item in fuelDetails)
+            {
+                list.Add(new UploadDetails
+                {
+                    CID = billDetails.BillCurrentNumber,
+                    DID = AppPreferences.GetString(this, Utilities.DEVICEID),
+                    SID = AppPreferences.GetString(this, Utilities.SITEID),
+                    CStock = billDetails.AvailableLiters,
+                    ClosingKM = item.ClosingKMS,
+                    DriverID = item.DriverID_PK,
+                    DriverName = item.DriverName,
+                    FilledBy = item.FilledBy,
+                    FuelDate = item.CurrentDate,
+                    FuelLts = item.FuelInLtrs,
+                    FuelNo = billDetails.BillPrefix + billDetails.BillCurrentNumber,
+                    FuelSource = item.FuelStockType,
+                    KMPL = item.Kmpl,
+                    OpeningKM = item.OpeningKMS,
+                    RegNo = item.VehicleNumber,
+                    VType = item.VehicleType,
+                    Rate = item.RatePerLtr,
+                    TAmount = item.Price,
+                    Remarks = item.Remarks,
+                    TransType = item.FuelType,
+                    Mode = item.PaymentType
+
+                });
+            }
+
         }
 
         private void SyncButton_Click()

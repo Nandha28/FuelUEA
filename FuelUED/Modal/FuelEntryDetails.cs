@@ -15,6 +15,7 @@ namespace FuelUED.Modal
         public string OpeningKMS { get; set; }
         public string ClosingKMS { get; set; }
         public string Kmpl { get; set; }
+        public string DriverID_PK { get; set; }
         public string FilledBy { get; set; }
         public string PaymentType { get; set; }
         public string RatePerLtr { get; set; }
