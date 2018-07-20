@@ -82,7 +82,7 @@ namespace FuelUED.Service
             //    "{\"VID\":\"1637\",\"RegNo\":\"TN19H3430\",\"DriverID_PK\":\"161\",\"DriverName\":\"PRADEEPGOUD\",\"TypeName\":\"Line Vehicle\"}]" +
             //    "</GetVDResult>");
 
-            return Between(response.Content, "<UPFStockResponse>", "</UPFStockResponse>");
+            return Between(response.Content, "<UPFStockResult>", "</UPFStockResult>");
         }
 
         public static string Between(string Text, string FirstString, string LastString)

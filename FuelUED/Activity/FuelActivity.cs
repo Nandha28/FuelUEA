@@ -336,30 +336,58 @@ namespace FuelUED
         {
             try
             {
-                fuelDetails = new FuelEntryDetails
+                if (txtClosingKMS.Text != string.Empty && txtOpeningKMS.Text != string.Empty)
                 {
-                    BillNumber = billNumber.Text,
-                    CurrentDate = dateTimeNow.ToString(),
-                    FuelType = fuelSpinner.SelectedItem.ToString(),
-                    FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
-                    VehicleNumber = vehicleNumber.Text,
-                    VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
-                    DriverName = driverNameSpinner.SelectedItem.ToString(),
-                    FuelInLtrs = fuelToFill.Text,
-                    FilledBy = txtFilledBy.Text,
-                    ClosingKMS = txtClosingKMS.Text,
-                    Kmpl = lblkmpl.Text,
-                    OpeningKMS = txtOpeningKMS.Text,
-                    PaymentType = cashModeSpinner.SelectedItem?.ToString(),
-                    Price = lblTotalPrice.Text,
-                    RatePerLtr = txtRate.Text,
-                    Remarks = txtRemarks.Text,
-                    VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
-                    DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
-                    MeterFault = checkBox.Checked == true ? "1" : "0",
-                    TotalKM = txtClosingKMS.Text != string.Empty && txtOpeningKMS.Text != string.Empty ?
-                    (Convert.ToDouble(txtClosingKMS.Text) - Convert.ToDouble(txtOpeningKMS.Text)).ToString() : "0"
-                };
+                    fuelDetails = new FuelEntryDetails
+                    {
+                        BillNumber = billNumber.Text,
+                        CurrentDate = dateTimeNow.ToString(),
+                        FuelType = fuelSpinner.SelectedItem.ToString(),
+                        FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
+                        VehicleNumber = vehicleNumber.Text,
+                        VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
+                        DriverName = driverNameSpinner.SelectedItem.ToString(),
+                        FuelInLtrs = fuelToFill.Text,
+                        FilledBy = txtFilledBy.Text,
+                        ClosingKMS = txtClosingKMS.Text,
+                        Kmpl = lblkmpl.Text,
+                        OpeningKMS = txtOpeningKMS.Text,
+                        PaymentType = cashModeSpinner.SelectedItem?.ToString(),
+                        Price = lblTotalPrice.Text,
+                        RatePerLtr = txtRate.Text,
+                        Remarks = txtRemarks.Text,
+                        VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
+                        DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
+                        MeterFault = checkBox.Checked == true ? "1" : "0",
+                        TotalKM = (Convert.ToDouble(txtClosingKMS.Text) - Convert.ToDouble(txtOpeningKMS.Text)).ToString()
+                    };
+                }
+                else
+                {
+                    fuelDetails = new FuelEntryDetails
+                    {
+                        BillNumber = billNumber.Text,
+                        CurrentDate = dateTimeNow.ToString(),
+                        FuelType = fuelSpinner.SelectedItem.ToString(),
+                        FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
+                        VehicleNumber = vehicleNumber.Text,
+                        VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
+                        DriverName = driverNameSpinner.SelectedItem.ToString(),
+                        FuelInLtrs = fuelToFill.Text,
+                        FilledBy = txtFilledBy.Text,
+                        ClosingKMS = txtClosingKMS.Text,
+                        Kmpl = lblkmpl.Text,
+                        OpeningKMS = txtOpeningKMS.Text,
+                        PaymentType = cashModeSpinner.SelectedItem?.ToString(),
+                        Price = lblTotalPrice.Text,
+                        RatePerLtr = txtRate.Text,
+                        Remarks = txtRemarks.Text,
+                        VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
+                        DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
+                        MeterFault = checkBox.Checked == true ? "1" : "0",
+                        TotalKM = "0"
+                    };
+                }
             }
 
             catch (Exception ec)

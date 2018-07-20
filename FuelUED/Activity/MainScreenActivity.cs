@@ -91,6 +91,13 @@ namespace FuelUED
 
         private void UploadDataToServer()
         {
+            RunOnUiThread(() =>
+            {
+                //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
+                mainHolder.Alpha = 0.5f;
+                loader.Visibility = Android.Views.ViewStates.Visible;
+                Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
+            });
             try
             {
                 fuelDetails = FuelDB.Singleton.GetFuelValues();
@@ -104,6 +111,15 @@ namespace FuelUED
             var list = new List<UploadDetails>();
             foreach (var item in fuelDetails)
             {
+                //string totlkm;
+                //if (item.ClosingKMS.Equals(string.Empty) || item.OpeningKMS.Equals(string.Empty))
+                //{
+                //    totlkm = "0";
+                //}
+                //else
+                //{
+                //    totlkm = item.TotalKM;
+                //}
                 list.Add(new UploadDetails
                 {
                     CID = billDetails.BillCurrentNumber == string.Empty ? "0" : billDetails.BillCurrentNumber,
@@ -118,7 +134,7 @@ namespace FuelUED
                     FuelLts = item.FuelInLtrs == string.Empty ? "0" : item.FuelInLtrs,
                     FuelNo = item.BillNumber == string.Empty ? "0" : item.BillNumber,
                     FuelSource = item.FuelStockType == string.Empty ? "0" : item.FuelStockType,
-                    KMPL = item.Kmpl == string.Empty ? "0" : item.Kmpl,
+                    KMPL = item.Kmpl == "KMPL" ? "0" : item.Kmpl,
                     OpeningKM = item.OpeningKMS == string.Empty ? "0" : item.OpeningKMS,
                     RegNo = item.VehicleNumber == string.Empty ? "0" : item.VehicleNumber,
                     VType = item.VehicleType == string.Empty ? "0" : item.VehicleType,
@@ -129,7 +145,7 @@ namespace FuelUED
                     Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
                     VehicleID = item.VID == string.Empty ? "0" : item.VID,
                     MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
-                    TotalKM = item.TotalKM == string.Empty ? "0" : item.Kmpl
+                    TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM
                 });
             }
             Console.WriteLine(list);
@@ -141,8 +157,18 @@ namespace FuelUED
                 var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
                 CreateDatabaseOrModifyDatabase(vehicleList);
             }
-            catch { }
+            catch
+            {
+                Toast.MakeText(this, "Error in Upload", ToastLength.Short).Show();
+            }
+            RunOnUiThread(() =>
+            {
+                loader.Visibility = Android.Views.ViewStates.Gone;
+                mainHolder.Alpha = 1f;
+                Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+            });
             Console.WriteLine(resposeAfterPost);
+            Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
         }
 
         private void SyncButton_Click()
@@ -184,8 +210,6 @@ namespace FuelUED
                 RunOnUiThread(() =>
                 {
                     loader.Visibility = Android.Views.ViewStates.Gone;
-                    //pd.Hide();
-                    //syncButton.Clickable = true;
                     mainHolder.Alpha = 1f;
                     Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                 });
