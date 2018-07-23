@@ -65,10 +65,18 @@
     <Compile Include="Activity\MainActivity1.cs" />
     <Compile Include="Activity\MainScreenActivity.cs" />
     <Compile Include="Modal\BillDetails.cs" />
+    <Compile Include="Modal\Bunk.cs" />
     <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
+    <Compile Include="Modal\FuelType.cs" />
+    <Compile Include="Modal\Inward.cs" />
+    <Compile Include="Modal\MeterDetails.cs" />
+    <Compile Include="Modal\Outward.cs" />
+    <Compile Include="Modal\PrintDetails.cs" />
+    <Compile Include="Modal\StockType.cs" />
     <Compile Include="Modal\UploadDetails.cs" />
     <Compile Include="Modal\VehicleDetails.cs" />
+    <Compile Include="Modal\VehicleType.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\WebService.cs" />
@@ -130,9 +138,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\list_item.axml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\layout\LogIn.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -165,6 +170,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\config.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\PrintView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace FuelUED.Modal
+﻿namespace FuelUED.Modal
 {
     public class FuelEntryDetails
-    {
+    {        
         public string VID { get; set; }
         public string BillNumber { get; set; }
         public string CurrentDate { get; set; }
@@ -15,14 +13,14 @@ namespace FuelUED.Modal
         public string FuelInLtrs { get; set; }
         public string OpeningKMS { get; set; }
         public string ClosingKMS { get; set; }
+        public string TotalKM { get; set; }
         public string Kmpl { get; set; }
         public string DriverID_PK { get; set; }
         public string FilledBy { get; set; }
         public string PaymentType { get; set; }
         public string RatePerLtr { get; set; }
         public string Price { get; set; }
-        public string Remarks { get; set; }
+        public string Remarks { get; set; }       
         public string MeterFault { get; set; }
-        public string TotalKM { get; set; }
     }
 }

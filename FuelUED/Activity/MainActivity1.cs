@@ -13,6 +13,7 @@ namespace FuelUED
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.config);
+            //addred as nuwe
         }
     }	
 }

@@ -1,10 +1,12 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelApp.Modal;
 using FuelUED.Modal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -36,7 +38,7 @@ namespace FuelUED
         private Spinner driverNameSpinner;
         private EditText fuelToFill;
         private TextView fuelAvailable;
-        private EditText txtOpeningKMS;
+        private TextView txtOpeningKMS;
         private EditText txtClosingKMS;
         private TextView lblkmpl;
         private EditText txtFilledBy;
@@ -48,12 +50,13 @@ namespace FuelUED
         private AutoCompleteTextView vehicleNumber;
         private TextView billNumber;
         private string dateTimeNow;
-        private Spinner fuelSpinner;
+        private Spinner fuelTypeSpinner;
         private Spinner fuelFormSpinner;
         private Spinner vehicleTypeSpinner;
         private FuelEntryDetails fuelDetails;
         private float availableFuel;
         private CheckBox checkBox;
+        private PrintDetails printDetails;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -99,10 +102,10 @@ namespace FuelUED
             billNumber = FindViewById<TextView>(Resource.Id.txtBillNumber);
             billNumber.Text = billDetailsList?.BillPrefix + billDetailsList?.BillCurrentNumber;
 
-            dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
-            fuelSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
-            fuelSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards" });
+            fuelTypeSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
+            fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards" });
 
             fuelFormSpinner = FindViewById<Spinner>(Resource.Id.fuelFormSpinner);
             fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, StockList);
@@ -114,22 +117,31 @@ namespace FuelUED
 
 
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
+            vehicleTypeSpinner.Adapter = new ArrayAdapter(this,
+                 Resource.Layout.select_dialog_item_material,
+                 new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
+
+            vehicleTypeSpinner.ItemSelected += VehicleTypeSpinner_ItemSelected;
+
+            //VehicleTypeSpinner_ItemClick;
 
             var layMeterFault = FindViewById<LinearLayout>(Resource.Id.layMeterFault);
 
             checkBox = FindViewById<CheckBox>(Resource.Id.chckMeterFault);
             checkBox.CheckedChange += (s, e) =>
             {
-                if (fuelSpinner.SelectedItem.ToString() == "Outward")
+                if (fuelTypeSpinner.SelectedItem.ToString() == "Outward")
                 {
                     layMeterFault.Visibility = checkBox.Checked ? Android.Views.ViewStates.Gone : Android.Views.ViewStates.Visible;
                 }
+                txtClosingKMS.Text = string.Empty;
+                lblkmpl.Text = "KMPL";
             };
 
             driverNameSpinner = FindViewById<Spinner>(Resource.Id.driverName);
             fuelToFill = FindViewById<EditText>(Resource.Id.fuelToFill);
             fuelAvailable = FindViewById<TextView>(Resource.Id.fuelAvailable);
-            txtOpeningKMS = FindViewById<EditText>(Resource.Id.txtOpeningKMS);
+            txtOpeningKMS = FindViewById<TextView>(Resource.Id.txtOpeningKMS);
             txtClosingKMS = FindViewById<EditText>(Resource.Id.txtClosingKMS);
             lblkmpl = FindViewById<TextView>(Resource.Id.lblkmpl);
             txtFilledBy = FindViewById<EditText>(Resource.Id.txtFilledBy);
@@ -140,14 +152,15 @@ namespace FuelUED
 
             fuelToFill.TextChanged += (s, e) => CheckFuelAvailbility();
             txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
-            txtOpeningKMS.TextChanged += (s, e) =>
-            {
-                if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text)
-                && string.IsNullOrEmpty(fuelToFill.Text))
-                {
-                    GetKMPL();
-                }
-            };
+            //txtOpeningKMS.TextChanged += (s, e) =>
+            //{
+            //    if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text)
+            //    && string.IsNullOrEmpty(fuelToFill.Text))
+            //    {
+            //        GetKMPL();
+            //    }
+            //};
+            driverNameSpinner.ItemSelected += (s, ev) => { fuelToFill.RequestFocus(); };
 
             if (billDetailsList != null)
             {
@@ -155,17 +168,11 @@ namespace FuelUED
             }
             txtClosingKMS.TextChanged += (s, e) =>
             {
-                if (string.IsNullOrEmpty(txtOpeningKMS.Text))
+                if (txtOpeningKMS.Text.Equals("0"))
                 {
-                    var alertDialog1 = new Android.App.AlertDialog.Builder(this);
-                    alertDialog1.SetTitle("Enter start KM first");
-                    alertDialog1.SetPositiveButton("OK", (ss, se) =>
-                    {
-                        txtOpeningKMS.RequestFocus();
-                    });
-                    alertDialog1.Show();
+                    return;
                 }
-                else if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text) && !string.IsNullOrEmpty(fuelToFill.Text))
+                if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text) && !string.IsNullOrEmpty(fuelToFill.Text))
                 {
                     if (Convert.ToDecimal(txtClosingKMS.Text) > Convert.ToDecimal(txtOpeningKMS.Text) &&
                     Convert.ToDecimal(fuelToFill.Text) > 0)
@@ -228,23 +235,34 @@ namespace FuelUED
                 }
             };
 
-            fuelSpinner.ItemSelected += (s, e) =>
+            fuelTypeSpinner.ItemSelected += (s, e) =>
             {
                 fuelFormSpinner.Adapter = null;
                 //StockList = null;
-                if (fuelSpinner.SelectedItem.Equals("Inwards"))
+                if (fuelTypeSpinner.SelectedItem.Equals("Inwards"))
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
+                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.backgroundInward);
+                    lblTitle.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
+                    btnStore.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
+                    layMeterFault.Visibility = Android.Views.ViewStates.Gone;
+                    checkBox.Visibility = Android.Views.ViewStates.Gone;
                     //StockList = new string[] { "Bunk" }; 
                 }
                 else
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
+                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundColor(Color.White);
+                    lblTitle.SetBackgroundResource(Resource.Color.borderColor);
+                    btnStore.SetBackgroundResource(Resource.Color.borderColor);
+                    layMeterFault.Visibility = Android.Views.ViewStates.Visible;
+                    checkBox.Visibility = Android.Views.ViewStates.Visible;
                     // StockList = new string[] { "Stock", "Bunk" };
                 }
                 ClearAllFields();
+                //fuelFormSpinner.PerformClick();
                 //fuelFormSpinnerAdapter.NotifyDataSetChanged();
             };
 
@@ -256,25 +274,44 @@ namespace FuelUED
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Gone;
                         btnStore.SetBackgroundResource(Resource.Color.borderColor);
                         lblTitle.SetBackgroundResource(Resource.Color.borderColor);
+                        FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundColor(Color.White);
                         imgFuel.Visibility = Android.Views.ViewStates.Gone;
                     }
                     else
                     {
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Visible;
-                        btnStore.SetBackgroundColor(Color.Red);
-                        lblTitle.SetBackgroundColor(Color.Red);
+                        if (fuelTypeSpinner.SelectedItem.Equals("Outward"))
+                        {
+                            FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.backgroundBunk);
+                            btnStore.SetBackgroundColor(Color.Brown);
+                            lblTitle.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundRed);
+                        }
+                        //else
+                        //{
+                        //    btnStore.SetBackgroundColor(Color.Red);
+                        //    lblTitle.SetBackgroundColor(Color.Red);
+                        //    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundColor(Color.White);
+                        //}
                         imgFuel.Visibility = Android.Views.ViewStates.Visible;
                         //btnStore.SetCompoundDrawables(Resources.GetDrawable(Resource.Drawable.ic_launcher), null, null, null);
                     }
                 };
         }
 
+        private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
+        {
+            if (driverNameSpinner.Adapter != null && !vehicleTypeSpinner.SelectedItem.ToString().Equals(string.Empty))
+            {
+                driverNameSpinner.PerformClick();
+            }
+        }
+
         private void ClearAllFields()
         {
             fuelToFill.Text = string.Empty;
             // fuelAvailable.Text = string.Empty;
-            txtOpeningKMS.Text = string.Empty;
-            // txtClosingKMS.Text = string.Empty;
+            //txtOpeningKMS.Text = string.Empty;
+            txtClosingKMS.Text = string.Empty;
             txtFilledBy.Text = string.Empty;
             txtRate.Text = string.Empty;
             lblTotalPrice.Text = string.Empty;
@@ -293,10 +330,10 @@ namespace FuelUED
         {
             if (string.IsNullOrEmpty(fuelToFill.Text))
             {
-                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + "ltrs";
+                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + " Ltrs.";
                 return;
             }
-            if (fuelSpinner.SelectedItem.Equals("Outward"))
+            if (fuelTypeSpinner.SelectedItem.Equals("Outward"))
             {
                 if (!fuelToFill.Text.Equals("."))
                 {
@@ -329,7 +366,7 @@ namespace FuelUED
             {
                 GetKMPL();
             }
-            fuelAvailable.Text = $"{availableFuel.ToString()}" + "ltrs";
+            //fuelAvailable.Text = $"{availableFuel.ToString()}" + "ltrs";
         }
 
         private void StoreDetils()
@@ -340,21 +377,21 @@ namespace FuelUED
                 {
                     fuelDetails = new FuelEntryDetails
                     {
-                        BillNumber = billNumber.Text,
-                        CurrentDate = dateTimeNow.ToString(),
-                        FuelType = fuelSpinner.SelectedItem.ToString(),
+                        BillNumber = billNumber.Text == string.Empty ? "0" : billNumber.Text,
+                        CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                        FuelType = fuelTypeSpinner.SelectedItem.ToString(),
                         FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
                         VehicleNumber = vehicleNumber.Text,
                         VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
                         DriverName = driverNameSpinner.SelectedItem.ToString(),
-                        FuelInLtrs = fuelToFill.Text,
+                        FuelInLtrs = fuelToFill.Text == string.Empty ? "0" : fuelToFill.Text,
                         FilledBy = txtFilledBy.Text,
-                        ClosingKMS = txtClosingKMS.Text,
-                        Kmpl = lblkmpl.Text,
-                        OpeningKMS = txtOpeningKMS.Text,
+                        ClosingKMS = txtClosingKMS.Text == string.Empty ? "0" : txtClosingKMS.Text,
+                        Kmpl = lblkmpl.Text == "KMPL" ? "0" : lblkmpl.Text,
+                        OpeningKMS = txtOpeningKMS.Text == string.Empty ? "0" : txtOpeningKMS.Text,
                         PaymentType = cashModeSpinner.SelectedItem?.ToString(),
-                        Price = lblTotalPrice.Text,
-                        RatePerLtr = txtRate.Text,
+                        Price = lblTotalPrice.Text == string.Empty ? "0" : lblTotalPrice.Text,
+                        RatePerLtr = txtRate.Text == string.Empty ? "0" : txtRate.Text,
                         Remarks = txtRemarks.Text,
                         VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
                         DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
@@ -366,21 +403,21 @@ namespace FuelUED
                 {
                     fuelDetails = new FuelEntryDetails
                     {
-                        BillNumber = billNumber.Text,
-                        CurrentDate = dateTimeNow.ToString(),
-                        FuelType = fuelSpinner.SelectedItem.ToString(),
+                        BillNumber = billNumber.Text == string.Empty ? "0" : billNumber.Text,
+                        CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                        FuelType = fuelTypeSpinner.SelectedItem.ToString(),
                         FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
                         VehicleNumber = vehicleNumber.Text,
                         VehicleType = vehicleTypeSpinner.SelectedItem.ToString(),
                         DriverName = driverNameSpinner.SelectedItem.ToString(),
-                        FuelInLtrs = fuelToFill.Text,
+                        FuelInLtrs = fuelToFill.Text == string.Empty ? "0" : fuelToFill.Text,
                         FilledBy = txtFilledBy.Text,
-                        ClosingKMS = txtClosingKMS.Text,
-                        Kmpl = lblkmpl.Text,
-                        OpeningKMS = txtOpeningKMS.Text,
+                        ClosingKMS = txtClosingKMS.Text == string.Empty ? "0" : txtClosingKMS.Text,
+                        Kmpl = lblkmpl.Text == "KMPL" ? "0" : lblkmpl.Text,
+                        OpeningKMS = txtOpeningKMS.Text == string.Empty ? "0" : txtOpeningKMS.Text,
                         PaymentType = cashModeSpinner.SelectedItem?.ToString(),
-                        Price = lblTotalPrice.Text,
-                        RatePerLtr = txtRate.Text,
+                        Price = lblTotalPrice.Text == string.Empty ? "0" : lblTotalPrice.Text,
+                        RatePerLtr = txtRate.Text == string.Empty ? "0" : txtRate.Text,
                         Remarks = txtRemarks.Text,
                         VID = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(i => i.VID).First(),
                         DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
@@ -401,9 +438,142 @@ namespace FuelUED
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
             FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
             FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
-            StartActivity(typeof(VehicleDetailActivity));
+            var printValues = StorePrintDetails(fuelDetails);
+
+            Intent intent = new Intent(this, typeof(VehicleDetailActivity));
+            intent.PutExtra("printDetails", JsonConvert.SerializeObject(printValues));
+            StartActivity(intent);
         }
 
+        private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
+        {
+            if (fuelDetails.FuelType.Equals("Inwards"))
+            {
+                printDetails = new PrintDetails
+                {
+                    BillNumber = fuelDetails.BillNumber,
+                    CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                    FuelType = fuelDetails.FuelType,
+                    FuelStockType = fuelDetails.FuelStockType,
+                    VehicleNumber = fuelDetails.VehicleNumber,
+                    VehicleType = fuelDetails.VehicleType,
+                    DriverName = fuelDetails.DriverName,
+                    FuelInLtrs = fuelDetails.FuelInLtrs,
+                    FilledBy = fuelDetails.FilledBy,
+                    PaymentType = fuelDetails.PaymentType,
+                    RatePerLtr = fuelDetails.RatePerLtr,
+                    Price = fuelDetails.Price,
+                    Remarks = fuelDetails.Remarks
+                };
+            }
+            else
+            {
+                if (fuelDetails.FuelStockType.Equals("Stock"))
+                {
+                    if (fuelDetails.MeterFault.Equals("0"))
+                    {
+                        printDetails = new PrintDetails
+                        {
+                            BillNumber = fuelDetails.BillNumber,
+                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            FuelType = fuelDetails.FuelType,
+                            FuelStockType = fuelDetails.FuelStockType,
+                            VehicleNumber = fuelDetails.VehicleNumber,
+                            VehicleType = fuelDetails.VehicleType,
+                            DriverName = fuelDetails.DriverName,
+                            FuelInLtrs = fuelDetails.FuelInLtrs,
+                            FilledBy = fuelDetails.FilledBy,
+                            OpeningKMS = fuelDetails.OpeningKMS,
+                            ClosingKMS = fuelDetails.ClosingKMS,
+                            Kmpl = fuelDetails.Kmpl,
+                            Remarks = fuelDetails.Remarks
+                        };
+                    }
+                    else
+                    {
+                        printDetails = new PrintDetails
+                        {
+                            BillNumber = fuelDetails.BillNumber,
+                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            FuelType = fuelDetails.FuelType,
+                            FuelStockType = fuelDetails.FuelStockType,
+                            VehicleNumber = fuelDetails.VehicleNumber,
+                            VehicleType = fuelDetails.VehicleType,
+                            DriverName = fuelDetails.DriverName,
+                            FuelInLtrs = fuelDetails.FuelInLtrs,
+                            FilledBy = fuelDetails.FilledBy,
+                            MeterFault = fuelDetails.MeterFault,
+                            Remarks = fuelDetails.Remarks
+                        };
+                    }
+                }
+                else
+                {
+                    if (fuelDetails.MeterFault.Equals("0"))
+                    {
+                        printDetails = new PrintDetails
+                        {
+                            BillNumber = fuelDetails.BillNumber,
+                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            FuelType = fuelDetails.FuelType,
+                            FuelStockType = fuelDetails.FuelStockType,
+                            VehicleNumber = fuelDetails.VehicleNumber,
+                            VehicleType = fuelDetails.VehicleType,
+                            DriverName = fuelDetails.DriverName,
+                            FuelInLtrs = fuelDetails.FuelInLtrs,
+                            FilledBy = fuelDetails.FilledBy,
+                            OpeningKMS = fuelDetails.OpeningKMS,
+                            ClosingKMS = fuelDetails.ClosingKMS,
+                            Kmpl = fuelDetails.Kmpl,
+                            PaymentType = fuelDetails.PaymentType,
+                            RatePerLtr = fuelDetails.RatePerLtr,
+                            Price = fuelDetails.Price,
+                            Remarks = fuelDetails.Remarks
+                        };
+                    }
+                    else
+                    {
+                        printDetails = new PrintDetails
+                        {
+                            BillNumber = fuelDetails.BillNumber,
+                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            FuelType = fuelDetails.FuelType,
+                            FuelStockType = fuelDetails.FuelStockType,
+                            VehicleNumber = fuelDetails.VehicleNumber,
+                            VehicleType = fuelDetails.VehicleType,
+                            DriverName = fuelDetails.DriverName,
+                            FuelInLtrs = fuelDetails.FuelInLtrs,
+                            FilledBy = fuelDetails.FilledBy,
+                            PaymentType = fuelDetails.PaymentType,
+                            RatePerLtr = fuelDetails.RatePerLtr,
+                            Price = fuelDetails.Price,
+                            MeterFault = fuelDetails.MeterFault,
+                            Remarks = fuelDetails.Remarks
+                        };
+                    }
+                }
+                //var json = 
+            }
+            return printDetails;
+        }
+        //FuelType = new FuelType
+        //{
+        //    IsInward = false,
+        //    Outward = new Outward
+        //    {
+        //        MeterDetails = new MeterDetails
+        //        {
+        //            IsMeterFault = fuelDetails.MeterFault == "0" ? false : true,
+        //            OpeningKM = fuelDetails.OpeningKMS,
+        //            ClosingKM = fuelDetails.ClosingKMS,
+        //            KMPL = fuelDetails.Kmpl
+        //        },
+        //        StockType = new StockType
+        //        {
+        //            IsStock = true
+        //        }
+        //    }
+        //},
         private void CalculateFuelTotalAmount()
         {
             if (!fuelToFill.Text.Equals(string.Empty) && !txtRate.Text.Equals(string.Empty))
@@ -431,10 +601,7 @@ namespace FuelUED
                 txtOpeningKMS.Text = VehicleList.Where((a => a.DriverName == driverNameSpinner.SelectedItem.ToString()))
                     .Distinct().Select(i => i.OpeningKM).Distinct().First();
 
-                //VehicleType = VehicleList.Select(I => I.TypeName).Distinct().ToArray();
-                vehicleTypeSpinner.Adapter = new ArrayAdapter(this,
-                    Resource.Layout.select_dialog_item_material,
-                    new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
+                vehicleTypeSpinner.PerformClick();
             }
         }
     }

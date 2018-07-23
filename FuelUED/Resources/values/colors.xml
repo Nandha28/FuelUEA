@@ -4,6 +4,15 @@
     <color name="colorPrimaryDark">#1B3147</color>
     <color name="colorAccent">#3498db</color>
     <color name="borderColor">#247185</color>
+  <!--Text Color-->
     <color name="grey">#D3D3D3</color>
-  
+    <color name="backgroundBunk">#F22626</color>
+    <color name="backgroundInward">#0CD164</color>
+    <color name="btnAndTitleBackgroundRed">#C60B0B</color>
+    <color name="btnAndTitleBackgroundGreen">#01682F</color>
+    <color name="btnTextColor">#5b2c00</color>
+    <color name="txtColor">#FFFFFF</color>
+ 
 </resources>
+<!--f22626 bunk background-->
+<!--inward 0cd164-->

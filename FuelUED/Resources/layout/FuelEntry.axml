@@ -7,16 +7,18 @@
     android:descendantFocusability="beforeDescendants"
     android:background="@android:color/white"
     android:focusable="true"
+    android:id="@+id/layFuelEntry"
     android:focusableInTouchMode="true"
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:textColor="@android:color/white"
         android:text="Fuel Entry"
         android:gravity="center"
         android:id="@+id/lblTittle"
-        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textSize="24dp"
         android:background="@color/borderColor" />
     <ScrollView
         android:layout_width="match_parent"
@@ -26,45 +28,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#C4C4C4"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:text="Number" />-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Number"
                 android:layout_margin="10dp"
                 android:maxLines="1"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:gravity="center_vertical"
                 android:inputType="number"
                 android:textSize="15dp"
                 android:paddingLeft="15dp"
                 android:background="@drawable/bottomborder"
                 android:id="@+id/txtBillNumber" />
-        <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#C4C4C4"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:text="Date" />-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:textStyle="bold"
                 android:textSize="15dp"
+                android:gravity="center_vertical"
                 android:textColor="@android:color/black"
                 android:paddingLeft="15dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder"
                 android:id="@+id/lbldateTime" />
-        <!--<TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:text="@string/planet_prompt"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,7 +60,9 @@
                 android:background="@drawable/bottomborder">
                 <Spinner
                     android:id="@+id/fuelSpinner"
+                    android:textStyle="bold"
                     android:textSize="15dp"
+                    android:textColor="@android:color/black"
                     android:layout_width="match_parent"
                     android:layout_height="40dp" />
             </LinearLayout>
@@ -84,22 +74,19 @@
                 <Spinner
                     android:id="@+id/fuelFormSpinner"
                     android:layout_width="match_parent"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:textSize="15dp"
                     android:layout_height="40dp" />
             </LinearLayout>
         <!--Vehicle Number-->
-        <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#C4C4C4"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:text="Vehicle Number" />-->
             <AutoCompleteTextView
                 android:id="@+id/vehicleNumber"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
                 android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
                 android:hint="Vehicle Number"
                 android:inputType="textCapCharacters"
                 android:paddingLeft="15dp"
@@ -116,17 +103,12 @@
                     android:id="@+id/vehicleType"
                     android:layout_width="match_parent"
                     android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:hint="Vehicle Type"
                     android:layout_height="40dp" />
             </LinearLayout>
         <!--Driver Name-->
-        <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#C4C4C4"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:text="Driver Name" />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,18 +117,13 @@
                 <Spinner
                     android:id="@+id/driverName"
                     android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:hint="Driver Name"
                     android:layout_width="match_parent"
                     android:layout_height="40dp" />
             </LinearLayout>
         <!--Fuel liters-->
-        <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#C4C4C4"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:text="Fuel Details" />-->
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -157,9 +134,11 @@
                     android:layout_width="wrap_content"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:textSize="15dp"
                     android:hint="Fuel"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:layout_weight="1"
                     android:paddingLeft="15dp"
                     android:background="@drawable/bottomborder"
@@ -171,15 +150,12 @@
                     android:textSize="15dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:paddingRight="15dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="5dp"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
                     android:id="@+id/fuelAvailable" />
             </LinearLayout>
-        <!--<View
-                android:layout_height="10dp"
-                android:layout_width="match_parent"
-                android:background="#CCCCCC" />-->
         <!--Check Box-->
             <EditText
                 android:layout_width="match_parent"
@@ -188,6 +164,8 @@
                 android:paddingLeft="15dp"
                 android:id="@+id/txtFilledBy"
                 android:inputType="text"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
                 android:textSize="15dp"
                 android:hint="Filled By"
                 android:layout_margin="10dp"
@@ -206,43 +184,32 @@
                 android:id="@+id/layMeterFault"
                 android:orientation="vertical"
                 android:layout_width="match_parent">
-            <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#C4C4C4"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:text="Opening KMS" />-->
                 <LinearLayout
                     android:layout_height="wrap_content"
                     android:weightSum="2"
                     android:orientation="horizontal"
                     android:layout_width="match_parent">
-                    <EditText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:maxLines="1"
                         android:layout_weight="1"
                         android:id="@+id/txtOpeningKMS"
                         android:textSize="15dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
                         android:text="0"
-                        android:hint="Opening KMS"
                         android:paddingLeft="5dp"
-                        android:background="@drawable/bottomborder"
                         android:inputType="numberDecimal"
                         android:layout_margin="10dp" />
-                <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#C4C4C4"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:text="Closing KMS" />-->
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:maxLines="1"
                         android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
                         android:layout_weight="1"
                         android:hint="Closing KMS"
                         android:id="@+id/txtClosingKMS"
@@ -257,6 +224,9 @@
                     android:layout_height="40dp"
                     android:id="@+id/lblkmpl"
                     android:paddingLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:textSize="15dp"
                     android:background="@drawable/bottomborder"
                     android:layout_margin="10dp"
@@ -269,17 +239,6 @@
                 android:orientation="vertical"
                 android:visibility="invisible"
                 android:id="@+id/layBunkDetails">
-            <!--<View
-                    android:layout_height="10dp"
-                    android:layout_width="match_parent"
-                    android:background="#CCCCCC" />-->
-            <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#C4C4C4"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:text="Filled By" />-->
             <!--Payment Mode-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -289,16 +248,11 @@
                     <Spinner
                         android:id="@+id/paymentMode"
                         android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
                         android:layout_width="match_parent"
                         android:layout_height="40dp" />
                 </LinearLayout>
-            <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#C4C4C4"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:text="Rate/Liter" />-->
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -307,6 +261,8 @@
                     android:paddingLeft="15dp"
                     android:layout_margin="10dp"
                     android:hint="Rate/Liter"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:inputType="numberDecimal"
                     android:id="@+id/txtRate"
                     android:background="@drawable/bottomborder" />
@@ -314,24 +270,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:textSize="15dp"
-                    android:text="Amount"
+                    android:hint="Amount"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:paddingLeft="15dp"
-                    android.textAlignment="center"
+                    android:gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:id="@+id/lblTotalPrice"
                     android:background="@drawable/bottomborder" />
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:textSize="15dp"
-                    android:hint="Remaks"
-                    android:id="@+id/txtRemarks"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingLeft="15dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bottomborder" />
             </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="15dp"
+                android:hint="Remaks"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:id="@+id/txtRemarks"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder" />
             <LinearLayout
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
@@ -352,20 +312,12 @@
                     android:text="STORE"
                     android:gravity="center"
                     android:paddingLeft="5dp"
+                    android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:textAlignment="center"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content" />
             </LinearLayout>
-        <!--<Button
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="STORE"
-                android:id="@+id/btnStore"
-                android:textAllCaps="true"
-                android:layout_margin="10dp"
-                android:textColor="@android:color/white"
-                android:background="@color/borderColor" />-->
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

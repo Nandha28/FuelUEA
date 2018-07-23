@@ -26,7 +26,7 @@ namespace FuelUED
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     StartActivity(typeof(ConfigActivity));
+                     StartActivity(typeof(ConfigActivity));                    
                  }
                  else
                  {
