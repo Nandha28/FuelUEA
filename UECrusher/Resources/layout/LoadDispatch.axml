@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textColor="@android:color/white"
+        android:text="Vehicle Dispatch details"
+        android:gravity="center"
+        android:id="@+id/lblTittle"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:background="@color/borderColor" />
+    <EditText
+        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:inputType="number"
+        android:textSize="15dp"
+        android:hint="Item Name"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingLeft="15dp"
+        android:background="@drawable/bottomborder"
+        android:id="@+id/fuelToFill" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Item Id"
+        android:layout_margin="10dp"
+        android:maxLines="1"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:background="@drawable/bottomborder"
+        android:id="@+id/lblItemId" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Date"
+        android:layout_margin="10dp"
+        android:maxLines="1"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:background="@drawable/bottomborder"
+        android:id="@+id/lblDate" />
+</LinearLayout>

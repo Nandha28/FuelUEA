@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textColor="@android:color/white"
+        android:text="Vehicle Entry details"
+        android:gravity="center"
+        android:id="@+id/lblTittle"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:background="@color/borderColor" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Number"
+                android:layout_margin="10dp"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:gravity="center_vertical"
+                android:textSize="18dp"
+                android:paddingLeft="15dp"
+                android:background="@drawable/bottomborder"
+                android:id="@+id/txtBillNumber" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:paddingLeft="15dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder"
+                android:id="@+id/lbldateTime" />
+            <AutoCompleteTextView
+                android:id="@+id/vehicleNumber"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:hint="Vehicle Number"
+                android:inputType="textCapCharacters"
+                android:paddingLeft="15dp"
+                android:theme="@style/Autocomplete"
+                android:background="@drawable/bottomborder"
+                android:layout_height="40dp" />
+        <!--Customer	-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/vehicleType"
+                    android:layout_width="match_parent"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:hint="Customer"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        <!--Item Type-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/vehicleType"
+                    android:layout_width="match_parent"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:hint="Item"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:paddingLeft="15dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder"
+                android:id="@+id/lblEmptyWeight" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/simpleRadioButton"
+                    android:layout_width="wrap_content"
+                    android:text="Cash"
+                    android:layout_weight="1"
+                    android:textSize="14dp"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/simpleRadioButton1"
+                    android:layout_width="wrap_content"
+                    android:text="Credit "
+                    android:layout_weight="1"
+                    android:textSize="14dp"
+                    android:layout_height="wrap_content" />
+            </RadioGroup>
+        <!--W Mode-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bottomborder">
+                <Spinner
+                    android:id="@+id/vehicleType"
+                    android:layout_width="match_parent"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:hint="W Mode"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
