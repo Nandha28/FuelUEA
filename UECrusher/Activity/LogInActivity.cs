@@ -22,7 +22,7 @@ namespace UECrusher
              {
                  if (email.Text.Equals(Utilities.ADMIN) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     //StartActivity(typeof(MainScreenActivity));
+                     StartActivity(typeof(MainActivity));
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {

@@ -153,6 +153,8 @@ namespace FuelUED
                         {
                             Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
                         });
+                        btnDownloadData.Clickable = true;
+                        AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     }
                     else
                     {
@@ -165,7 +167,7 @@ namespace FuelUED
                     {
                         loader.Visibility = Android.Views.ViewStates.Gone;
                         mainHolder.Alpha = 1f;
-                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);                      
+                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                     });
                 }
                 else
@@ -289,6 +291,8 @@ namespace FuelUED
                     mainHolder.Alpha = 1f;
                     Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                     Toast.MakeText(this, "success..", ToastLength.Short).Show();
+                    btnDownloadData.Clickable = false;
+                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
                 });
             }));
             thread.Start();

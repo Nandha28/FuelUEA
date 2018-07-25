@@ -332,6 +332,7 @@ namespace FuelUED
 
         private void CheckFuelAvailbility()
         {
+            availableFuel = float.Parse(billDetailsList?.AvailableLiters);
             if (string.IsNullOrEmpty(fuelToFill.Text))
             {
                 fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + " Ltrs.";
@@ -339,7 +340,7 @@ namespace FuelUED
             }
             if (fuelTypeSpinner.SelectedItem.Equals("Outward"))
             {
-                if (!fuelToFill.Text.Equals("."))
+                if (!fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals("Stock"))
                 {
                     if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters))
                     {
@@ -446,7 +447,7 @@ namespace FuelUED
 
             Intent intent = new Intent(this, typeof(VehicleDetailActivity));
             intent.PutExtra("printDetails", JsonConvert.SerializeObject(printValues));
-            StartActivity(intent);            
+            StartActivity(intent);
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
