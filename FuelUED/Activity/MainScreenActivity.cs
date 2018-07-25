@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FuelUED
 {
@@ -24,13 +26,14 @@ namespace FuelUED
         private RelativeLayout mainHolder;
         private Button btnDownloadData;
 
-        public string ipadress { get; private set; }
+        public string IpAddress { get; private set; }
         public bool IsDeviceAvailable { get; private set; }
 
         private string siteId;
         private string deviceId;
         private Button btnUploadData;
         private TableQuery<FuelEntryDetails> fuelDetails;
+        private bool IsExitApp;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,12 +48,21 @@ namespace FuelUED
             //Ipadress = pref.GetString(Utilities.IPAddress, string.Empty);
 
             //Get IPAdress for preference
-            ipadress = AppPreferences.GetString(this, Utilities.IPAddress);
+            IpAddress = AppPreferences.GetString(this, Utilities.IPAddress);
             siteId = AppPreferences.GetString(this, Utilities.SITEID);
             deviceId = AppPreferences.GetString(this, Utilities.DEVICEID);
 
-            WebService.IPADDRESS = ipadress;
+            WebService.IPADDRESS = IpAddress;
 
+
+            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
+            {
+                var alertDialog1 = new Android.App.AlertDialog.Builder(this);
+                alertDialog1.SetTitle("Logout");
+                alertDialog1.SetMessage("Do you want to exit ?");
+                alertDialog1.SetPositiveButton("OK", (ss, se) => Finish());
+                alertDialog1.Show();
+            };
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
                  //VehicleList = FuelDB.Singleton.GetValue().ToList();
@@ -79,101 +91,165 @@ namespace FuelUED
             btnDownloadData = FindViewById<Button>(Resource.Id.btnDownloadData);
             btnDownloadData.Click += (s, e) =>
             {
-                SyncButton_Click();
+                if (!AppPreferences.GetBool(this, Utilities.IsDownloaded))
+                {
+                    SyncButton_Click();
+                }
+                else
+                {
+                    Toast.MakeText(this, "Please Upload Data and Try again..", ToastLength.Short).Show();
+                }
             };
 
             btnUploadData = FindViewById<Button>(Resource.Id.btnUploadData);
             btnUploadData.Click += (s, e) =>
             {
-                UploadDataToServer();
+                UploadDetailsToServer();
             };
         }
 
-        private void UploadDataToServer()
+        private void UploadDetailsToServer()
         {
             RunOnUiThread(() =>
             {
-                //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
+                Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
                 mainHolder.Alpha = 0.5f;
                 loader.Visibility = Android.Views.ViewStates.Visible;
                 Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
             });
-            try
+            var thread = new Thread(new ThreadStart(delegate
             {
-                fuelDetails = FuelDB.Singleton.GetFuelValues();
-            }
-            catch { }
-            if (fuelDetails == null)
-            {
-                return;
-            }
-            var billDetails = FuelDB.Singleton.GetBillDetails()?.First();
-            var list = new List<UploadDetails>();
-            foreach (var item in fuelDetails)
-            {
-                //string totlkm;
-                //if (item.ClosingKMS.Equals(string.Empty) || item.OpeningKMS.Equals(string.Empty))
-                //{
-                //    totlkm = "0";
-                //}
-                //else
-                //{
-                //    totlkm = item.TotalKM;
-                //}
-                list.Add(new UploadDetails
+                try
                 {
-                    CID = billDetails.BillCurrentNumber == string.Empty ? "0" : billDetails.BillCurrentNumber,
-                    DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
-                    SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
-                    CStock = billDetails.AvailableLiters == string.Empty ? "0" : billDetails.AvailableLiters,
-                    ClosingKM = item.ClosingKMS == string.Empty ? "0" : item.ClosingKMS,
-                    DriverID = item.DriverID_PK == string.Empty ? "0" : item.DriverID_PK,
-                    DriverName = item.DriverName == string.Empty ? "0" : item.DriverName,
-                    FilledBy = item.FilledBy == string.Empty ? "0" : item.FilledBy,
-                    FuelDate = item.CurrentDate == string.Empty ? "0" : item.CurrentDate,
-                    FuelLts = item.FuelInLtrs == string.Empty ? "0" : item.FuelInLtrs,
-                    FuelNo = item.BillNumber == string.Empty ? "0" : item.BillNumber,
-                    FuelSource = item.FuelStockType == string.Empty ? "0" : item.FuelStockType,
-                    KMPL = item.Kmpl == "KMPL" ? "0" : item.Kmpl,
-                    OpeningKM = item.OpeningKMS == string.Empty ? "0" : item.OpeningKMS,
-                    RegNo = item.VehicleNumber == string.Empty ? "0" : item.VehicleNumber,
-                    VType = item.VehicleType == string.Empty ? "0" : item.VehicleType,
-                    Rate = item.RatePerLtr == string.Empty ? "0" : item.RatePerLtr,
-                    TAmount = item.Price == string.Empty ? "0" : item.Price,
-                    Remarks = item.Remarks == string.Empty ? "0" : item.Remarks,
-                    TransType = item.FuelType == string.Empty ? "0" : item.FuelType,
-                    Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
-                    VehicleID = item.VID == string.Empty ? "0" : item.VID,
-                    MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
-                    TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM
-                });
-            }
-            Console.WriteLine(list);
-            var deserializedData = JsonConvert.SerializeObject(list);
-            Console.WriteLine(deserializedData);
-            var resposeAfterPost = WebService.PostAllDataToWebService("UPFStock", deserializedData);
-            try
-            {
-                var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
-                CreateDatabaseOrModifyDatabase(vehicleList);
-            }
-            catch
-            {
-                Toast.MakeText(this, "Error in Upload", ToastLength.Short).Show();
-            }
-            RunOnUiThread(() =>
-            {
-                loader.Visibility = Android.Views.ViewStates.Gone;
-                mainHolder.Alpha = 1f;
-                Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
-            });
-            Console.WriteLine(resposeAfterPost);
-            Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
+                    fuelDetails = FuelDB.Singleton.GetFuelValues();
+                }
+                catch
+                {
+                    RunOnUiThread(() =>
+                    {
+                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        mainHolder.Alpha = 1f;
+                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                        Toast.MakeText(this, "No Data to Upload", ToastLength.Short).Show();
+                    });
+                    btnUploadData.Clickable = true;
+                    btnDownloadData.Clickable = true;
+                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+                    return;
+                }
+                if (fuelDetails != null)
+                {
+                    //btnUploadData.Clickable = true;
+                    //btnDownloadData.Clickable = true;
+                    //AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+
+                    btnUploadData.Clickable = true;
+                    btnDownloadData.Clickable = false;
+                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
+                    var result = UploadValues();
+                    if (result)
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
+                        });
+                    }
+                    else
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            Toast.MakeText(this, "Upload Failed", ToastLength.Short).Show();
+                        });
+                    }
+                    RunOnUiThread(() =>
+                    {
+                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        mainHolder.Alpha = 1f;
+                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);                      
+                    });
+                }
+                else
+                {
+                    RunOnUiThread(() =>
+                    {
+                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        mainHolder.Alpha = 1f;
+                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                        Toast.MakeText(this, "No Data to upload", ToastLength.Short).Show();
+                    });
+                    btnUploadData.Clickable = true;
+                    btnDownloadData.Clickable = true;
+                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+                }
+            }));
+            thread.Start();
         }
+
+        private bool UploadValues()
+        {
+            var billDetails = FuelDB.Singleton.GetBillDetails()?.First();
+            if (billDetails != null)
+            {
+                var list = new List<UploadDetails>();
+                foreach (var item in fuelDetails)
+                {
+                    list.Add(new UploadDetails
+                    {
+                        CID = billDetails.BillCurrentNumber == string.Empty ? "0" : billDetails.BillCurrentNumber,
+                        DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
+                        SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
+                        CStock = billDetails.AvailableLiters == string.Empty ? "0" : billDetails.AvailableLiters,
+                        ClosingKM = item.ClosingKMS == string.Empty ? "0" : item.ClosingKMS,
+                        DriverID = item.DriverID_PK == string.Empty ? "0" : item.DriverID_PK,
+                        DriverName = item.DriverName == string.Empty ? "0" : item.DriverName,
+                        FilledBy = item.FilledBy == string.Empty ? "0" : item.FilledBy,
+                        FuelDate = item.CurrentDate == string.Empty ? "0" : item.CurrentDate,
+                        FuelLts = item.FuelInLtrs == string.Empty ? "0" : item.FuelInLtrs,
+                        FuelNo = item.BillNumber == string.Empty ? "0" : item.BillNumber,
+                        FuelSource = item.FuelStockType == string.Empty ? "0" : item.FuelStockType,
+                        KMPL = item.Kmpl == "KMPL" ? "0" : item.Kmpl,
+                        OpeningKM = item.OpeningKMS == string.Empty ? "0" : item.OpeningKMS,
+                        RegNo = item.VehicleNumber == string.Empty ? "0" : item.VehicleNumber,
+                        VType = item.VehicleType == string.Empty ? "0" : item.VehicleType,
+                        Rate = item.RatePerLtr == string.Empty ? "0" : item.RatePerLtr,
+                        TAmount = item.Price == string.Empty ? "0" : item.Price,
+                        Remarks = item.Remarks == string.Empty ? "0" : item.Remarks,
+                        TransType = item.FuelType == string.Empty ? "0" : item.FuelType,
+                        Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
+                        VehicleID = item.VID == string.Empty ? "0" : item.VID,
+                        MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
+                        TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM
+                    });
+                }
+                Console.WriteLine(list);
+                var deserializedData = JsonConvert.SerializeObject(list);
+                Console.WriteLine(deserializedData);
+                var resposeAfterPost = WebService.PostAllDataToWebService("UPFStock", deserializedData);
+                try
+                {
+                    var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
+                    if (vehicleList != null)
+                    {
+                        CreateDatabaseOrModifyDatabase(vehicleList);
+                    }
+                }
+                catch
+                {
+                    RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(this, "Error in Upload", ToastLength.Short).Show();
+                    });
+                    return false;
+                }
+                Console.WriteLine(resposeAfterPost);
+            }
+            return true;
+        }
+
 
         private void SyncButton_Click()
         {
-            if (ipadress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
+            if (IpAddress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
             {
                 Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
                 //StartActivity(typeof(ConfigActivity));
@@ -181,7 +257,7 @@ namespace FuelUED
             }
             RunOnUiThread(() =>
             {
-                //    //Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
+                Toast.MakeText(this, "Please wait..", ToastLength.Short).Show();
                 mainHolder.Alpha = 0.5f;
                 loader.Visibility = Android.Views.ViewStates.Visible;
                 Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
@@ -212,12 +288,10 @@ namespace FuelUED
                     loader.Visibility = Android.Views.ViewStates.Gone;
                     mainHolder.Alpha = 1f;
                     Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                    Toast.MakeText(this, "success..", ToastLength.Short).Show();
                 });
-                //Toast.MakeText(this, "Stored in Database", ToastLength.Short).Show();
             }));
             thread.Start();
-            // loader.Visibility = Android.Views.ViewStates.Visible;
-            // loader.Visibility = Android.Views.ViewStates.Gone;
         }
 
         private void CreateDatabaseOrModifyDatabase(List<VehicleDetails> vehicleList)
@@ -239,8 +313,29 @@ namespace FuelUED
             };
 
             AppPreferences.SaveString(this, Utilities.DEVICESTATUS, billDetails.DeviceStatus);
+            AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
             FuelDB.Singleton.InsertValues(vehicleList);
+            btnDownloadData.Clickable = false;
             FuelDB.Singleton.InsertBillDetails(billDetails);
+        }
+        protected override void OnResume()
+        {
+            IsExitApp = false;
+            base.OnResume();
+        }
+        public override void OnBackPressed()
+        {
+            //var intent = new Intent(Intent.Action);
+            //intent.AddCategory(Intent.CategoryHome);
+            //intent.AddFlags(ActivityFlags.NewTask);
+            //StartActivity(intent);
+            //Finish();
+            if (IsExitApp)
+            {
+                base.OnBackPressed();
+            }
+            IsExitApp = true;
+            Toast.MakeText(this, "Press agin to exit app..", ToastLength.Short).Show();
         }
     }
 }

@@ -30,6 +30,8 @@ namespace FuelUED
         static string[] OutwardStockMeterFault, OutwardBunkMeterFault;
         private PrintDetails user;
 
+        public bool IsExtraPrint { get; private set; }
+
         public void OnRaiseException(int p0, string p1)
         {
             Console.WriteLine(p0 + p1);
@@ -282,6 +284,15 @@ namespace FuelUED
             FuelDB.Singleton.DeleteTable<BillDetails>();
             FuelDB.Singleton.CreateTable<BillDetails>();
             FuelDB.Singleton.InsertBillDetails(billDetails);
+            AgainPrint();
+            var intent = new Intent(this, typeof(MainScreenActivity));
+            intent.AddFlags(ActivityFlags.ClearTop);
+            StartActivity(intent);
+            Finish();
+        }
+
+        private void AgainPrint()
+        {
             if (nGXPrinter != null)
             {
                 //nGXPrinter.PrintText(textName.Text);              
@@ -292,8 +303,6 @@ namespace FuelUED
             {
                 Toast.MakeText(this, "Printer not connected", ToastLength.Short).Show();
             }
-            StartActivity(typeof(MainScreenActivity));
-            Finish();
         }
 
         private Bitmap GetCanvas(View view, int height, int width)
@@ -307,6 +316,28 @@ namespace FuelUED
                 canvas.DrawColor(Color.White);
             view.Draw(canvas);
             return bitmap;
+        }
+        public override void OnBackPressed()
+        {
+            if (IsExtraPrint)
+            {
+                base.OnBackPressed();
+            }
+            IsExtraPrint = true;
+            //var alertDialog = new Android.App.AlertDialog.Builder(this);
+            //alertDialog.SetTitle("Additional Print");
+            //alertDialog.SetMessage("Do you want to print agin ?");
+            //alertDialog.SetPositiveButton("Yes", (ss, se) =>
+            //{
+            //    AgainPrint();
+            //});
+            //alertDialog.SetNegativeButton("No", (s, e) =>
+            //{
+            //    IsExtraPrint = false;
+            //    base.OnBackPressed();
+            //});
+            //alertDialog.SetCancelable(true);
+            //alertDialog.Show();
         }
     }
 }

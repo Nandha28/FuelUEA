@@ -10,6 +10,11 @@ namespace FuelUED.CommonFunctions
             var preference = PreferenceManager.GetDefaultSharedPreferences(context);
             preference.Edit().PutString(key, value).Apply();
         }
+        public static void SaveBool(Context context, string key, bool value)
+        {
+            var preference = PreferenceManager.GetDefaultSharedPreferences(context);
+            preference.Edit().PutBoolean(key, value).Apply();
+        }
         public static void SaveInt(Context context, string key, int value)
         {
             var preference = PreferenceManager.GetDefaultSharedPreferences(context);
@@ -19,6 +24,11 @@ namespace FuelUED.CommonFunctions
         {
             var preference = PreferenceManager.GetDefaultSharedPreferences(context);
             return preference.GetString(key, string.Empty);
+        }
+        public static bool GetBool(Context context, string key)
+        {
+            var preference = PreferenceManager.GetDefaultSharedPreferences(context);
+            return preference.GetBoolean(key,false);
         }
         public static int GetInt(Context context, string key)
         {

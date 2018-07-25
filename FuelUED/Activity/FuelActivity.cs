@@ -179,6 +179,10 @@ namespace FuelUED
                     {
                         GetKMPL();
                     }
+                    else
+                    {
+                        lblkmpl.Text = "KMPL";
+                    }
                 }
             };
 
@@ -442,7 +446,7 @@ namespace FuelUED
 
             Intent intent = new Intent(this, typeof(VehicleDetailActivity));
             intent.PutExtra("printDetails", JsonConvert.SerializeObject(printValues));
-            StartActivity(intent);
+            StartActivity(intent);            
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)

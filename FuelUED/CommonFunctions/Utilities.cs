@@ -10,5 +10,6 @@
         public const string SITEID = "siteid";
         public const string BILLNUMBER = "billnumber";
         public const string DEVICESTATUS = "devicestatus";
+        public const string IsDownloaded = "alreadydownloaded";
     }
 }

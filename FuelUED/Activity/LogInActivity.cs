@@ -7,9 +7,9 @@ using FuelUED.CommonFunctions;
 
 namespace FuelUED
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, NoHistory = true)]
     public class LogInActivity : AppCompatActivity
-    {      
+    {
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -26,13 +26,13 @@ namespace FuelUED
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     StartActivity(typeof(ConfigActivity));                    
+                     StartActivity(typeof(ConfigActivity));
                  }
                  else
                  {
                      Toast.MakeText(this, "Invalid Credentials", ToastLength.Short).Show();
                  }
-             };
+             };          
         }
     }
 }
