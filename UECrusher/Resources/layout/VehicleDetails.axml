@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_margin="10dp"
+    android:background="@color/borderColor"
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textColor="@android:color/white"
-        android:text="Vehicle Entry details"
+        android:text="Ve hicle Entry details"
         android:gravity="center"
         android:id="@+id/lblTittle"
         android:textStyle="bold"
-        android:textSize="24dp"
-        android:background="@color/borderColor" />
+        android:textSize="24dp" />
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
+        android:layout_margin="10dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:textSize="18dp"
                 android:paddingLeft="15dp"
                 android:background="@drawable/bottomborder"
-                android:id="@+id/txtBillNumber" />
+                android:id="@+id/lblBillNumber" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -104,18 +104,21 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:weightSum="2"
+                android:id="@+id/radioPaymentMode"
                 android:layout_height="wrap_content">
                 <RadioButton
-                    android:id="@+id/simpleRadioButton"
+                    android:id="@+id/cashRadioButton"
                     android:layout_width="wrap_content"
                     android:text="Cash"
+                    android:textColor="@android:color/white"
                     android:layout_weight="1"
                     android:textSize="14dp"
                     android:layout_height="wrap_content" />
                 <RadioButton
-                    android:id="@+id/simpleRadioButton1"
+                    android:id="@+id/creditRadioButton"
+                    android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
-                    android:text="Credit "
+                    android:text="Credit"
                     android:layout_weight="1"
                     android:textSize="14dp"
                     android:layout_height="wrap_content" />
@@ -127,7 +130,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder">
                 <Spinner
-                    android:id="@+id/vehicleType"
+                    android:id="@+id/vehicleMode"
                     android:layout_width="match_parent"
                     android:textSize="18dp"
                     android:textStyle="bold"
