@@ -3,8 +3,10 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views.InputMethods;
 using Android.Widget;
 using FuelApp.Modal;
+using FuelUED.Adapter;
 using FuelUED.Modal;
 using Newtonsoft.Json;
 using System;
@@ -53,10 +55,13 @@ namespace FuelUED
         private Spinner fuelTypeSpinner;
         private Spinner fuelFormSpinner;
         private Spinner vehicleTypeSpinner;
+        private ArrayAdapter vehicleTypeAdapter;
         private FuelEntryDetails fuelDetails;
         private float availableFuel;
         private CheckBox checkBox;
         private PrintDetails printDetails;
+        private bool isVehicleTypeSpinnerSelected;
+        private bool isDriverNameSpinnerSelected;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -94,7 +99,9 @@ namespace FuelUED
             if (myVehiclelist != null)
             {
                 var adapter = new ArrayAdapter<String>(this, Resource.Layout.select_dialog_item_material, myVehiclelist);
+                //var adapter = new AutoSuggestAdapter(this, Resource.Layout.select_dialog_item_material, myVehiclelist.ToList());
                 vehicleNumber.Adapter = adapter;
+                vehicleNumber.Threshold = 1;
                 vehicleNumber.ItemClick += VehicleNumber_ItemClick;
                 vehicleNumber.TextChanged += VehicleNumber_TextChanged;
             }
@@ -117,9 +124,9 @@ namespace FuelUED
 
 
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
-            vehicleTypeSpinner.Adapter = new ArrayAdapter(this,
-                 Resource.Layout.select_dialog_item_material,
-                 new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
+            vehicleTypeAdapter =
+                new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
+                new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
 
             vehicleTypeSpinner.ItemSelected += VehicleTypeSpinner_ItemSelected;
 
@@ -160,7 +167,21 @@ namespace FuelUED
             //        GetKMPL();
             //    }
             //};
-            driverNameSpinner.ItemSelected += (s, ev) => { fuelToFill.RequestFocus(); };
+            driverNameSpinner.ItemSelected += (s, ev) =>
+            {
+                if (!isDriverNameSpinnerSelected)
+                {
+                    isDriverNameSpinnerSelected = true;
+                    driverNameSpinner.PerformClick();
+                }
+                else
+                {
+                    txtOpeningKMS.Text = VehicleList.Where((a => a.DriverName == driverNameSpinner.SelectedItem.ToString()))
+                    .Distinct().Select(i => i.OpeningKM).Distinct().First();
+
+                    fuelToFill.RequestFocus();
+                }
+            };
 
             if (billDetailsList != null)
             {
@@ -304,9 +325,20 @@ namespace FuelUED
 
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            if (driverNameSpinner.Adapter != null && !vehicleTypeSpinner.SelectedItem.ToString().Equals(string.Empty))
+            if (!isVehicleTypeSpinnerSelected)
             {
+                isVehicleTypeSpinnerSelected = true;
+                vehicleTypeSpinner.PerformClick();
+            }
+            else
+            {
+                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
+                driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
                 driverNameSpinner.PerformClick();
+                //if (driverNameSpinner.Adapter != null && !vehicleTypeSpinner.SelectedItem.ToString().Equals(string.Empty))
+                //{
+                //}
+                isDriverNameSpinnerSelected = false;
             }
         }
 
@@ -593,6 +625,7 @@ namespace FuelUED
             {
                 driverNameSpinner.Adapter = null;
                 vehicleTypeSpinner.Adapter = null;
+                ClearAllFields();
             }
         }
 
@@ -600,13 +633,12 @@ namespace FuelUED
         {
             if (VehicleList != null)
             {
-                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
-                driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
-
-                txtOpeningKMS.Text = VehicleList.Where((a => a.DriverName == driverNameSpinner.SelectedItem.ToString()))
-                    .Distinct().Select(i => i.OpeningKM).Distinct().First();
-
+                vehicleTypeSpinner.Adapter = vehicleTypeAdapter;
                 vehicleTypeSpinner.PerformClick();
+                isVehicleTypeSpinnerSelected = false;
+
+                InputMethodManager inputManager = (InputMethodManager)GetSystemService(InputMethodService);
+                inputManager.HideSoftInputFromWindow(Window.CurrentFocus.WindowToken, HideSoftInputFlags.NotAlways);
             }
         }
     }

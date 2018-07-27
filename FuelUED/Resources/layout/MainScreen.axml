@@ -7,7 +7,9 @@
     <ImageButton
         android:layout_height="50dp"
         android:layout_width="50dp"
-        android:id="@+id/btnLogout"
+        android:id="@+id/btnLogout" 
+        android:scaleType="fitXY" 
+        android:background="@null"
         android:src="@drawable/logout"
         android:layout_margin="10dp"
         android:layout_alignParentRight="true" />

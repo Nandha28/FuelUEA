@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity\ConfigActivity.cs" />
+    <Compile Include="Adapter\AutoSuggestAdapter.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="Database\FuelDB.cs" />
