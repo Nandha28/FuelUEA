@@ -1,4 +1,4 @@
-﻿namespace UECrusher.CommonFunctions
+﻿namespace UECrusher
 {
     public class Utilities
     {

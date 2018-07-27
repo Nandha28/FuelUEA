@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     android:descendantFocusability="beforeDescendants"
     android:background="@android:color/white"
     android:focusable="true"
     android:id="@+id/layFuelEntry"
-    android:focusableInTouchMode="true"
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"

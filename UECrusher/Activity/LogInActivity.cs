@@ -3,7 +3,6 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using UECrusher.Activity;
-using UECrusher.CommonFunctions;
 
 namespace UECrusher
 {
@@ -22,11 +21,11 @@ namespace UECrusher
              {
                  if (email.Text.Equals(Utilities.ADMIN) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     StartActivity(typeof(MainActivity));
+                     StartActivity(typeof(VehicleDetailActivity));
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     StartActivity(typeof(ConfigActivity));                    
+                     StartActivity(typeof(ConfigActivity));                 
                  }
                  else
                  {
