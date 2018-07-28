@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -19,13 +20,15 @@ namespace UECrusher.Activity
         private TextView lblBillNumber;
         private TextView lblDate;
         private TextView lblEmptyWeight;
-        private AutoCompleteTextView autoVehicleNumber;
+        private AutoCompleteTextView vehicleNumberAutoComplete;
         private RadioGroup radioGroup;
         private RadioButton cashRadioButton, creditRadioButton;
         private Spinner itemType;
+        private Spinner ownerNumber;
         private Spinner wMode;
         private ScrollView layScroll;
         private ProgressBar progressLoader;
+        private List<VehicleDetails> vehiclDetailList;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -33,31 +36,40 @@ namespace UECrusher.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.VehicleDetails);
-            layScroll = FindViewById<ScrollView>(Resource.Id.layScroll);
+
             progressLoader = FindViewById<ProgressBar>(Resource.Id.loader);
+            // progressLoader.Visibility = Android.Views.ViewStates.Visible;
+            layScroll = FindViewById<ScrollView>(Resource.Id.layScroll);
+            //layScroll.Alpha = 0.5f;
             var lblTittle = FindViewById<TextView>(Resource.Id.lblTittle);
             lblBillNumber = FindViewById<TextView>(Resource.Id.lblBillNumber);
             lblDate = FindViewById<TextView>(Resource.Id.lblDate);
             lblEmptyWeight = FindViewById<TextView>(Resource.Id.lblEmptyWeight);
-            autoVehicleNumber = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
+            vehicleNumberAutoComplete = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
             radioGroup = FindViewById<RadioGroup>(Resource.Id.radioPaymentMode);
             cashRadioButton = FindViewById<RadioButton>(Resource.Id.cashRadioButton);
             creditRadioButton = FindViewById<RadioButton>(Resource.Id.creditRadioButton);
             itemType = FindViewById<Spinner>(Resource.Id.itemTypeSpinner);
+            ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
 
-            var task = new Thread(() =>
-              {                
-                  RunOnUiThread(() =>
-                  {
-                      progressLoader.Visibility = Android.Views.ViewStates.Visible;
-                      layScroll.Alpha = 0.5f;
-                      Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
-                  });
-              });
-            task.Start();
+            //    var task = new Thread(() =>
+            //      {                
+            //          RunOnUiThread(() =>
+            //          {
+            //              progressLoader.Visibility = Android.Views.ViewStates.Visible;
+            //              layScroll.Alpha = 0.5f;
+            //              Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
+            //          });
+            //      });
+            //    task.Start();
             ShowLoader(true);
+            Task.Run(() => GetDetails()
+            );
+        }
 
+        private async Task GetDetails()
+        {
             WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
             var did = AppPreferences.GetString(this, Utilities.DEVICEID);
             var siteId = AppPreferences.GetString(this, Utilities.SITEID);
@@ -67,34 +79,47 @@ namespace UECrusher.Activity
                 try
                 {
                     var result = WebService.Singleton.PostDataToWebService("GetVE", did, siteId);
-                    var deserialize = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    var taskRemoveLoader = new Thread(() =>
-                    {
-                        RunOnUiThread(() =>
-                        {
-                            progressLoader.Visibility = Android.Views.ViewStates.Gone;
-                            layScroll.Alpha = 1f;
-                            Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
-                        });
-                    });
-                    taskRemoveLoader.Start();                   
+                    vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
+                    FillVehicleDetails();
                 }
                 catch
                 {
-                    Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
+                    RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
+                    });
                 }
             }
             else
             {
-                Toast.MakeText(this, "Someting went wrong..", ToastLength.Short).Show();
+                RunOnUiThread(() =>
+                {
+                    Toast.MakeText(this, "Someting went wrong..", ToastLength.Short).Show();
+                });
             }
             ShowLoader(false);
         }
 
+        private void FillVehicleDetails()
+        {
+            var billNum = AppPreferences.GetString(this, Utilities.BILLNUMBER);
+            lblBillNumber.Text = billNum == null ? "00" : billNum;
+            if (vehiclDetailList != null)
+            {
+                vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
+                                                   vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
+                vehicleNumberAutoComplete.ItemSelected += VehicleNumberAutoComplete_ItemSelected;
+            }
+        }
+
+        private void VehicleNumberAutoComplete_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
+        {
+            ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
+                vehiclDetailList.Where(x => x.OName == vehicleNumberAutoComplete.Text).Select(x => x.OName).Distinct().ToArray());
+        }
+
         private void ShowLoader(bool isToHide)
         {
-            //var thread = new Thread(new ThreadStart(delegate
-            //{
             RunOnUiThread(() =>
             {
                 if (isToHide)

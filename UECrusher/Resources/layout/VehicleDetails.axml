@@ -3,13 +3,6 @@
     android:layout_width="match_parent"
     android:background="@color/borderColor"
     android:layout_height="match_parent">
-    <ProgressBar
-        android:id="@+id/loader"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -82,14 +75,14 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder"
                 android:id="@+id/lblOwnerName" />
-        <!--Customer-->
+        <!--Customer/Owner Name-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder">
                 <Spinner
-                    android:id="@+id/vehicleType"
+                    android:id="@+id/ownerNumberSpinner"
                     android:layout_width="match_parent"
                     android:textSize="18dp"
                     android:textStyle="bold"
@@ -166,4 +159,11 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <ProgressBar
+        android:id="@+id/loader"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -2,7 +2,7 @@
 {
     public class Utilities
     {
-        public const int BILL_NUMBER = 1000001;
+        public const int BILL_NUMBER = 00;
         public const string ADMIN = "admin";
         public const string CONFIG = "config";
         public const string IPAddress = "ip";
