@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views.InputMethods;
 using Android.Widget;
 using Newtonsoft.Json;
 using UECrusher.CommonFunctions;
@@ -23,12 +25,13 @@ namespace UECrusher.Activity
         private AutoCompleteTextView vehicleNumberAutoComplete;
         private RadioGroup radioGroup;
         private RadioButton cashRadioButton, creditRadioButton;
-        private Spinner itemType;
-        private Spinner ownerNumber;
+        private Spinner itemTypeSpinner;
+        private TextView ownerName;
         private Spinner wMode;
         private ScrollView layScroll;
-        private ProgressBar progressLoader;
+        private ProgressBar progressLoader;  
         private List<VehicleDetails> vehiclDetailList;
+        private List<ItemDetails> itemDetails;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -43,15 +46,21 @@ namespace UECrusher.Activity
             //layScroll.Alpha = 0.5f;
             var lblTittle = FindViewById<TextView>(Resource.Id.lblTittle);
             lblBillNumber = FindViewById<TextView>(Resource.Id.lblBillNumber);
-            lblDate = FindViewById<TextView>(Resource.Id.lblDate);
+            lblDate = FindViewById<TextView>(Resource.Id.lbldateTime);
             lblEmptyWeight = FindViewById<TextView>(Resource.Id.lblEmptyWeight);
             vehicleNumberAutoComplete = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
             radioGroup = FindViewById<RadioGroup>(Resource.Id.radioPaymentMode);
             cashRadioButton = FindViewById<RadioButton>(Resource.Id.cashRadioButton);
             creditRadioButton = FindViewById<RadioButton>(Resource.Id.creditRadioButton);
-            itemType = FindViewById<Spinner>(Resource.Id.itemTypeSpinner);
-            ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);
+            itemTypeSpinner = FindViewById<Spinner>(Resource.Id.itemTypeSpinner);
+            // ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);
+            ownerName = FindViewById<TextView>(Resource.Id.lblOwnerName);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
+
+            lblDate.Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            vehicleNumberAutoComplete.ItemClick += VehicleNumberAutoComplete_ItemClick;
+            vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
+            vehicleNumberAutoComplete.Threshold = 1;
 
             //    var task = new Thread(() =>
             //      {                
@@ -68,11 +77,44 @@ namespace UECrusher.Activity
             );
         }
 
+        private void VehicleNumberAutoComplete_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
+        {
+            if (vehicleNumberAutoComplete.Text == string.Empty)
+            {
+                ClearAllFields();
+            }
+        }
+
+        private void VehicleNumberAutoComplete_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            var list = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).FirstOrDefault();
+            // ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, list);
+            ownerName.Text = list.OName;
+            lblEmptyWeight.Text = list.EmptyWeight;
+
+            //ownerNumber.PerformClick();         
+        }
+
+        private void ClearAllFields()
+        {
+            lblEmptyWeight.Text = string.Empty;
+            ownerName.Text = string.Empty;
+        }
+
+        private void HideKeyboard()
+        {
+            InputMethodManager inputManager = (InputMethodManager)GetSystemService(InputMethodService);
+            inputManager.HideSoftInputFromWindow(Window.CurrentFocus.WindowToken, HideSoftInputFlags.NotAlways);
+        }
+
         private async Task GetDetails()
         {
-            WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
-            var did = AppPreferences.GetString(this, Utilities.DEVICEID);
-            var siteId = AppPreferences.GetString(this, Utilities.SITEID);
+            //WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
+            WebService.IPADDRESS = "49.207.180.49";
+            var did = "FED11";
+            //AppPreferences.GetString(this, Utilities.DEVICEID);
+            var siteId = "2";
+            //AppPreferences.GetString(this, Utilities.SITEID);
 
             if (!did.Equals(string.Empty) && !siteId.Equals(string.Empty) && !WebService.IPADDRESS.Equals(string.Empty))
             {
@@ -80,14 +122,20 @@ namespace UECrusher.Activity
                 {
                     var result = WebService.Singleton.PostDataToWebService("GetVE", did, siteId);
                     vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    FillVehicleDetails();
+                    var itemType = WebService.Singleton.PostDataToWebService("GetItem",did,siteId);
+                    itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
+                    RunOnUiThread(() =>
+                    {
+                        FillVehicleDetails();
+                    });
                 }
-                catch
+                catch (Exception ex)
                 {
                     RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
                     });
+                    Console.WriteLine(ex.Message);
                 }
             }
             else
@@ -103,19 +151,14 @@ namespace UECrusher.Activity
         private void FillVehicleDetails()
         {
             var billNum = AppPreferences.GetString(this, Utilities.BILLNUMBER);
-            lblBillNumber.Text = billNum == null ? "00" : billNum;
+            lblBillNumber.Text = "LB" + (billNum == string.Empty ? "00" : billNum);
             if (vehiclDetailList != null)
             {
                 vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
                                                    vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
-                vehicleNumberAutoComplete.ItemSelected += VehicleNumberAutoComplete_ItemSelected;
+                itemType
+                wMode.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Sales", "Purchase" });
             }
-        }
-
-        private void VehicleNumberAutoComplete_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
-                vehiclDetailList.Where(x => x.OName == vehicleNumberAutoComplete.Text).Select(x => x.OName).Distinct().ToArray());
         }
 
         private void ShowLoader(bool isToHide)
