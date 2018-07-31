@@ -3,80 +3,80 @@
     android:layout_width="match_parent"
     android:background="@color/borderColor"
     android:layout_height="match_parent">
-    <TextView
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      android:textColor="@android:color/white"
+      android:text="Vehicle Entry details"
+      android:gravity="center"
+      android:id="@+id/lblTittle"
+      android:textStyle="bold"
+      android:textSize="24dp" />
+  <ScrollView
+      android:layout_width="match_parent"
+      android:fillViewport="true"
+      android:layout_margin="10dp"
+      android:scrollbars="none"
+      android:layout_below="@id/lblTittle"
+      android:visibility="visible"
+      android:id="@+id/layScroll"
+      android:layout_height="wrap_content">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textColor="@android:color/white"
-        android:text="Vehicle Entry details"
-        android:gravity="center"
-        android:id="@+id/lblTittle"
-        android:textStyle="bold"
-        android:textSize="24dp" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_margin="10dp"
-        android:scrollbars="none"
-        android:layout_below="@id/lblTittle"
-        android:visibility="visible"
-        android:id="@+id/layScroll"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusableInTouchMode="true"
-            android:descendantFocusability="beforeDescendants"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Number"
-                android:layout_margin="10dp"
-                android:maxLines="1"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:gravity="center_vertical"
-                android:textSize="18dp"
-                android:paddingLeft="15dp"
-                android:background="@drawable/bottomborder"
-                android:id="@+id/lblBillNumber" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
-                android:id="@+id/lbldateTime" />
-            <AutoCompleteTextView
-                android:id="@+id/vehicleNumber"
-                android:layout_width="match_parent"
-                android:layout_margin="10dp"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:hint="Vehicle Number"
-                android:inputType="textCapCharacters"
-                android:paddingLeft="15dp"
-                android:theme="@style/Autocomplete"
-                android:background="@drawable/bottomborder"
-                android:layout_height="40dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
-                android:id="@+id/lblOwnerName" />
-        <!--Customer/Owner Name-->
-        <!--
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:descendantFocusability="beforeDescendants"
+        android:orientation="vertical">
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:hint="Number"
+          android:layout_margin="10dp"
+          android:maxLines="1"
+          android:textStyle="bold"
+          android:textColor="@android:color/black"
+          android:gravity="center_vertical"
+          android:textSize="18dp"
+          android:paddingLeft="15dp"
+          android:background="@drawable/bottomborder"
+          android:id="@+id/lblBillNumber" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:textStyle="bold"
+          android:textSize="18dp"
+          android:gravity="center_vertical"
+          android:textColor="@android:color/black"
+          android:paddingLeft="15dp"
+          android:layout_margin="10dp"
+          android:background="@drawable/bottomborder"
+          android:id="@+id/lbldateTime" />
+      <AutoCompleteTextView
+          android:id="@+id/vehicleNumber"
+          android:layout_width="match_parent"
+          android:layout_margin="10dp"
+          android:textSize="18dp"
+          android:textStyle="bold"
+          android:textColor="@android:color/black"
+          android:hint="Vehicle Number"
+          android:inputType="textCapCharacters"
+          android:paddingLeft="15dp"
+          android:theme="@style/Autocomplete"
+          android:background="@drawable/bottomborder"
+          android:layout_height="40dp" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:textStyle="bold"
+          android:textSize="18dp"
+          android:gravity="center_vertical"
+          android:textColor="@android:color/black"
+          android:paddingLeft="15dp"
+          android:layout_margin="10dp"
+          android:background="@drawable/bottomborder"
+          android:id="@+id/lblOwnerName" />
+      <!--Customer/Owner Name-->
+      <!--
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,81 +91,91 @@
                     android:hint="Customer"
                     android:layout_height="40dp" />
             </LinearLayout>-->
-        <!--Item Type-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder">
-                <Spinner
-                    android:id="@+id/itemTypeSpinner"
-                    android:layout_width="match_parent"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:hint="Item"
-                    android:layout_height="40dp" />
-            </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
-                android:id="@+id/lblEmptyWeight" />
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginLeft="5dp"
-                android:id="@+id/radioPaymentMode"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/cashRadioButton"
-                    android:layout_width="wrap_content"
-                    android:text="Cash"
-                    android:checked="true"
-                    android:buttonTint="@android:color/white"
-                    android:textColor="@android:color/white"
-                    android:layout_weight="1"
-                    android:textSize="18dp"
-                    android:layout_height="wrap_content" />
-                <RadioButton
-                    android:id="@+id/creditRadioButton"
-                    android:textColor="@android:color/white"
-                    android:layout_width="wrap_content"
-                    android:text="Credit"
-                    android:buttonTint="@android:color/white"
-                    android:layout_weight="1"
-                    android:textSize="18dp"
-                    android:layout_height="wrap_content" />
-            </RadioGroup>
-        <!--W Mode-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder">
-                <Spinner
-                    android:id="@+id/vehicleModeSpinner"
-                    android:layout_width="match_parent"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:hint="W Mode"
-                    android:layout_height="40dp" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-    <ProgressBar
-        android:id="@+id/loader"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+      <!--Item Type-->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="10dp"
+          android:background="@drawable/bottomborder">
+        <Spinner
+            android:id="@+id/itemTypeSpinner"
+            android:layout_width="match_parent"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:hint="Item"
+            android:layout_height="40dp" />
+      </LinearLayout>
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:textStyle="bold"
+          android:textSize="18dp"
+          android:gravity="center_vertical"
+          android:textColor="@android:color/black"
+          android:paddingLeft="15dp"
+          android:layout_margin="10dp"
+          android:background="@drawable/bottomborder"
+          android:id="@+id/lblEmptyWeight" />
+      <RadioGroup
+          android:layout_width="match_parent"
+          android:orientation="horizontal"
+          android:weightSum="2"
+          android:layout_marginLeft="5dp"
+          android:id="@+id/radioPaymentMode"
+          android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/cashRadioButton"
+            android:layout_width="wrap_content"
+            android:text="Cash"
+            android:checked="true"
+            android:buttonTint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:layout_weight="1"
+            android:textSize="18dp"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/creditRadioButton"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:text="Credit"
+            android:buttonTint="@android:color/white"
+            android:layout_weight="1"
+            android:textSize="18dp"
+            android:layout_height="wrap_content" />
+      </RadioGroup>
+      <!--W Mode-->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="10dp"
+          android:background="@drawable/bottomborder">
+        <Spinner
+            android:id="@+id/vehicleModeSpinner"
+            android:layout_width="match_parent"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:hint="W Mode"
+            android:layout_height="40dp" />
+      </LinearLayout>
+      <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Store"           
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textAllCaps="false"
+            android:id="@+id/btnStore"
+            android:background="@android:color/white"
+            android:textColor="@color/borderColor" />
+    </LinearLayout>
+  </ScrollView>
+  <ProgressBar
+      android:id="@+id/loader"
+      android:visibility="gone"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_centerHorizontal="true" />
 </RelativeLayout>

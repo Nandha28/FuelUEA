@@ -29,7 +29,7 @@ namespace UECrusher.Activity
         private TextView ownerName;
         private Spinner wMode;
         private ScrollView layScroll;
-        private ProgressBar progressLoader;  
+        private ProgressBar progressLoader;
         private List<VehicleDetails> vehiclDetailList;
         private List<ItemDetails> itemDetails;
 
@@ -57,7 +57,7 @@ namespace UECrusher.Activity
             ownerName = FindViewById<TextView>(Resource.Id.lblOwnerName);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
 
-            lblDate.Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME, CultureInfo.InvariantCulture);
             vehicleNumberAutoComplete.ItemClick += VehicleNumberAutoComplete_ItemClick;
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
             vehicleNumberAutoComplete.Threshold = 1;
@@ -83,14 +83,24 @@ namespace UECrusher.Activity
             {
                 ClearAllFields();
             }
+            var isRegisterVehicle = vehiclDetailList.Any(x => x.RegNo.Contains(vehicleNumberAutoComplete.Text));
+            if (!isRegisterVehicle)
+            {
+                ownerName.Text = Utilities.NEW_VEHICLE;
+                lblEmptyWeight.Text = Utilities.EMPTY_WEIGHT;
+            }
         }
 
         private void VehicleNumberAutoComplete_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             var list = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).FirstOrDefault();
             // ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, list);
-            ownerName.Text = list.OName;
-            lblEmptyWeight.Text = list.EmptyWeight;
+            if (list != null)
+            {
+                ownerName.Text = list.OName;
+                lblEmptyWeight.Text = list.EmptyWeight;
+            }
+            itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
 
             //ownerNumber.PerformClick();         
         }
@@ -99,6 +109,7 @@ namespace UECrusher.Activity
         {
             lblEmptyWeight.Text = string.Empty;
             ownerName.Text = string.Empty;
+            itemTypeSpinner.Adapter = null;            
         }
 
         private void HideKeyboard()
@@ -120,9 +131,9 @@ namespace UECrusher.Activity
             {
                 try
                 {
-                    var result = WebService.Singleton.PostDataToWebService("GetVE", did, siteId);
+                    var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS, did, siteId, Utilities.GET_VEHICLE_RESULT);
                     vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    var itemType = WebService.Singleton.PostDataToWebService("GetItem",did,siteId);
+                    var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, did, siteId, Utilities.GET_ITEM_RESULT);
                     itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
                     RunOnUiThread(() =>
                     {
@@ -156,7 +167,7 @@ namespace UECrusher.Activity
             {
                 vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
                                                    vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
-                itemType
+
                 wMode.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Sales", "Purchase" });
             }
         }
