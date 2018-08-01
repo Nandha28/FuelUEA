@@ -28,6 +28,7 @@ namespace UECrusher.Activity
         private Spinner itemTypeSpinner;
         private TextView ownerName;
         private Spinner wMode;
+        private Button btnPrint;
         private ScrollView layScroll;
         private ProgressBar progressLoader;
         private List<VehicleDetails> vehiclDetailList;
@@ -56,7 +57,8 @@ namespace UECrusher.Activity
             // ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);
             ownerName = FindViewById<TextView>(Resource.Id.lblOwnerName);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
-
+            btnPrint = FindViewById<Button>(Resource.Id.btnPrint);
+            btnPrint.Click += BtnPrint_Click;
             lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME, CultureInfo.InvariantCulture);
             vehicleNumberAutoComplete.ItemClick += VehicleNumberAutoComplete_ItemClick;
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
@@ -75,7 +77,7 @@ namespace UECrusher.Activity
             ShowLoader(true);
             Task.Run(() => GetDetails()
             );
-        }
+        }       
 
         private void VehicleNumberAutoComplete_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
@@ -190,6 +192,16 @@ namespace UECrusher.Activity
                 }
             });
             //thread.Start();
+        }
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            UploadItemDetails();
+        }
+
+        private Task UploadItemDetails()
+        {
+
+            return null;
         }
     }
 }

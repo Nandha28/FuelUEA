@@ -5,6 +5,7 @@
         public const int BILL_NUMBER = 00;
         public const string ADMIN = "admin";
         public const string CONFIG = "config";
+        public const string DELIVERY = "delivery";
         public const string IPAddress = "ip";
         public const string DEVICEID = "deviceid";
         public const string SITEID = "siteid";
