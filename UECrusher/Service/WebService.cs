@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using System;
 using System.Threading.Tasks;
 
 namespace Utilities
@@ -21,8 +22,6 @@ namespace Utilities
         {
             var client = new RestClient(BASEURL + IPADDRESS + SUBURL);
             var request = new RestRequest(Method.GET);
-            // request.AddHeader("postman-token", "6e4a4235-cc51-e3fb-79df-3c66df033c77");
-            //request.AddHeader("cache-control", "no-cache");
             request.AddHeader("content-type", "text/xml");
             request.AddParameter("text/xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap:Envelope " +
                 "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
@@ -37,14 +36,54 @@ namespace Utilities
                 "</soap:Envelope>", ParameterType.RequestBody);
 
             IRestResponse response = client.Execute(request);
-            System.Console.WriteLine(response.Content);
-            //var data = new String("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://tempuri.org/\">
-            //[{\"VehicleID_PK\":\"1635\",\"RegNo\":\"TN21AX4273\",\"DriverID_PK\":\"158\",\"DriverName\":\"MITTU\",\"TypeName\":\
-            //"Line Vehicle\"},{\"VehicleID_PK\":\"1635\",\"RegNo\":\"TN21AX4273\",\"DriverID_PK\":\"159\",\"DriverName\":\"TULLU\",\"
-            //TypeName\":\"Line Vehicle\"},{\"VehicleID_PK\":\"1636\",\"RegNo\":\"TN19K1207\",\"DriverID_PK\":\"160\",\"DriverName\":\"
-            //AMYAJENA\",\"TypeName\":\"Line Vehicle\"},{\"VehicleID_PK\":\"1637\",\"RegNo\":\"TN19H3430\",\"DriverID_PK\":\"161\",\"Dri
-            //verName\":\"PRADEEPGOUD\",\"TypeName\":\"Line Vehicle\"}]</string>");   49.207.180.49         
+            Console.WriteLine(response.Content);
             return Between(response.Content, "org/\">", "</string>");
+        }
+        public string GetBillDetails(string method, string billNo, string siteId)
+        {
+            var client = new RestClient(BASEURL + IPADDRESS + SUBURL);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("content-type", "text/xml");
+            request.AddParameter("text/xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap:Envelope " +
+                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
+                "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n  " +
+                "<soap:Body>\r\n    " +
+                "<" + method + " xmlns=\"http://tempuri.org/\">\r\n   " +
+                "   <LB>" + billNo + "</LB>\r\n    " +
+                "  <SiteID>" + siteId + "</SiteID>\r\n" +
+                "    </" + method + ">\r\n " +
+                " </soap:Body>\r\n" +
+                "</soap:Envelope>", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            return Between(response.Content, "<CheckVEResult>", "</CheckVEResult>");
+        }
+
+        public string UVEDS(string billNo, string itemId, string itemName, string loadTime)
+        {
+            //11/01/2018 13:05:00 == loadTime
+            var client = new RestClient(BASEURL + IPADDRESS + SUBURL);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("content-type", "text/xml");
+            request.AddParameter("text/xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap:Envelope " +
+                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
+                "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n  " +
+                "<soap:Body>\r\n    " +
+                "<UVEDS xmlns=\"http://tempuri.org/\">\r\n   " +
+                "   <LB>" + billNo + "</LB>\r\n    " +
+                "  <ItemID>" + itemId + "</ItemID>\r\n" +
+                "  <ItemName>" + itemName + "</ItemName>\r\n" +
+                "  <LoadTime>" + loadTime + "</LoadTime>\r\n" +
+                "    </UVEDS>\r\n " +
+                " </soap:Body>\r\n" +
+                "</soap:Envelope>", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            return Between(response.Content, "<UVEDSResult>", "</UVEDSResult>");
         }
 
         public Task<string> PostDataToWebService(string method, string deviceID, string siteId, string responseText)
@@ -72,10 +111,10 @@ namespace Utilities
             //    "</GetVDResult>");
             return Task.Run(() => Between(response.Content, $"<{responseText}>", $"</{responseText}>"));
 
-          //  return Between(response.Content, $"<{responseText}>", $"</{responseText}>");
+            //  return Between(response.Content, $"<{responseText}>", $"</{responseText}>");
         }
 
-        public string PostAllDataToWebService(string method, string json)
+        public string PostAllDataToWebService(string method, string json, string responseStr)
         {
             var client = new RestClient(BASEURL + IPADDRESS + SUBURL);
             var request = new RestRequest(Method.POST);
@@ -101,7 +140,7 @@ namespace Utilities
             //    "{\"VID\":\"1637\",\"RegNo\":\"TN19H3430\",\"DriverID_PK\":\"161\",\"DriverName\":\"PRADEEPGOUD\",\"TypeName\":\"Line Vehicle\"}]" +
             //    "</GetVDResult>");
 
-            return Between(response.Content, "<UPFStockResult>", "</UPFStockResult>");
+            return Between(response.Content, $"<{responseStr}>", $"</{responseStr}>");
         }
 
         public string Between(string Text, string FirstString, string LastString)

@@ -13,12 +13,15 @@
         public const string DEVICESTATUS = "devicestatus";
         public const string NEW_VEHICLE = "New Vehicle";
         public const string EMPTY_WEIGHT = "0";
-        public const string DATE_MONTH_TIME = "dd/MM/yyyy hh:mm:ss tt";
+        public const string DATE_MONTH_TIME_AMPM = "dd/MM/yyyy hh:mm:ss tt";
+        public const string MONTH_DATE_TIME = "MM/dd/yyyy hh:mm:ss";
         //Methods
         public const string GET_VEHICLE_DETAILS = "GetVE";
         public const string GET_VEHICLE_RESULT = "GetVEResult";
 
         public const string GET_ITEM_DETAILS = "GetItem";
         public const string GET_ITEM_RESULT = "GetItemResult";
+
+        public const string INVE = "INVE";
     }
 }

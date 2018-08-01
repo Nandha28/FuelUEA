@@ -16,7 +16,7 @@ using Utilities;
 
 namespace UECrusher.Activity
 {
-    [Activity(Label = "VehicleDetailActivity", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "VehicleDetailActivity")]
     public class VehicleDetailActivity : AppCompatActivity
     {
         private TextView lblBillNumber;
@@ -33,6 +33,8 @@ namespace UECrusher.Activity
         private ProgressBar progressLoader;
         private List<VehicleDetails> vehiclDetailList;
         private List<ItemDetails> itemDetails;
+        private string did;
+        private string siteId;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -59,7 +61,7 @@ namespace UECrusher.Activity
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
             btnPrint = FindViewById<Button>(Resource.Id.btnPrint);
             btnPrint.Click += BtnPrint_Click;
-            lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME, CultureInfo.InvariantCulture);
+            lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME_AMPM, CultureInfo.InvariantCulture);
             vehicleNumberAutoComplete.ItemClick += VehicleNumberAutoComplete_ItemClick;
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
             vehicleNumberAutoComplete.Threshold = 1;
@@ -77,7 +79,7 @@ namespace UECrusher.Activity
             ShowLoader(true);
             Task.Run(() => GetDetails()
             );
-        }       
+        }
 
         private void VehicleNumberAutoComplete_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
@@ -102,6 +104,7 @@ namespace UECrusher.Activity
                 ownerName.Text = list.OName;
                 lblEmptyWeight.Text = list.EmptyWeight;
             }
+            HideKeyboard();
             itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
 
             //ownerNumber.PerformClick();         
@@ -111,7 +114,7 @@ namespace UECrusher.Activity
         {
             lblEmptyWeight.Text = string.Empty;
             ownerName.Text = string.Empty;
-            itemTypeSpinner.Adapter = null;            
+            itemTypeSpinner.Adapter = null;
         }
 
         private void HideKeyboard()
@@ -124,9 +127,9 @@ namespace UECrusher.Activity
         {
             //WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
             WebService.IPADDRESS = "49.207.180.49";
-            var did = "FED11";
+            did = "FED11";
             //AppPreferences.GetString(this, Utilities.DEVICEID);
-            var siteId = "2";
+            siteId = "2";
             //AppPreferences.GetString(this, Utilities.SITEID);
 
             if (!did.Equals(string.Empty) && !siteId.Equals(string.Empty) && !WebService.IPADDRESS.Equals(string.Empty))
@@ -164,7 +167,7 @@ namespace UECrusher.Activity
         private void FillVehicleDetails()
         {
             var billNum = AppPreferences.GetString(this, Utilities.BILLNUMBER);
-            lblBillNumber.Text = "LB" + (billNum == string.Empty ? "00" : billNum);
+            lblBillNumber.Text = billNum == string.Empty ? "LB1" : billNum;
             if (vehiclDetailList != null)
             {
                 vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
@@ -195,13 +198,45 @@ namespace UECrusher.Activity
         }
         private void BtnPrint_Click(object sender, EventArgs e)
         {
-            UploadItemDetails();
+            var response = UploadItemDetails();
+            if (!response.Equals(string.Empty))
+            {
+                AppPreferences.SaveString(this, Utilities.BILLNUMBER, response);
+                Toast.MakeText(this,"Sucess", ToastLength.Short).Show();
+            }
         }
 
-        private Task UploadItemDetails()
+        private string UploadItemDetails()
         {
+            var str = FindViewById<RadioButton>(radioGroup.CheckedRadioButtonId).Text;
 
-            return null;
+            //Console.WriteLine(dataToUpload);
+            var list = new List<UploadItemDetails>()
+            {
+               new UploadItemDetails
+               {
+                // DID = AppPreferences.GetString(this, Utilities.DEVICEID),
+                DID = did,
+                EntryDate = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                EWeight = lblEmptyWeight.Text,
+                LBNo = lblBillNumber.Text,
+                OwnerName = ownerName.Text,
+                PayMode = str,
+                VehicleNo = vehicleNumberAutoComplete.Text,
+                //SiteID = AppPreferences.GetString(this, Utilities.SITEID),
+                SiteID = siteId,
+                WMode = wMode.SelectedItem.ToString(),
+                ItemName = itemTypeSpinner.SelectedItem.ToString(),
+                OwnerId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().OID,
+                VehicleId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().VID,
+                ItemId = itemDetails.Where(x => x.MaterialName == itemTypeSpinner.SelectedItem.ToString()).First().ItemID_PK
+               }
+        };
+            var serializedData = JsonConvert.SerializeObject(list);
+            var result = WebService.Singleton.PostAllDataToWebService(Utilities.INVE, serializedData, "INVEResult");
+            Console.WriteLine(result);
+            var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
+            return deserializeResult.First().CUNUM;
         }
     }
 }

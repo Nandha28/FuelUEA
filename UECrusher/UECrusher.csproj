@@ -58,11 +58,14 @@
     <Compile Include="Activity\ConfigActivity.cs" />
     <Compile Include="Activity\DeliveryActivity.cs" />
     <Compile Include="Activity\LogInActivity.cs" />
+    <Compile Include="Activity\UVEDSDetails.cs" />
     <Compile Include="Activity\VehicleDetailActivity.cs" />
+    <Compile Include="Activity\VehicleDetailsGETVE.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Model\ItemDetails.cs" />
+    <Compile Include="Model\UploadFirstResult.cs" />
     <Compile Include="Model\UploadItemDetails.cs" />
     <Compile Include="Model\VehicleDetails.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

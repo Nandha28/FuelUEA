@@ -3,71 +3,115 @@
     android:background="@color/borderColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+  <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:id="@+id/layProgressLoader"
+       android:orientation="vertical">
+    <ProgressBar
+      android:visibility="gone"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_centerHorizontal="true" />
+  </LinearLayout>
+  <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:id="@+id/layBillEntry"
+       android:orientation="vertical">
+    <EditText
+      android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+     android:layout_margin="10dp"
+     android:maxLines="1"
+     android:singleLine="true"
+     android:inputType="text"
+     android:textSize="15dp"
+     android:hint="Bill Bumber"
+     android:textColorHint="@color/grey"
+     android:textColor="@color/grey"
+     android:paddingLeft="15dp"
+     android:id="@+id/txtBillNumber" />
+    <Button
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Check"
+              android:layout_alignParentBottom="true"
+              android:layout_gravity="center"
+              android:layout_margin="10dp"
+              android:textAllCaps="false"
+              android:id="@+id/btnCheck"
+              android:background="@android:color/white"
+              android:textColor="@color/borderColor" />
+  </LinearLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:visibility="gone"      
+      android:id="@+id/layDeliveryDetails"
+      android:orientation="vertical">
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:textColor="@android:color/white"
-            android:text="Delivery Details"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="24dp" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Number"
-            android:layout_margin="10dp"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:gravity="center_vertical"
-            android:textSize="18dp"
-            android:paddingLeft="15dp"
-            android:background="@drawable/bottomborder"
-            android:id="@+id/lblBillNumber" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder">
-            <Spinner
-                android:id="@+id/itemTypeSpinner"
-                android:layout_width="match_parent"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:hint="Item"
-                android:layout_height="40dp" />
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Date"
-            android:layout_margin="10dp"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:gravity="center_vertical"
-            android:background="@drawable/bottomborder"
-            android:textSize="18dp"
-            android:paddingLeft="15dp"
-            android:id="@+id/lblDate" />
-    <!--<LinearLayout
+        android:layout_height="60dp"
+        android:textColor="@android:color/white"
+        android:text="Delivery Details"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Number"
+        android:layout_margin="10dp"
+        android:maxLines="1"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:background="@drawable/bottomborder"
+        android:id="@+id/lblBillNumber" />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@drawable/bottomborder">
-        <Spinner
-            android:id="@+id/isDS"
-            android:layout_width="match_parent"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:hint="Item"
-            android:layout_height="40dp" />-->
+      <Spinner
+          android:id="@+id/itemTypeSpinner"
+          android:layout_width="match_parent"
+          android:textSize="18dp"
+          android:textStyle="bold"
+          android:textColor="@android:color/black"
+          android:hint="Item"
+          android:layout_height="40dp" />
     </LinearLayout>
+    <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Date"
+        android:layout_margin="10dp"
+        android:maxLines="1" 
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:background="@drawable/bottomborder"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:id="@+id/lblDate" />-->
+    <Button
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Update"
+              android:layout_alignParentBottom="true"
+              android:layout_gravity="center"
+              android:layout_margin="10dp"
+              android:textAllCaps="false"
+              android:id="@+id/btnUpdate"
+              android:background="@android:color/white"
+              android:textColor="@color/borderColor" />
+  </LinearLayout>
 </RelativeLayout>
