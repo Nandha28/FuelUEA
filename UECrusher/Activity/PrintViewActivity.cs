@@ -58,10 +58,12 @@ namespace UECrusher.Activity
             // Create your application here
             SetContentView(Resource.Layout.activity_main);
             layMainLinear = FindViewById<LinearLayout>(Resource.Id.layMainLinear);
-            layMainScroll = FindViewById<ScrollView>(Resource.Id.layMainScroll);        
+            layMainScroll = FindViewById<ScrollView>(Resource.Id.layMainScroll);
             var data = Intent.GetStringExtra("data");
-            var deserializeResult = JsonConvert.DeserializeObject<List<UploadItemDetails>>(data);
-            FindViewById<Button>(Resource.Id.btn).Click += (s,e) =>
+            var array = Intent.GetStringArrayListExtra("array");
+            var listType = Intent.GetStringExtra("typeof");
+
+            FindViewById<Button>(Resource.Id.btn).Click += (s, e) =>
             {
                 if (nGXPrinter != null)
                 {
@@ -70,12 +72,41 @@ namespace UECrusher.Activity
                     // layScrollview.Visibility = ViewStates.Gone;
                 }
             };
-            Print(deserializeResult.First());
+            if (listType.Equals("UploadItemDetails"))
+            {
+                var deserializeResult = JsonConvert.DeserializeObject<List<UploadItemDetails>>(data);
+                Print(deserializeResult.First(), array, listType);
+            }
+            else
+            {
+                var deserializeResult = JsonConvert.DeserializeObject<VehicleDetailsGETVE>(data);
+                PrintSecond(deserializeResult, array, listType);
+            }
         }
-        private void Print(UploadItemDetails uploadItemDetails)
+
+        private void PrintSecond(VehicleDetailsGETVE vehicleDetailsGETVE, IList<string> array, string listType)
         {
-            var array = new string[] { "LB. No.","Date", "Vehicle", "Customer","Item","Empty Weight",
-                                        "Pay Mode","W Mode","DID"};
+            var index = 0;
+            foreach (var item in vehicleDetailsGETVE.GetType().GetProperties())
+            {
+                try
+                {
+                    var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
+                    View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
+                    view.FindViewById<TextView>(Resource.Id.txtName).Text = array[index];
+                    view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(vehicleDetailsGETVE, null).ToString();
+                    layMainLinear.AddView(view, index);
+                    index++;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        private void Print(UploadItemDetails uploadItemDetails, IList<string> array, string listType)
+        {
             var index = 0;
             foreach (var item in uploadItemDetails.GetType().GetProperties())
             {
@@ -83,7 +114,7 @@ namespace UECrusher.Activity
                 {
                     var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
                     View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
-                    view.FindViewById<TextView>(Resource.Id.txtName).Text = "dummy";
+                    view.FindViewById<TextView>(Resource.Id.txtName).Text = array[index];
                     view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(uploadItemDetails, null).ToString();
                     layMainLinear.AddView(view, index);
                     index++;
@@ -92,7 +123,7 @@ namespace UECrusher.Activity
                 {
                     Console.WriteLine(ex.Message);
                 }
-            }      
+            }
         }
         public Bitmap GetCanvas(View view, int height, int width)
         {

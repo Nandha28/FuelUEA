@@ -63,7 +63,7 @@
     <Compile Include="Activity\LogInActivity.cs" />
     <Compile Include="Activity\PrintViewActivity.cs" />
     <Compile Include="Activity\VehicleDetailActivity.cs" />
-    <Compile Include="Activity\VehicleDetailsGETVE.cs" />
+    <Compile Include="Model\VehicleDetailsGETVE.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="MainActivity.cs" />

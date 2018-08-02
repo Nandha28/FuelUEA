@@ -226,6 +226,12 @@ namespace UECrusher.Activity
             //    AppPreferences.SaveString(this, Utilities.BILLNUMBER, response);
             //    Toast.MakeText(this, "Sucess", ToastLength.Short).Show();
             //}
+            RunOnUiThread(() =>
+            {
+                progressLoader.Visibility = ViewStates.Visible;
+                layScroll.Alpha = 0.5f;
+                Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
+            });
             var str = FindViewById<RadioButton>(radioGroup.CheckedRadioButtonId).Text;
             try
             {
@@ -253,16 +259,42 @@ namespace UECrusher.Activity
                 };
                 var serializedData = JsonConvert.SerializeObject(list);
                 var result = WebService.Singleton.PostAllDataToWebService(Utilities.INVE, serializedData, "INVEResult");
-                Console.WriteLine(result);
+                if (result == null)
+                {
+                    RunOnUiThread(() =>
+                    {
+                        progressLoader.Visibility = ViewStates.Gone;
+                        layScroll.Alpha = 1f;
+                        Window.ClearFlags(WindowManagerFlags.NotTouchable);
+                        Toast.MakeText(this, "Error in upload..", ToastLength.Short).Show();
+                    });
+                    return;
+                }
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
 
                 var intent = new Intent(this, typeof(PrintViewActivity));
-                intent.PutExtra("data", serializedData);
+                var lista = list.Select(x => new { x.LBNo, x.EntryDate, x.VehicleNo, x.OwnerName, x.ItemName, x.EWeight, x.PayMode, x.WMode });
+                var array = new string[] { "LB. No.", "Date", "Vehicle", "Customer", "Item", "Empty Weight", "Pay Mode", "W Mode" };
+                var seralizedPrintData = JsonConvert.SerializeObject(lista);
+                intent.PutExtra("data", seralizedPrintData);
+                intent.PutStringArrayListExtra("array", array);
+                intent.PutExtra("typeof", "UploadItemDetails");
                 StartActivity(intent);
+                RunOnUiThread(() =>
+                {
+                    progressLoader.Visibility = ViewStates.Gone;
+                    layScroll.Alpha = 1f;
+                    Window.ClearFlags(WindowManagerFlags.NotTouchable);                  
+                });
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                RunOnUiThread(() =>
+                {
+                    progressLoader.Visibility = ViewStates.Gone;
+                    layScroll.Alpha = 1f;
+                    Window.ClearFlags(WindowManagerFlags.NotTouchable);
+                });
             }
 
         }

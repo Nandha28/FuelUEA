@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -83,6 +84,7 @@ namespace UECrusher.Activity
                 RunOnUiThread(() =>
                 {
                     Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
+                    ShowLoader(false);
                 });
                 Console.WriteLine(ex.Message);
             }
@@ -117,7 +119,26 @@ namespace UECrusher.Activity
                 {
                     layDeliveryDetails.Visibility = Android.Views.ViewStates.Gone;
                     layBillEntry.Visibility = Android.Views.ViewStates.Visible;
-                    Toast.MakeText(this, "Successfully updated..", ToastLength.Short).Show();
+
+                    var array = new string[] { "LB. No.", "Date", "Item" };
+                    var list = new VehicleDetailsGETVE
+                    {
+                        LoadBillNo = itemDetailsGetVE.First().LoadBillNo,
+                        EntryDate = itemDetailsGetVE.First().EntryDate,
+                        ItemName = itemDetailsGetVE.First().ItemName
+                    };
+                    var serilizedData = JsonConvert.SerializeObject(list);
+
+                    var intent = new Intent(this, typeof(PrintViewActivity));
+                    intent.PutExtra("data", serilizedData);
+                    intent.PutStringArrayListExtra("array", array);
+                    intent.PutExtra("typeof", "VehicleDetailsGETVE");
+                    StartActivity(intent);
+                    //Toast.MakeText(this, "Successfully updated..", ToastLength.Short).Show();
+                }
+                else
+                {
+                    Toast.MakeText(this, "Error in updated..", ToastLength.Short).Show();
                 }
             }
             catch { }
@@ -138,11 +159,13 @@ namespace UECrusher.Activity
 
         private void CheckBillNumberAndGetDetails()
         {
-            WebService.IPADDRESS = "49.207.180.49";
-            did = "FED11";
+            // WebService.IPADDRESS = "49.207.180.49";
+            // did = "FED11";
             //AppPreferences.GetString(this, Utilities.DEVICEID);
-            siteId = "2";
-            //AppPreferences.GetString(this, Utilities.SITEID);
+            // siteId = "2";
+            WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
+            did = AppPreferences.GetString(this, Utilities.DEVICEID);
+            siteId = AppPreferences.GetString(this, Utilities.SITEID);
 
             if (!did.Equals(string.Empty) && !siteId.Equals(string.Empty) && !WebService.IPADDRESS.Equals(string.Empty))
             {
@@ -154,21 +177,28 @@ namespace UECrusher.Activity
                     {
                         layDeliveryDetails.Visibility = Android.Views.ViewStates.Visible;
                         layBillEntry.Visibility = Android.Views.ViewStates.Gone;
+                        lblBillNumber.Text = itemDetailsGetVE.First().LoadBillNo;
                     }
                     else
                     {
-                        Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
-                    }
-                    //vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    //var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, did, siteId, Utilities.GET_ITEM_RESULT);
+                        ShowWrongText();
+                    }                  
                 }
                 catch (Exception ex)
                 {
-
                     Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
                     Console.WriteLine(ex.Message);
                 }
             }
+            else
+            {
+                ShowWrongText();
+            }
+        }
+
+        private void ShowWrongText()
+        {
+            Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
         }
     }
 }
