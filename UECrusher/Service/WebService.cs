@@ -1,4 +1,7 @@
-﻿using RestSharp;
+﻿using Android.Graphics;
+using Android.Graphics.Drawables;
+using Android.Views;
+using RestSharp;
 using System;
 using System.Threading.Tasks;
 
@@ -158,6 +161,6 @@ namespace Utilities
             }
             catch { }
             return null;
-        }
+        }       
     }
 }

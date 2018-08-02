@@ -34,6 +34,9 @@
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>PdbOnly</DebugType>
@@ -58,7 +61,7 @@
     <Compile Include="Activity\ConfigActivity.cs" />
     <Compile Include="Activity\DeliveryActivity.cs" />
     <Compile Include="Activity\LogInActivity.cs" />
-    <Compile Include="Activity\UVEDSDetails.cs" />
+    <Compile Include="Activity\PrintViewActivity.cs" />
     <Compile Include="Activity\VehicleDetailActivity.cs" />
     <Compile Include="Activity\VehicleDetailsGETVE.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
@@ -168,6 +171,18 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\DeliveryDetail.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PrinterBinding\PrinterBinding.csproj">
+      <Project>{80be7c94-a8b4-4670-8975-e6eea17e4b2b}</Project>
+      <Name>PrinterBinding</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\PrintView.axml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

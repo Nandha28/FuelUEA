@@ -6,7 +6,7 @@ using UECrusher.Activity;
 
 namespace UECrusher
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class LogInActivity : AppCompatActivity
     {      
         protected override void OnCreate(Bundle savedInstanceState)

@@ -3,6 +3,17 @@
     android:layout_width="match_parent"
     android:background="@color/borderColor"
     android:layout_height="match_parent">
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/layScrollview"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layLinear" />
+    </ScrollView>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"

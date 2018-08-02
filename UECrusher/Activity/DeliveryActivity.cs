@@ -14,7 +14,7 @@ using Utilities;
 
 namespace UECrusher.Activity
 {
-    [Activity(Label = "DeliveryActivity", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "DeliveryActivity", Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
     public class DeliveryActivity : AppCompatActivity
     {
         private TextView lblBillNumber;
@@ -63,12 +63,12 @@ namespace UECrusher.Activity
 
         private async void GetDetails()
         {
-            //WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
-            WebService.IPADDRESS = "49.207.180.49";
-            did = "FED11";
-            //AppPreferences.GetString(this, Utilities.DEVICEID);
-            siteId = "2";
-            //AppPreferences.GetString(this, Utilities.SITEID);
+            WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
+            //WebService.IPADDRESS = "49.207.180.49";
+            //did = "FED11";
+            did = AppPreferences.GetString(this, Utilities.DEVICEID);
+            //siteId = "2";
+            siteId = AppPreferences.GetString(this, Utilities.SITEID);
             try
             {
                 //var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS, did, siteId, Utilities.GET_VEHICLE_RESULT);
@@ -117,7 +117,7 @@ namespace UECrusher.Activity
                 {
                     layDeliveryDetails.Visibility = Android.Views.ViewStates.Gone;
                     layBillEntry.Visibility = Android.Views.ViewStates.Visible;
-                    Toast.MakeText(this,"Successfully updated..", ToastLength.Short).Show();
+                    Toast.MakeText(this, "Successfully updated..", ToastLength.Short).Show();
                 }
             }
             catch { }

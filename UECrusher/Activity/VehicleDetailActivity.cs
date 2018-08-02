@@ -5,10 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Com.Ngx.Mp100sdk;
+using Com.Ngx.Mp100sdk.Intefaces;
 using Newtonsoft.Json;
 using UECrusher.CommonFunctions;
 using UECrusher.Model;
@@ -16,9 +20,10 @@ using Utilities;
 
 namespace UECrusher.Activity
 {
-    [Activity(Label = "VehicleDetailActivity")]
-    public class VehicleDetailActivity : AppCompatActivity
+    [Activity(Theme = "@style/AppTheme.NoActionBar")]
+    public class VehicleDetailActivity : AppCompatActivity, INGXCallback
     {
+        NGXPrinter nGXPrinter;
         private TextView lblBillNumber;
         private TextView lblDate;
         private TextView lblEmptyWeight;
@@ -26,10 +31,12 @@ namespace UECrusher.Activity
         private RadioGroup radioGroup;
         private RadioButton cashRadioButton, creditRadioButton;
         private Spinner itemTypeSpinner;
+        private ScrollView layScrollview;
         private TextView ownerName;
         private Spinner wMode;
         private Button btnPrint;
         private ScrollView layScroll;
+        private LinearLayout layLinear;
         private ProgressBar progressLoader;
         private List<VehicleDetails> vehiclDetailList;
         private List<ItemDetails> itemDetails;
@@ -42,6 +49,16 @@ namespace UECrusher.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.VehicleDetails);
+
+            try
+            {
+                nGXPrinter = NGXPrinter.NgxPrinterInstance;
+                nGXPrinter.InitService(this, this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             progressLoader = FindViewById<ProgressBar>(Resource.Id.loader);
             // progressLoader.Visibility = Android.Views.ViewStates.Visible;
@@ -56,7 +73,12 @@ namespace UECrusher.Activity
             cashRadioButton = FindViewById<RadioButton>(Resource.Id.cashRadioButton);
             creditRadioButton = FindViewById<RadioButton>(Resource.Id.creditRadioButton);
             itemTypeSpinner = FindViewById<Spinner>(Resource.Id.itemTypeSpinner);
-            // ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);
+            // ownerNumber = FindViewById<Spinner>(Resource.Id.ownerNumberSpinner);          
+
+            layScrollview = FindViewById<ScrollView>(Resource.Id.layScrollview);
+            layLinear = FindViewById<LinearLayout>(Resource.Id.layLinear);
+            layScrollview.Visibility = ViewStates.Gone;
+
             ownerName = FindViewById<TextView>(Resource.Id.lblOwnerName);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
             btnPrint = FindViewById<Button>(Resource.Id.btnPrint);
@@ -125,12 +147,12 @@ namespace UECrusher.Activity
 
         private async Task GetDetails()
         {
-            //WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
-            WebService.IPADDRESS = "49.207.180.49";
-            did = "FED11";
-            //AppPreferences.GetString(this, Utilities.DEVICEID);
-            siteId = "2";
-            //AppPreferences.GetString(this, Utilities.SITEID);
+            WebService.IPADDRESS = AppPreferences.GetString(this, Utilities.IPAddress);
+            //WebService.IPADDRESS = "49.207.180.49";
+            //did = "FED11";
+            did = AppPreferences.GetString(this, Utilities.DEVICEID);
+            //siteId = "2";
+            siteId = AppPreferences.GetString(this, Utilities.SITEID);
 
             if (!did.Equals(string.Empty) && !siteId.Equals(string.Empty) && !WebService.IPADDRESS.Equals(string.Empty))
             {
@@ -183,60 +205,80 @@ namespace UECrusher.Activity
             {
                 if (isToHide)
                 {
-                    progressLoader.Visibility = Android.Views.ViewStates.Visible;
+                    progressLoader.Visibility = ViewStates.Visible;
                     layScroll.Alpha = 0.5f;
-                    Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
+                    Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
                 }
                 else
                 {
-                    progressLoader.Visibility = Android.Views.ViewStates.Gone;
+                    progressLoader.Visibility = ViewStates.Gone;
                     layScroll.Alpha = 1f;
-                    Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                    Window.ClearFlags(WindowManagerFlags.NotTouchable);
                 }
             });
             //thread.Start();
         }
         private void BtnPrint_Click(object sender, EventArgs e)
         {
-            var response = UploadItemDetails();
-            if (!response.Equals(string.Empty))
+            //var response = UploadItemDetails();
+            //if (response != null && !response.Equals(string.Empty))
+            //{
+            //    AppPreferences.SaveString(this, Utilities.BILLNUMBER, response);
+            //    Toast.MakeText(this, "Sucess", ToastLength.Short).Show();
+            //}
+            var str = FindViewById<RadioButton>(radioGroup.CheckedRadioButtonId).Text;
+            try
             {
-                AppPreferences.SaveString(this, Utilities.BILLNUMBER, response);
-                Toast.MakeText(this,"Sucess", ToastLength.Short).Show();
+                //Console.WriteLine(dataToUpload);
+                var list = new List<UploadItemDetails>()
+                {
+                    new UploadItemDetails
+                    {
+                        // DID = AppPreferences.GetString(this, Utilities.DEVICEID),
+                        DID = did,
+                        EntryDate = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                        EWeight = lblEmptyWeight.Text,
+                        LBNo = lblBillNumber.Text,
+                        OwnerName = ownerName.Text,
+                        PayMode = str,
+                        VehicleNo = vehicleNumberAutoComplete.Text,
+                        //SiteID = AppPreferences.GetString(this, Utilities.SITEID),
+                        SiteID = siteId,
+                        WMode = wMode.SelectedItem.ToString(),
+                        ItemName = itemTypeSpinner.SelectedItem.ToString(),
+                        OwnerId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().OID,
+                        VehicleId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().VID,
+                        ItemId = itemDetails.Where(x => x.MaterialName == itemTypeSpinner.SelectedItem.ToString()).First().ItemID_PK
+                    }
+                };
+                var serializedData = JsonConvert.SerializeObject(list);
+                var result = WebService.Singleton.PostAllDataToWebService(Utilities.INVE, serializedData, "INVEResult");
+                Console.WriteLine(result);
+                var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
+
+                var intent = new Intent(this, typeof(PrintViewActivity));
+                intent.PutExtra("data", serializedData);
+                StartActivity(intent);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
-        private string UploadItemDetails()
+        public void OnRaiseException(int p0, string p1)
         {
-            var str = FindViewById<RadioButton>(radioGroup.CheckedRadioButtonId).Text;
 
-            //Console.WriteLine(dataToUpload);
-            var list = new List<UploadItemDetails>()
-            {
-               new UploadItemDetails
-               {
-                // DID = AppPreferences.GetString(this, Utilities.DEVICEID),
-                DID = did,
-                EntryDate = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
-                EWeight = lblEmptyWeight.Text,
-                LBNo = lblBillNumber.Text,
-                OwnerName = ownerName.Text,
-                PayMode = str,
-                VehicleNo = vehicleNumberAutoComplete.Text,
-                //SiteID = AppPreferences.GetString(this, Utilities.SITEID),
-                SiteID = siteId,
-                WMode = wMode.SelectedItem.ToString(),
-                ItemName = itemTypeSpinner.SelectedItem.ToString(),
-                OwnerId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().OID,
-                VehicleId = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).First().VID,
-                ItemId = itemDetails.Where(x => x.MaterialName == itemTypeSpinner.SelectedItem.ToString()).First().ItemID_PK
-               }
-        };
-            var serializedData = JsonConvert.SerializeObject(list);
-            var result = WebService.Singleton.PostAllDataToWebService(Utilities.INVE, serializedData, "INVEResult");
-            Console.WriteLine(result);
-            var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
-            return deserializeResult.First().CUNUM;
+        }
+
+        public void OnReturnString(string p0)
+        {
+        }
+
+        public void OnRunResult(bool p0)
+        {
+
         }
     }
 }
