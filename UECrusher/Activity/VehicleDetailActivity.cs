@@ -88,6 +88,11 @@ namespace UECrusher.Activity
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
             vehicleNumberAutoComplete.Threshold = 1;
 
+            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) => 
+            {
+                StartActivity(typeof(LogInActivity));
+                Finish();
+            };
             //    var task = new Thread(() =>
             //      {                
             //          RunOnUiThread(() =>
@@ -105,16 +110,20 @@ namespace UECrusher.Activity
 
         private void VehicleNumberAutoComplete_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
-            if (vehicleNumberAutoComplete.Text == string.Empty)
+            try
             {
-                ClearAllFields();
+                if (vehicleNumberAutoComplete.Text == string.Empty)
+                {
+                    ClearAllFields();
+                }
+                var isRegisterVehicle = vehiclDetailList.Any(x => x.RegNo.Contains(vehicleNumberAutoComplete.Text));
+                if (!isRegisterVehicle)
+                {
+                    ownerName.Text = Utilities.NEW_VEHICLE;
+                    lblEmptyWeight.Text = Utilities.EMPTY_WEIGHT;
+                }
             }
-            var isRegisterVehicle = vehiclDetailList.Any(x => x.RegNo.Contains(vehicleNumberAutoComplete.Text));
-            if (!isRegisterVehicle)
-            {
-                ownerName.Text = Utilities.NEW_VEHICLE;
-                lblEmptyWeight.Text = Utilities.EMPTY_WEIGHT;
-            }
+            catch { }
         }
 
         private void VehicleNumberAutoComplete_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
@@ -271,7 +280,9 @@ namespace UECrusher.Activity
                     return;
                 }
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
-
+                //Save bill number
+                AppPreferences.SaveString(this,Utilities.BILLNUMBER,deserializeResult.First().CUNUM);
+                
                 var intent = new Intent(this, typeof(PrintViewActivity));
                 var lista = list.Select(x => new { x.LBNo, x.EntryDate, x.VehicleNo, x.OwnerName, x.ItemName, x.EWeight, x.PayMode, x.WMode });
                 var array = new string[] { "LB. No.", "Date", "Vehicle", "Customer", "Item", "Empty Weight", "Pay Mode", "W Mode" };

@@ -59,6 +59,13 @@ namespace UECrusher.Activity
             //  lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME, CultureInfo.InvariantCulture);
 
             Task.Run(() => GetDetails());
+
+
+            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
+            {
+                StartActivity(typeof(LogInActivity));
+                Finish();
+            };
         }
 
 

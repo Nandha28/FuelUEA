@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/layMainScroll"
+        android:fillViewport="true"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-  <ScrollView  android:layout_width="match_parent"
-               android:id="@+id/layMainScroll"
-               android:fillViewport="true"
-               android:layout_height="wrap_content">
-    <LinearLayout    android:layout_height="match_parent"
-                     android:layout_width="match_parent"
-                     android:orientation="vertical">
-      <LinearLayout  android:layout_height="wrap_content"
-                     android:layout_width="match_parent"
-                     android:orientation="vertical"
-                     android:id="@+id/layMainLinear" />
-    </LinearLayout>
-  </ScrollView>
-  <Button        android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:text="click"
-                 android:layout_alignParentBottom="true"
-                 android:layout_margin="10dp"
-                 android:id="@+id/btn" />
+                android:orientation="vertical"
+                android:id="@+id/layMainLinear" />
+        </LinearLayout>
+    </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Click"
+        android:textSize="@dimen/btn_text_size"
+        android:background="@color/buttonBackground"
+        android:textColor="@color/buttonTextColor"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:id="@+id/btn" />
 </RelativeLayout>

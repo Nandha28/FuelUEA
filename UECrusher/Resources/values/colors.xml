@@ -4,6 +4,8 @@
   <color name="colorPrimaryDark">#1B3147</color>
   <color name="colorAccent">#3498db</color>
   <color name="borderColor">#247185</color>
+  <color name="buttonBackground">#E4D235</color>
+  <color name="buttonTextColor">#202020</color>
   <!--Text Color-->
   <color name="grey">#D3D3D3</color>
   <color name="backgroundBunk">#F22626</color>
