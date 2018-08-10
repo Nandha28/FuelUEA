@@ -88,7 +88,7 @@ namespace UECrusher.Activity
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
             vehicleNumberAutoComplete.Threshold = 1;
 
-            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) => 
+            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
             {
                 StartActivity(typeof(LogInActivity));
                 Finish();
@@ -191,7 +191,7 @@ namespace UECrusher.Activity
                 });
             }
             ShowLoader(false);
-            itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
+            //itemList.AddRange(itemDetails.Select(x => x.MaterialName).ToList());       
         }
 
         private void FillVehicleDetails()
@@ -203,7 +203,11 @@ namespace UECrusher.Activity
                 vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
                                                    vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
 
-                wMode.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Sales", "Purchase" });
+                wMode.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, new string[] { "Sales", "Purchase" });
+
+                var itemList = itemDetails.Select(x => x.MaterialName).ToList();
+                itemList.Insert(0, "Select");
+                itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
             }
         }
 
@@ -234,6 +238,11 @@ namespace UECrusher.Activity
             //    AppPreferences.SaveString(this, Utilities.BILLNUMBER, response);
             //    Toast.MakeText(this, "Sucess", ToastLength.Short).Show();
             //}
+            if (itemTypeSpinner.SelectedItemPosition.Equals(0))
+            {
+                Toast.MakeText(this, "Select the particular item..", ToastLength.Short).Show();
+                return;
+            }
             RunOnUiThread(() =>
             {
                 progressLoader.Visibility = ViewStates.Visible;
@@ -280,8 +289,8 @@ namespace UECrusher.Activity
                 }
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadFirstResult>>(result);
                 //Save bill number
-                AppPreferences.SaveString(this,Utilities.BILLNUMBER,deserializeResult.First().CUNUM);
-                
+                AppPreferences.SaveString(this, Utilities.BILLNUMBER, deserializeResult.First().CUNUM);
+
                 var intent = new Intent(this, typeof(PrintViewActivity));
                 var lista = list.Select(x => new { x.LBNo, x.EntryDate, x.VehicleNo, x.OwnerName, x.ItemName, x.EWeight, x.PayMode, x.WMode });
                 var array = new string[] { "LB. No.", "Date", "Vehicle", "Customer", "Item", "Empty Weight", "Pay Mode", "W Mode" };
@@ -294,7 +303,7 @@ namespace UECrusher.Activity
                 {
                     progressLoader.Visibility = ViewStates.Gone;
                     layScroll.Alpha = 1f;
-                    Window.ClearFlags(WindowManagerFlags.NotTouchable);                  
+                    Window.ClearFlags(WindowManagerFlags.NotTouchable);
                 });
             }
             catch (Exception ex)

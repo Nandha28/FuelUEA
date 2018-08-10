@@ -30,6 +30,7 @@ namespace UECrusher.Activity
         private string did;
         private string siteId;
         private List<VehicleDetailsGETVE> itemDetailsGetVE;
+        private bool isBillEntry;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -83,7 +84,11 @@ namespace UECrusher.Activity
                 //vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
                 var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, did, siteId, Utilities.GET_ITEM_RESULT);
                 itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
-                itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
+
+                var itemList = itemDetails.Select(x => x.MaterialName).ToList();
+                itemList.Insert(0, "Select");
+                itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
+                //  itemTypeSpinner.Adapter = new BasicAdapter(this, itemDetails.Select(x => x.MaterialName).ToArray());
                 ShowLoader(false);
             }
             catch (Exception ex)
@@ -117,6 +122,11 @@ namespace UECrusher.Activity
         }
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
+            if (itemTypeSpinner.SelectedItemPosition.Equals(0))
+            {
+                Toast.MakeText(this, "Select the particular item..", ToastLength.Short).Show();
+                return;
+            }
             try
             {
                 //  var itemId = itemDetailsGetVE.First().ItemID_FK;
@@ -126,6 +136,7 @@ namespace UECrusher.Activity
                 {
                     layDeliveryDetails.Visibility = Android.Views.ViewStates.Gone;
                     layBillEntry.Visibility = Android.Views.ViewStates.Visible;
+                    isBillEntry = true;
 
                     var array = new string[] { "LB. No.", "Date", "Item" };
                     var list = new VehicleDetailsGETVE
@@ -184,12 +195,13 @@ namespace UECrusher.Activity
                     {
                         layDeliveryDetails.Visibility = Android.Views.ViewStates.Visible;
                         layBillEntry.Visibility = Android.Views.ViewStates.Gone;
+                        isBillEntry = false;
                         lblBillNumber.Text = itemDetailsGetVE.First().LoadBillNo;
                     }
                     else
                     {
                         ShowWrongText();
-                    }                  
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -206,6 +218,20 @@ namespace UECrusher.Activity
         private void ShowWrongText()
         {
             Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+        }
+        public override void OnBackPressed()
+        {
+            if (isBillEntry)
+            {
+                base.OnBackPressed();
+            }
+            else
+            {
+                layDeliveryDetails.Visibility = Android.Views.ViewStates.Gone;
+                layBillEntry.Visibility = Android.Views.ViewStates.Visible;
+                txtBillNumber.Text = string.Empty;
+                isBillEntry = true;
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ namespace UECrusher.Activity
         private LinearLayout layMainLinear;
         private ScrollView layMainScroll;
         private NGXPrinter nGXPrinter;
+        private string listType;
 
         public void OnRaiseException(int p0, string p1)
         {
@@ -61,30 +62,70 @@ namespace UECrusher.Activity
             layMainScroll = FindViewById<ScrollView>(Resource.Id.layMainScroll);
             var data = Intent.GetStringExtra("data");
             var array = Intent.GetStringArrayListExtra("array");
-            var listType = Intent.GetStringExtra("typeof");
+            listType = Intent.GetStringExtra("typeof");
 
             FindViewById<Button>(Resource.Id.btn).Click += (s, e) =>
             {
-                if (nGXPrinter != null)
-                {
-                    nGXPrinter.PrintImage(GetCanvas(layMainLinear, layMainScroll.GetChildAt(0).Height, layMainScroll.GetChildAt(0).Width));
-                    nGXPrinter.PrintText("\n");
-                    // layScrollview.Visibility = ViewStates.Gone;
-                }
+                PrintFromPrinter();
+                printAgain();
             };
             if (listType.Equals("UploadItemDetails"))
             {
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadItemDetails>>(data);
-                Print(deserializeResult.First(), array, listType);
+                Print(deserializeResult.First(), array);
             }
             else
             {
                 var deserializeResult = JsonConvert.DeserializeObject<VehicleDetailsGETVE>(data);
-                PrintSecond(deserializeResult, array, listType);
+                PrintSecond(deserializeResult, array);
             }
         }
 
-        private void PrintSecond(VehicleDetailsGETVE vehicleDetailsGETVE, IList<string> array, string listType)
+        private void PrintFromPrinter()
+        {
+            if (nGXPrinter != null)
+            {
+                nGXPrinter.PrintImage(GetCanvas(layMainLinear, layMainScroll.GetChildAt(0).Height, layMainScroll.GetChildAt(0).Width));
+                nGXPrinter.PrintText("\n");
+                // layScrollview.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                Toast.MakeText(this, "Printer not connected", ToastLength.Short).Show();
+            }
+        }
+
+        private void printAgain()
+        {
+            var alertDialog = new Android.App.AlertDialog.Builder(this);
+            alertDialog.SetTitle("Additional Print");
+            alertDialog.SetMessage("Do you want to print agin ?");
+            alertDialog.SetCancelable(false);
+            alertDialog.SetPositiveButton("Yes", (ss, se) =>
+            {
+                PrintFromPrinter();
+            });
+            alertDialog.SetNegativeButton("No", (ss, ee) =>
+            {
+                if (listType.Equals("UploadItemDetails"))
+                {
+                    var intent = new Intent(this, typeof(VehicleDetailActivity));
+                    intent.AddFlags(ActivityFlags.ClearTop);
+                    StartActivity(intent);
+                    Finish();
+                }
+                else
+                {
+                    var intent = new Intent(this, typeof(DeliveryActivity));
+                    intent.AddFlags(ActivityFlags.ClearTop);
+                    StartActivity(intent);
+                    Finish();
+                }
+            });
+            alertDialog.Show();
+        }
+
+        private void PrintSecond(VehicleDetailsGETVE vehicleDetailsGETVE, IList<string> array)
         {
             var index = 0;
             foreach (var item in vehicleDetailsGETVE.GetType().GetProperties())
@@ -105,7 +146,7 @@ namespace UECrusher.Activity
             }
         }
 
-        private void Print(UploadItemDetails uploadItemDetails, IList<string> array, string listType)
+        private void Print(UploadItemDetails uploadItemDetails, IList<string> array)
         {
             var index = 0;
             foreach (var item in uploadItemDetails.GetType().GetProperties())

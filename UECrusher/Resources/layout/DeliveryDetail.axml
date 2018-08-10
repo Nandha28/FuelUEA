@@ -36,7 +36,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:inputType="text"
-            android:textSize="15dp"
+            android:textSize="18dp"
             android:hint="Bill Bumber"
             android:textColorHint="@color/grey"
             android:textColor="@color/grey"
@@ -52,8 +52,8 @@
             android:textAllCaps="false"
             android:id="@+id/btnCheck"
             android:textSize="@dimen/btn_text_size"
-            android:background="@color/buttonBackground"
-            android:textColor="@color/buttonTextColor" />
+            android:background="@android:color/white"
+            android:textColor="@color/borderColor" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -120,7 +120,7 @@
             android:textAllCaps="false"
             android:id="@+id/btnUpdate"
             android:textSize="@dimen/btn_text_size"
-            android:background="@color/buttonBackground"
-            android:textColor="@color/buttonTextColor" />
+            android:background="@android:color/white"
+            android:textColor="@color/borderColor" />
     </LinearLayout>
 </RelativeLayout>

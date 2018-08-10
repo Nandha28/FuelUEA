@@ -21,6 +21,7 @@
         android:text="Vehicle Entry details"
         android:gravity="center"
         android:id="@+id/lblTittle"
+        android:background="#003644"
         android:textStyle="bold"
         android:textSize="24dp" />
     <ScrollView
@@ -193,9 +194,9 @@
     <ImageButton
         android:layout_height="30dp"
         android:layout_width="30dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/logout"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/lblTittle"
+        android:layout_alignParentRight="true"        
         android:id="@+id/btnLogout" />
 </RelativeLayout>
