@@ -136,8 +136,6 @@ namespace UECrusher.Activity
                 lblEmptyWeight.Text = list.EmptyWeight;
             }
             HideKeyboard();
-            itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
-
             //ownerNumber.PerformClick();         
         }
 
@@ -193,6 +191,7 @@ namespace UECrusher.Activity
                 });
             }
             ShowLoader(false);
+            itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, itemDetails.Select(x => x.MaterialName).ToArray());
         }
 
         private void FillVehicleDetails()

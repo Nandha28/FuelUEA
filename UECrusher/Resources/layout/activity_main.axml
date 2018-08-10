@@ -25,8 +25,8 @@
         android:layout_height="wrap_content"
         android:text="Print"
         android:textSize="@dimen/btn_text_size"
-        android:background="@color/buttonBackground"
-        android:textColor="@color/buttonTextColor"
+        android:background="@color/borderColor"
+        android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:id="@+id/btn" />
