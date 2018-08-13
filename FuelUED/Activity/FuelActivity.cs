@@ -126,7 +126,7 @@ namespace FuelUED
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
             vehicleTypeAdapter =
                 new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
-                new string[] { "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
+                new string[] { "Select", "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
 
             vehicleTypeSpinner.ItemSelected += VehicleTypeSpinner_ItemSelected;
 
@@ -250,6 +250,11 @@ namespace FuelUED
                 //        alertDialog.Show();
                 //    }
                 //}
+                if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
+                {
+                    Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
+                    return;
+                }
                 if (fuelFormSpinner.SelectedItem.Equals("Stock"))
                 {
                     StoreDetils();
