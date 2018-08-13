@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
+        android:textSize="18dp"
         android:layout_margin="10dp"
         android:textColor="@android:color/white"
         android:id="@+id/txtEmail"
@@ -21,6 +22,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18dp"
         android:layout_margin="10dp"
         android:textColorHint="#FFFFFF"
         android:textColor="@android:color/white"
@@ -32,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:textSize="18dp"
         android:textAllCaps="false"
         android:background="@android:color/white"
         android:textColor="@color/borderColor"

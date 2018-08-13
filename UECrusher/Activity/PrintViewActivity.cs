@@ -67,7 +67,7 @@ namespace UECrusher.Activity
             FindViewById<Button>(Resource.Id.btn).Click += (s, e) =>
             {
                 PrintFromPrinter();
-                printAgain();
+               // printAgain();
             };
             if (listType.Equals("UploadItemDetails"))
             {
@@ -85,8 +85,10 @@ namespace UECrusher.Activity
         {
             if (nGXPrinter != null)
             {
+                nGXPrinter.PrintText("\n\n\n");
                 nGXPrinter.PrintImage(GetCanvas(layMainLinear, layMainScroll.GetChildAt(0).Height, layMainScroll.GetChildAt(0).Width));
-                nGXPrinter.PrintText("\n");
+                nGXPrinter.PrintText("\n\n\n");
+                PrintAgain();
                 // layScrollview.Visibility = ViewStates.Gone;
             }
             else
@@ -95,7 +97,7 @@ namespace UECrusher.Activity
             }
         }
 
-        private void printAgain()
+        private void PrintAgain()
         {
             var alertDialog = new Android.App.AlertDialog.Builder(this);
             alertDialog.SetTitle("Additional Print");

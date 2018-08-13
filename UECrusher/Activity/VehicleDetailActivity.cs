@@ -42,6 +42,7 @@ namespace UECrusher.Activity
         private List<ItemDetails> itemDetails;
         private string did;
         private string siteId;
+        private bool IsExtraPrint;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -90,8 +91,16 @@ namespace UECrusher.Activity
 
             FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
             {
-                StartActivity(typeof(LogInActivity));
-                Finish();
+                var alertDialog = new Android.App.AlertDialog.Builder(this);
+                alertDialog.SetTitle("Logout");
+                alertDialog.SetMessage("Do you want to logout ?");
+                alertDialog.SetPositiveButton("Yes", (se, ee) =>
+                {
+                    StartActivity(typeof(LogInActivity));
+                    Finish();
+                });
+                alertDialog.SetNegativeButton("No", (se, ee) => { });
+                alertDialog.Show();
             };
             //    var task = new Thread(() =>
             //      {                
@@ -331,5 +340,14 @@ namespace UECrusher.Activity
         {
 
         }
+        //public override void OnBackPressed()
+        //{
+        //    if (IsExtraPrint)
+        //    {
+        //        base.OnBackPressed();
+        //    }
+        //    IsExtraPrint = true;
+        //    Toast.MakeText(this, "Press agin to exit..", ToastLength.Short).Show();
+        //}
     }
 }

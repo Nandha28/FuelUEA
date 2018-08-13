@@ -27,6 +27,7 @@ namespace UECrusher.Activity
         private LinearLayout layDeliveryDetails;
         private EditText txtBillNumber;
         private List<ItemDetails> itemDetails;
+        private List<string> itemList;
         private string did;
         private string siteId;
         private List<VehicleDetailsGETVE> itemDetailsGetVE;
@@ -59,13 +60,26 @@ namespace UECrusher.Activity
             lblBillNumber.Text = AppPreferences.GetString(this, Utilities.BILLNUMBER);
             //  lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME, CultureInfo.InvariantCulture);
 
+            itemTypeSpinner.ItemSelected += (s, e) =>
+            {
+
+            };
+
             Task.Run(() => GetDetails());
 
 
             FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
             {
-                StartActivity(typeof(LogInActivity));
-                Finish();
+                var alertDialog = new Android.App.AlertDialog.Builder(this);
+                alertDialog.SetTitle("Logout");
+                alertDialog.SetMessage("Do you want to logout ?");
+                alertDialog.SetPositiveButton("Yes", (se, ee) =>
+                {
+                    StartActivity(typeof(LogInActivity));
+                    Finish();
+                });
+                alertDialog.SetNegativeButton("No", (se, ee) => { });
+                alertDialog.Show();
             };
         }
 
@@ -85,10 +99,9 @@ namespace UECrusher.Activity
                 var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, did, siteId, Utilities.GET_ITEM_RESULT);
                 itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
 
-                var itemList = itemDetails.Select(x => x.MaterialName).ToList();
-                itemList.Insert(0, "Select");
-                itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
-                //  itemTypeSpinner.Adapter = new BasicAdapter(this, itemDetails.Select(x => x.MaterialName).ToArray());
+                itemList = itemDetails.Select(x => x.MaterialName).ToList();
+                //itemList.Insert(0, "Select");                
+                //itemTypeSpinner.Adapter = new BasicAdapter(this, itemDetails.Select(x => x.MaterialName).ToArray());
                 ShowLoader(false);
             }
             catch (Exception ex)
@@ -122,16 +135,17 @@ namespace UECrusher.Activity
         }
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
-            if (itemTypeSpinner.SelectedItemPosition.Equals(0))
-            {
-                Toast.MakeText(this, "Select the particular item..", ToastLength.Short).Show();
-                return;
-            }
+            //if (itemTypeSpinner.SelectedItemPosition.Equals(0))
+            //{
+            //    Toast.MakeText(this, "Select the particular item..", ToastLength.Short).Show();
+            //    return;
+            //}
             try
             {
                 //  var itemId = itemDetailsGetVE.First().ItemID_FK;
-                var response = WebService.Singleton.UVEDS(lblBillNumber.Text, itemDetailsGetVE.First().ItemID_FK,
-                    itemDetailsGetVE.First().ItemName, DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture));
+                var id = itemDetails.Where(x => x.MaterialName == itemTypeSpinner.SelectedItem.ToString()).Select(x => x.ItemID_PK).First();
+                var response = WebService.Singleton.UVEDS(lblBillNumber.Text, id,
+                    itemTypeSpinner.Selected.ToString(), DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture));
                 if (!response.Equals(string.Empty))
                 {
                     layDeliveryDetails.Visibility = Android.Views.ViewStates.Gone;
@@ -142,8 +156,8 @@ namespace UECrusher.Activity
                     var list = new VehicleDetailsGETVE
                     {
                         LoadBillNo = itemDetailsGetVE.First().LoadBillNo,
-                        EntryDate = itemDetailsGetVE.First().EntryDate,
-                        ItemName = itemDetailsGetVE.First().ItemName
+                        EntryDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
+                        ItemName = itemTypeSpinner.SelectedItem.ToString()
                     };
                     var serilizedData = JsonConvert.SerializeObject(list);
 
@@ -193,10 +207,23 @@ namespace UECrusher.Activity
                     itemDetailsGetVE = JsonConvert.DeserializeObject<List<VehicleDetailsGETVE>>(result);
                     if (!itemDetailsGetVE.Equals(string.Empty))
                     {
-                        layDeliveryDetails.Visibility = Android.Views.ViewStates.Visible;
-                        layBillEntry.Visibility = Android.Views.ViewStates.Gone;
-                        isBillEntry = false;
-                        lblBillNumber.Text = itemDetailsGetVE.First().LoadBillNo;
+                        if (itemDetailsGetVE.First().IsDS.ToLower().Equals("false"))
+                        {
+                            layDeliveryDetails.Visibility = Android.Views.ViewStates.Visible;
+                            layBillEntry.Visibility = Android.Views.ViewStates.Gone;
+                            isBillEntry = false;
+                            lblBillNumber.Text = itemDetailsGetVE.First().LoadBillNo;
+                            var name = itemDetailsGetVE.First().ItemName;
+                            var index = itemList.FindIndex(x => x.StartsWith(name));
+                            var selectedItem = itemList[index];
+                            itemList.RemoveAt(index);
+                            itemList.Insert(0, selectedItem);
+                            itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
+                        }
+                        else
+                        {
+                            ShowWrongText("Already Updated...");
+                        }
                     }
                     else
                     {
@@ -215,9 +242,16 @@ namespace UECrusher.Activity
             }
         }
 
-        private void ShowWrongText()
+        private void ShowWrongText(string text = "")
         {
-            Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+            if (text != "")
+            {
+                Toast.MakeText(this, text, ToastLength.Short).Show();
+            }
+            else
+            {
+                Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+            }
         }
         public override void OnBackPressed()
         {

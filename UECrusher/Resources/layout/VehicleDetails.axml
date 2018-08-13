@@ -174,8 +174,9 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Store"
+                android:text="Save"
                 android:layout_gravity="center"
+                android:textStyle="bold"
                 android:layout_margin="10dp"
                 android:textSize="@dimen/btn_text_size"
                 android:textAllCaps="false"
@@ -195,8 +196,9 @@
         android:layout_height="30dp"
         android:layout_width="30dp"
         android:layout_marginTop="15dp"
+        android:rotation="180"
         android:layout_marginRight="10dp"
         android:background="@drawable/logout"
-        android:layout_alignParentRight="true"        
+        android:layout_alignParentRight="true"
         android:id="@+id/btnLogout" />
 </RelativeLayout>
