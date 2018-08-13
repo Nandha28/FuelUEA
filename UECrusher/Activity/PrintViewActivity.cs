@@ -85,9 +85,9 @@ namespace UECrusher.Activity
         {
             if (nGXPrinter != null)
             {
-                nGXPrinter.PrintText("\n\n\n");
+                nGXPrinter.PrintText("\n\n");                
                 nGXPrinter.PrintImage(GetCanvas(layMainLinear, layMainScroll.GetChildAt(0).Height, layMainScroll.GetChildAt(0).Width));
-                nGXPrinter.PrintText("\n\n\n");
+                nGXPrinter.PrintText("\n\n\n\n\n");
                 PrintAgain();
                 // layScrollview.Visibility = ViewStates.Gone;
             }
