@@ -63,6 +63,7 @@
     <Compile Include="Activity\LogInActivity.cs" />
     <Compile Include="Activity\PrintViewActivity.cs" />
     <Compile Include="Activity\VehicleDetailActivity.cs" />
+    <Compile Include="CommonFunctions\ExceptionLog.cs" />
     <Compile Include="Model\VehicleDetailsGETVE.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />

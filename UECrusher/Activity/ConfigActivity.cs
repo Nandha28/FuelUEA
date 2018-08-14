@@ -33,6 +33,7 @@ namespace UECrusher.Activity
                 AppPreferences.SaveString(this, Utilities.DEVICEID, txtDeviceID.Text.Replace(" ", ""));
                 AppPreferences.SaveString(this, Utilities.SITEID, txtSiteID.Text.Replace(" ", ""));
                 StartActivity(typeof(LogInActivity));
+                ExceptionLog.LogDetails(this,"App Configured..");
             };
         }
     }

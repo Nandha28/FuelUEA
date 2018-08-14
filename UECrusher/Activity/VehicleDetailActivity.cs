@@ -42,7 +42,6 @@ namespace UECrusher.Activity
         private List<ItemDetails> itemDetails;
         private string did;
         private string siteId;
-        private bool IsExtraPrint;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -50,6 +49,7 @@ namespace UECrusher.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.VehicleDetails);
+            ExceptionLog.LogDetails(this, "Vehicle Entry Details...");
 
             try
             {
@@ -59,8 +59,14 @@ namespace UECrusher.Activity
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                ExceptionLog.LogDetails(this, "Printer not connected...");
             }
 
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                ShowText("Something went wrong");
+            };
+            var alertDialog = new Android.App.AlertDialog.Builder(this);
             progressLoader = FindViewById<ProgressBar>(Resource.Id.loader);
             // progressLoader.Visibility = Android.Views.ViewStates.Visible;
             layScroll = FindViewById<ScrollView>(Resource.Id.layScroll);
@@ -91,7 +97,6 @@ namespace UECrusher.Activity
 
             FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
             {
-                var alertDialog = new Android.App.AlertDialog.Builder(this);
                 alertDialog.SetTitle("Logout");
                 alertDialog.SetMessage("Do you want to logout ?");
                 alertDialog.SetPositiveButton("Yes", (se, ee) =>
@@ -132,20 +137,36 @@ namespace UECrusher.Activity
                     lblEmptyWeight.Text = Utilities.EMPTY_WEIGHT;
                 }
             }
-            catch { }
+            catch(Exception ex)
+            {
+                ExceptionLog.LogDetails(this, ex.Message + "\n In vehicle number autocomplete text..");
+            }
         }
 
         private void VehicleNumberAutoComplete_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var list = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).FirstOrDefault();
-            // ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, list);
-            if (list != null)
+            try
             {
-                ownerName.Text = list.OName;
-                lblEmptyWeight.Text = list.EmptyWeight;
+                var list = vehiclDetailList.Where(x => x.RegNo == vehicleNumberAutoComplete.Text).FirstOrDefault();
+                // ownerNumber.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, list);
+                if (list != null)
+                {
+                    ownerName.Text = list.OName;
+                    lblEmptyWeight.Text = list.EmptyWeight;
+                }
+            }
+            catch
+            {
+                ShowText("Something went wrong");
+                ExceptionLog.LogDetails(this, "Exception in finding Owner Number or empty weight \n");
             }
             HideKeyboard();
             //ownerNumber.PerformClick();         
+        }
+
+        private void ShowText(string text)
+        {
+            Toast.MakeText(this, text, ToastLength.Short).Show();
         }
 
         private void ClearAllFields()
@@ -190,6 +211,8 @@ namespace UECrusher.Activity
                         Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
                     });
                     Console.WriteLine(ex.Message);
+                    ExceptionLog.LogDetails(this, ex.Message +"\n\n In GetVE");
+
                 }
             }
             else
@@ -209,14 +232,22 @@ namespace UECrusher.Activity
             lblBillNumber.Text = billNum == string.Empty ? "LB1" : billNum;
             if (vehiclDetailList != null)
             {
-                vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
-                                                   vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
+                try
+                {
+                    vehicleNumberAutoComplete.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
+                                                       vehiclDetailList.Select(x => x.RegNo).Distinct().ToArray());
 
-                wMode.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, new string[] { "Sales", "Purchase" });
+                    wMode.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, new string[] { "Sales", "Purchase" });
 
-                var itemList = itemDetails.Select(x => x.MaterialName).ToList();
-                itemList.Insert(0, "Select");
-                itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
+                    var itemList = itemDetails.Select(x => x.MaterialName).ToList();
+                    itemList.Insert(0, "Select");
+                    itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
+                }
+                catch(Exception ex)
+                {
+                    ShowText("Something went wrong");
+                    ExceptionLog.LogDetails(this, ex.Message + "\n\n In FillVehicleDetails");
+                }
             }
         }
 
@@ -293,6 +324,7 @@ namespace UECrusher.Activity
                         layScroll.Alpha = 1f;
                         Window.ClearFlags(WindowManagerFlags.NotTouchable);
                         Toast.MakeText(this, "Error in upload..", ToastLength.Short).Show();
+                        ExceptionLog.LogDetails(this,"Exception during upload..");
                     });
                     return;
                 }
@@ -319,10 +351,12 @@ namespace UECrusher.Activity
             {
                 RunOnUiThread(() =>
                 {
+                    Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
                     progressLoader.Visibility = ViewStates.Gone;
                     layScroll.Alpha = 1f;
                     Window.ClearFlags(WindowManagerFlags.NotTouchable);
                 });
+                ExceptionLog.LogDetails(this,ex.Message + "\n\n Exception during button print");
             }
 
         }

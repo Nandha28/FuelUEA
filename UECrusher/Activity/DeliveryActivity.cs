@@ -39,6 +39,14 @@ namespace UECrusher.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.DeliveryDetail);
+            ExceptionLog.LogDetails(this, "\n\n In Vehicle Delivery...");
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+            };
+
+
             lblBillNumber = FindViewById<TextView>(Resource.Id.lblBillNumber);
             itemTypeSpinner = FindViewById<Spinner>(Resource.Id.itemTypeSpinner);
             //  lblDate = FindViewById<TextView>(Resource.Id.lblDate);
@@ -111,7 +119,7 @@ namespace UECrusher.Activity
                     Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
                     ShowLoader(false);
                 });
-                Console.WriteLine(ex.Message);
+                ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in GetItem");
             }
         }
         private void ShowLoader(bool value)
@@ -170,10 +178,13 @@ namespace UECrusher.Activity
                 }
                 else
                 {
-                    Toast.MakeText(this, "Error in updated..", ToastLength.Short).Show();
+                    Toast.MakeText(this, "Error in update..", ToastLength.Short).Show();
                 }
             }
-            catch { }
+            catch(Exception ex)
+            {
+                ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in UVEDS...");
+            }
         }
 
         private void BtnCheck_Click(object sender, EventArgs e)
@@ -181,7 +192,14 @@ namespace UECrusher.Activity
             if (!txtBillNumber.Text.Equals(string.Empty))
             {
                 loaderLayout.Visibility = Android.Views.ViewStates.Visible;
-                CheckBillNumberAndGetDetails();
+                try
+                {
+                    CheckBillNumberAndGetDetails();
+                }
+                catch(Exception ex)
+                {
+                    ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in CheckBillNumberAndGetDetails");
+                }
             }
             else
             {
@@ -233,7 +251,7 @@ namespace UECrusher.Activity
                 catch (Exception ex)
                 {
                     Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
-                    Console.WriteLine(ex.Message);
+                    ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in CheckBillNumberAndGetDetails");
                 }
             }
             else

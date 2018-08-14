@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -15,6 +15,7 @@ using Android.Widget;
 using Com.Ngx.Mp100sdk;
 using Com.Ngx.Mp100sdk.Intefaces;
 using Newtonsoft.Json;
+using UECrusher.CommonFunctions;
 using UECrusher.Model;
 using Utilities;
 
@@ -54,10 +55,16 @@ namespace UECrusher.Activity
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ExceptionLog.LogDetails(this, ex.Message);
             }
             // Create your application here
             SetContentView(Resource.Layout.activity_main);
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+            };
+
             layMainLinear = FindViewById<LinearLayout>(Resource.Id.layMainLinear);
             layMainScroll = FindViewById<ScrollView>(Resource.Id.layMainScroll);
             var data = Intent.GetStringExtra("data");
@@ -144,6 +151,7 @@ namespace UECrusher.Activity
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    ExceptionLog.LogDetails(this, ex.Message);
                 }
             }
         }
@@ -164,6 +172,7 @@ namespace UECrusher.Activity
                 }
                 catch (Exception ex)
                 {
+                    ExceptionLog.LogDetails(this, ex.Message);
                     Console.WriteLine(ex.Message);
                 }
             }

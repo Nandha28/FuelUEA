@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
@@ -17,12 +18,26 @@ namespace UECrusher
 
             // Create your application here
             SetContentView(Resource.Layout.LogIn);
+            ExceptionLog.LogDetails(this, "Login Activity...");
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => 
+            {
+                Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+            };
+
+            TaskScheduler.UnobservedTaskException += (s, e) => 
+            {
+                Toast.MakeText(this,"Something went wrong", ToastLength.Short).Show();
+            };
+
             var email = FindViewById<EditText>(Resource.Id.txtEmail);
             var password = FindViewById<EditText>(Resource.Id.txtPassword);
 
             var ipAddress = AppPreferences.GetString(this, Utilities.IPAddress);
             var did = AppPreferences.GetString(this, Utilities.DEVICEID);
             var siteId = AppPreferences.GetString(this, Utilities.SITEID);
+
+
 
             FindViewById<Button>(Resource.Id.btnLogin).Click += (s, e) =>
              {
