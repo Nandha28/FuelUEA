@@ -3,9 +3,12 @@
   <color name="colorPrimary">#2c3e50</color>
   <color name="colorPrimaryDark">#1B3147</color>
   <color name="colorAccent">#3498db</color>
-  <color name="borderColor">#247185</color>
-  <color name="buttonBackground">#E4D235</color>
-  <color name="buttonTextColor">#202020</color>
+  <color name="borderColor">#FFBB02</color>
+  <color name="textColorEmptyBackground">@android:color/black</color>
+  <color name="textColorBorderBackground">@android:color/white</color>
+  <color name="headerTextBackground">#003644</color>
+  <color name="buttonBackground">@android:color/white</color>
+  <color name="buttonTextColor">@android:color/black</color>
   <!--Text Color-->
   <color name="grey">#D3D3D3</color>
   <color name="backgroundBunk">#F22626</color>

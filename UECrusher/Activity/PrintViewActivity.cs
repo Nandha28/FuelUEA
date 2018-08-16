@@ -28,6 +28,7 @@ namespace UECrusher.Activity
         private ScrollView layMainScroll;
         private NGXPrinter nGXPrinter;
         private string listType;
+        private Button btnSave;
 
         public void OnRaiseException(int p0, string p1)
         {
@@ -74,8 +75,10 @@ namespace UECrusher.Activity
             FindViewById<Button>(Resource.Id.btn).Click += (s, e) =>
             {
                 PrintFromPrinter();
-               // printAgain();
+                // printAgain();
             };
+            btnSave = FindViewById<Button>(Resource.Id.btnSave);
+            btnSave.Click += BtnSave_Click;
             if (listType.Equals("UploadItemDetails"))
             {
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadItemDetails>>(data);
@@ -88,13 +91,44 @@ namespace UECrusher.Activity
             }
         }
 
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            var alertDialog = new Android.App.AlertDialog.Builder(this);
+            alertDialog.SetTitle("Save");
+            alertDialog.SetMessage("Do you want to save ?");
+            alertDialog.SetCancelable(false);
+            alertDialog.SetPositiveButton("Yes", (ss, se) =>
+            {
+                if (listType.Equals("UploadItemDetails"))
+                {
+                    var intent = new Intent(this, typeof(VehicleDetailActivity));
+                    intent.AddFlags(ActivityFlags.ClearTop);
+                    StartActivity(intent);
+                    Finish();
+                }
+                else
+                {
+                    var intent = new Intent(this, typeof(DeliveryActivity));
+                    intent.AddFlags(ActivityFlags.ClearTop);
+                    StartActivity(intent);
+                    Finish();
+                }
+            });
+            alertDialog.SetNegativeButton("No", (ss, ee) => { });
+            alertDialog.Show();
+        }
+
         private void PrintFromPrinter()
         {
             if (nGXPrinter != null)
             {
-                nGXPrinter.PrintText("\n\n");                
+                nGXPrinter.PrintText("\n");
                 nGXPrinter.PrintImage(GetCanvas(layMainLinear, layMainScroll.GetChildAt(0).Height, layMainScroll.GetChildAt(0).Width));
-                nGXPrinter.PrintText("\n\n\n\n\n");
+                nGXPrinter.PrintText("\n\n\n");
+                if (listType.Equals("UploadItemDetails"))
+                {
+                    nGXPrinter.PrintText("\n\n\n\n\n");
+                }
                 PrintAgain();
                 // layScrollview.Visibility = ViewStates.Gone;
             }

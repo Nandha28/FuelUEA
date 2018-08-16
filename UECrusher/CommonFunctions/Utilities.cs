@@ -20,6 +20,8 @@
         public const string GET_VEHICLE_RESULT = "GetVEResult";
 
         public const string GET_ITEM_DETAILS = "GetItem";
+        public const string GET_CURRENT_BILL = "GetVECUNum";
+        public const string GET_CURRENT_BILL_RES = "GetVECUNumResult";
         public const string GET_ITEM_RESULT = "GetItemResult";
 
         public const string INVE = "INVE";

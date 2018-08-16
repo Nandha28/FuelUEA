@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:maxLines="1"
+        android:backgroundTint="@color/textColorEmptyBackground"
+        android:minHeight="@dimen/minHeight"
         android:singleLine="true"
         android:inputType="text"
-        android:textSize="18dp"
         android:hint="Device ID"
-        android:textColorHint="@color/grey"
-        android:textColor="@color/grey"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/textColorEmptyBackground"
+        android:textColorHint="@color/textColorEmptyBackground"
         android:paddingLeft="15dp"
         android:id="@+id/txtDeviceId" />
     <EditText
@@ -24,12 +26,14 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:maxLines="1"
+        android:minHeight="@dimen/minHeight"
+        android:backgroundTint="@color/textColorEmptyBackground"
         android:singleLine="true"
         android:inputType="text"
-        android:textSize="18dp"
         android:hint="Site ID"
-        android:textColorHint="@color/grey"
-        android:textColor="@color/grey"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/textColorEmptyBackground"
+        android:textColorHint="@color/textColorEmptyBackground"
         android:paddingLeft="15dp"
         android:id="@+id/txtSiteId" />
     <EditText
@@ -37,12 +41,14 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:maxLines="1"
+        android:minHeight="@dimen/minHeight"
         android:singleLine="true"
         android:inputType="text"
-        android:textSize="18dp"
         android:hint="IP Address"
-        android:textColorHint="@color/grey"
-        android:textColor="@color/grey"
+        android:backgroundTint="@color/textColorEmptyBackground"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/textColorEmptyBackground"
+        android:textColorHint="@color/textColorEmptyBackground"
         android:paddingLeft="15dp"
         android:id="@+id/txtIP" />
     <Button
@@ -52,9 +58,8 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textSize="18dp"
-        android:textAllCaps="false"
+        android:textSize="@dimen/button_text_size"
         android:id="@+id/btnConfig"
-        android:background="@android:color/white"
-        android:textColor="@color/borderColor" />
+        android:background="@color/buttonBackground"
+        android:textColor="@color/buttonTextColor" />
 </LinearLayout>

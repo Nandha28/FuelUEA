@@ -3,13 +3,15 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views;
 using Android.Widget;
 using UECrusher.Activity;
 using UECrusher.CommonFunctions;
 
 namespace UECrusher
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, NoHistory = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar",
+       MainLauncher = true, NoHistory = true)]
     public class LogInActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

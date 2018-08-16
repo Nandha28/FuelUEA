@@ -35,6 +35,7 @@ namespace UECrusher.Activity
         private TextView ownerName;
         private Spinner wMode;
         private Button btnPrint;
+        private Button btnClear;
         private ScrollView layScroll;
         private LinearLayout layLinear;
         private ProgressBar progressLoader;
@@ -89,7 +90,9 @@ namespace UECrusher.Activity
             ownerName = FindViewById<TextView>(Resource.Id.lblOwnerName);
             wMode = FindViewById<Spinner>(Resource.Id.vehicleModeSpinner);
             btnPrint = FindViewById<Button>(Resource.Id.btnPrint);
+            btnClear = FindViewById<Button>(Resource.Id.btnClear);
             btnPrint.Click += BtnPrint_Click;
+            btnClear.Click += BtnClear_Click;
             lblDate.Text = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME_AMPM, CultureInfo.InvariantCulture);
             vehicleNumberAutoComplete.ItemClick += VehicleNumberAutoComplete_ItemClick;
             vehicleNumberAutoComplete.TextChanged += VehicleNumberAutoComplete_TextChanged;
@@ -122,6 +125,12 @@ namespace UECrusher.Activity
             );
         }
 
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            ClearAllFields();
+            vehicleNumberAutoComplete.Text = string.Empty;
+        }
+
         private void VehicleNumberAutoComplete_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
             try
@@ -137,7 +146,7 @@ namespace UECrusher.Activity
                     lblEmptyWeight.Text = Utilities.EMPTY_WEIGHT;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ExceptionLog.LogDetails(this, ex.Message + "\n In vehicle number autocomplete text..");
             }
@@ -173,7 +182,7 @@ namespace UECrusher.Activity
         {
             lblEmptyWeight.Text = string.Empty;
             ownerName.Text = string.Empty;
-            itemTypeSpinner.Adapter = null;
+            itemTypeSpinner.SetSelection(0);            
         }
 
         private void HideKeyboard()
@@ -195,12 +204,19 @@ namespace UECrusher.Activity
             {
                 try
                 {
-                    var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS, did, siteId, Utilities.GET_VEHICLE_RESULT);
+                    var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS, 
+                                                                                 did, siteId, Utilities.GET_VEHICLE_RESULT);
                     vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, did, siteId, Utilities.GET_ITEM_RESULT);
+                    var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, 
+                                                                                   did, siteId, Utilities.GET_ITEM_RESULT);
                     itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
+
+                    var response = await WebService.Singleton.PostDataToWebService(Utilities.GET_CURRENT_BILL,
+                        did, siteId, Utilities.GET_CURRENT_BILL_RES);
+                    var currentBill  = JsonConvert.DeserializeObject<List<UploadFirstResult>>(response);
                     RunOnUiThread(() =>
                     {
+                        lblBillNumber.Text = currentBill.First().CUNUM;
                         FillVehicleDetails();
                     });
                 }
@@ -211,7 +227,7 @@ namespace UECrusher.Activity
                         Toast.MakeText(this, "No Data to load..", ToastLength.Short).Show();
                     });
                     Console.WriteLine(ex.Message);
-                    ExceptionLog.LogDetails(this, ex.Message +"\n\n In GetVE");
+                    ExceptionLog.LogDetails(this, ex.Message + "\n\n In GetVE");
 
                 }
             }
@@ -228,8 +244,8 @@ namespace UECrusher.Activity
 
         private void FillVehicleDetails()
         {
-            var billNum = AppPreferences.GetString(this, Utilities.BILLNUMBER);
-            lblBillNumber.Text = billNum == string.Empty ? "LB1" : billNum;
+            //var billNum = AppPreferences.GetString(this, Utilities.BILLNUMBER);
+            //lblBillNumber.Text = billNum == string.Empty ? "LB1" : billNum;
             if (vehiclDetailList != null)
             {
                 try
@@ -243,7 +259,7 @@ namespace UECrusher.Activity
                     itemList.Insert(0, "Select");
                     itemTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.spinner_item, itemList);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ShowText("Something went wrong");
                     ExceptionLog.LogDetails(this, ex.Message + "\n\n In FillVehicleDetails");
@@ -324,7 +340,7 @@ namespace UECrusher.Activity
                         layScroll.Alpha = 1f;
                         Window.ClearFlags(WindowManagerFlags.NotTouchable);
                         Toast.MakeText(this, "Error in upload..", ToastLength.Short).Show();
-                        ExceptionLog.LogDetails(this,"Exception during upload..");
+                        ExceptionLog.LogDetails(this, "Exception during upload..");
                     });
                     return;
                 }
@@ -333,7 +349,22 @@ namespace UECrusher.Activity
                 AppPreferences.SaveString(this, Utilities.BILLNUMBER, deserializeResult.First().CUNUM);
 
                 var intent = new Intent(this, typeof(PrintViewActivity));
-                var lista = list.Select(x => new { x.LBNo, x.EntryDate, x.VehicleNo, x.OwnerName, x.ItemName, x.EWeight, x.PayMode, x.WMode });
+                var newList = new List<UploadItemDetails>()
+                {
+                    new UploadItemDetails
+                    {
+                        LBNo = list.First().LBNo,
+                        EntryDate = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME_AMPM,CultureInfo.CurrentCulture),
+                        VehicleNo = list.First().VehicleNo,
+                        OwnerName = list.First().OwnerName,
+                        ItemName = list.First().ItemName,
+                        EWeight = list.First().EWeight,
+                        PayMode = list.First().PayMode,
+                        WMode = list.First().WMode
+                    }
+                };
+                var lista = newList.Select(x => new { x.LBNo, x.EntryDate, x.VehicleNo, x.OwnerName, x.ItemName, x.EWeight, x.PayMode, x.WMode });
+
                 var array = new string[] { "LB. No.", "Date", "Vehicle", "Customer", "Item", "Empty Weight", "Pay Mode", "W Mode" };
                 var seralizedPrintData = JsonConvert.SerializeObject(lista);
                 intent.PutExtra("data", seralizedPrintData);
@@ -356,7 +387,7 @@ namespace UECrusher.Activity
                     layScroll.Alpha = 1f;
                     Window.ClearFlags(WindowManagerFlags.NotTouchable);
                 });
-                ExceptionLog.LogDetails(this,ex.Message + "\n\n Exception during button print");
+                ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception during button print");
             }
 
         }

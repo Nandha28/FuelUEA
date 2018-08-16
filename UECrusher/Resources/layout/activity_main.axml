@@ -20,14 +20,30 @@
                 android:id="@+id/layMainLinear" />
         </LinearLayout>
     </ScrollView>
-    <Button
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:text="Print"
-        android:textSize="@dimen/btn_text_size"
-        android:background="@color/borderColor"
-        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:id="@+id/btn" />
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="save"
+            android:layout_weight="1"
+            android:textSize="@dimen/button_text_size"
+            android:background="@color/buttonBackground"
+            android:textColor="@color/buttonTextColor"
+            android:layout_margin="10dp"
+            android:id="@+id/btnSave" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="print"
+            android:layout_weight="1"
+            android:textSize="@dimen/button_text_size"
+            android:background="@color/buttonBackground"
+            android:textColor="@color/buttonTextColor"
+            android:layout_margin="10dp"
+            android:id="@+id/btn" />
+    </LinearLayout>
 </RelativeLayout>

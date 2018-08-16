@@ -18,12 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textColor="@android:color/white"
-        android:text="Vehicle Entry details"
+        android:text="Load Bill Entry"
         android:gravity="center"
         android:id="@+id/lblTittle"
-        android:background="#003644"
+        android:background="@color/headerTextBackground"
         android:textStyle="bold"
-        android:textSize="24dp" />
+        android:textSize="@dimen/text_size" />
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
@@ -41,27 +41,23 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:hint="Number"
                 android:layout_margin="10dp"
                 android:maxLines="1"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textColorEmptyBackground"
                 android:gravity="center_vertical"
-                android:textSize="18dp"
-                android:paddingLeft="15dp"
-                android:background="@drawable/bottomborder"
+                android:textSize="@dimen/text_size"
                 android:id="@+id/lblBillNumber" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="18dp"
+                android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
+                android:textColor="@color/textColorEmptyBackground"
                 android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
                 android:id="@+id/lbldateTime" />
         <!--W Mode-->
             <LinearLayout
@@ -72,52 +68,39 @@
                 <Spinner
                     android:id="@+id/vehicleModeSpinner"
                     android:layout_width="match_parent"
-                    android:textSize="18dp"
+                    android:minHeight="@dimen/minHeight"
+                    android:textSize="@dimen/text_size"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorEmptyBackground"
                     android:hint="W Mode"
-                    android:layout_height="40dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
             <AutoCompleteTextView
                 android:id="@+id/vehicleNumber"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
-                android:textSize="18dp"
+                android:textSize="@dimen/text_size"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:minHeight="@dimen/minHeight"
+                android:padding="5dp"
+                android:textColor="@color/textColorEmptyBackground"
                 android:hint="Vehicle Number"
                 android:inputType="textCapCharacters"
-                android:paddingLeft="15dp"
                 android:theme="@style/Autocomplete"
                 android:background="@drawable/bottomborder"
-                android:layout_height="40dp" />
+                android:layout_height="wrap_content" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
-                android:id="@+id/lblOwnerName" />
-        <!--Customer/Owner Name-->
-        <!--
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:minHeight="@dimen/minHeight"
+                android:paddingLeft="5dp"
+                android:textSize="@dimen/text_size"
+                android:gravity="center_vertical"
+                android:textColor="@color/textColorEmptyBackground"
+                android:background="@drawable/bottomborder"
                 android:layout_margin="10dp"
-                android:background="@drawable/bottomborder">
-                <Spinner
-                    android:id="@+id/ownerNumberSpinner"
-                    android:layout_width="match_parent"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:hint="Customer"
-                    android:layout_height="40dp" />
-            </LinearLayout>-->
+                android:id="@+id/lblOwnerName" />
         <!--Item Type-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,28 +110,28 @@
                 <Spinner
                     android:id="@+id/itemTypeSpinner"
                     android:layout_width="match_parent"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorEmptyBackground"
                     android:hint="Item"
-                    android:layout_height="40dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/minHeight"
                 android:textStyle="bold"
-                android:textSize="18dp"
+                android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
+                android:textColor="@color/textColorEmptyBackground"
                 android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
                 android:id="@+id/lblEmptyWeight" />
             <RadioGroup
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_marginLeft="5dp"
+                android:layout_margin="10dp"
                 android:id="@+id/radioPaymentMode"
                 android:layout_height="wrap_content">
                 <RadioButton
@@ -157,32 +140,48 @@
                     android:text="Cash"
                     android:checked="true"
                     android:buttonTint="@android:color/white"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/textColorEmptyBackground"
                     android:layout_weight="1"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/text_size"
                     android:layout_height="wrap_content" />
                 <RadioButton
                     android:id="@+id/creditRadioButton"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/textColorEmptyBackground"
                     android:layout_width="wrap_content"
                     android:text="Credit"
                     android:buttonTint="@android:color/white"
                     android:layout_weight="1"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/text_size"
                     android:layout_height="wrap_content" />
             </RadioGroup>
-            <Button
-                android:layout_width="match_parent"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:text="Save"
-                android:layout_gravity="center"
-                android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:textSize="@dimen/btn_text_size"
-                android:textAllCaps="false"
-                android:id="@+id/btnPrint"
-                android:background="@color/buttonBackground"
-                android:textColor="@color/buttonTextColor" />
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="clear"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/button_text_size"
+                    android:id="@+id/btnClear"
+                    android:background="@color/buttonBackground"
+                    android:textColor="@color/buttonTextColor" />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Go"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/button_text_size"
+                    android:id="@+id/btnPrint"
+                    android:background="@color/buttonBackground"
+                    android:textColor="@color/buttonTextColor" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <ProgressBar
@@ -193,12 +192,11 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
     <ImageButton
-        android:layout_height="30dp"
-        android:layout_width="30dp"
-        android:layout_marginTop="15dp"
-        android:rotation="180"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/logout"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/signout"
         android:layout_alignParentRight="true"
         android:id="@+id/btnLogout" />
 </RelativeLayout>

@@ -160,12 +160,13 @@ namespace UECrusher.Activity
                     layBillEntry.Visibility = Android.Views.ViewStates.Visible;
                     isBillEntry = true;
 
-                    var array = new string[] { "LB. No.", "Date", "Item" };
+                    var array = new string[] { "LB. No.", "Out Date and Time", "Item", "Vehicle No." };
                     var list = new VehicleDetailsGETVE
                     {
                         LoadBillNo = itemDetailsGetVE.First().LoadBillNo,
-                        EntryDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
-                        ItemName = itemTypeSpinner.SelectedItem.ToString()
+                        EntryDate = DateTime.Now.ToString(Utilities.DATE_MONTH_TIME_AMPM, CultureInfo.InvariantCulture),
+                        ItemName = itemTypeSpinner.SelectedItem.ToString(),
+                        VehicleNo = itemDetailsGetVE.First().VehicleNo
                     };
                     var serilizedData = JsonConvert.SerializeObject(list);
 
@@ -181,7 +182,7 @@ namespace UECrusher.Activity
                     Toast.MakeText(this, "Error in update..", ToastLength.Short).Show();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in UVEDS...");
             }
@@ -196,7 +197,7 @@ namespace UECrusher.Activity
                 {
                     CheckBillNumberAndGetDetails();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ExceptionLog.LogDetails(this, ex.Message + "\n\n Exception in CheckBillNumberAndGetDetails");
                 }

@@ -3,14 +3,24 @@
     android:background="@color/borderColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textColor="@android:color/white"
+        android:background="@color/headerTextBackground"
+        android:text="Load Bill Entry"
+        android:gravity="center"
+        android:id="@+id/lblTittle"
+        android:textStyle="bold"
+        android:textSize="24dp" />
     <ImageButton
-        android:layout_height="30dp"
-        android:layout_width="30dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/logout"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/signout"
         android:layout_alignParentRight="true"
-        android:id="@+id/btnLogout"
-        android:rotation="180" />
+        android:id="@+id/btnLogout" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,10 +47,10 @@
             android:maxLines="1"
             android:singleLine="true"
             android:inputType="text"
-            android:textSize="18dp"
+            android:textSize="@dimen/text_size"
             android:hint="Bill Bumber"
-            android:textColorHint="@color/grey"
-            android:textColor="@color/grey"
+            android:textColorHint="@color/textColorEmptyBackground"
+            android:textColor="@color/textColorEmptyBackground"
             android:paddingLeft="15dp"
             android:id="@+id/txtBillNumber" />
         <Button
@@ -50,11 +60,10 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:textAllCaps="false"
             android:id="@+id/btnCheck"
-            android:textSize="@dimen/btn_text_size"
-            android:background="@android:color/white"
-            android:textColor="@color/borderColor" />
+            android:textSize="@dimen/button_text_size"
+            android:background="@color/buttonBackground"
+            android:textColor="@color/buttonTextColor" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,26 +72,24 @@
         android:visibility="gone"
         android:id="@+id/layDeliveryDetails"
         android:orientation="vertical">
-        <TextView
+    <!--<TextView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textColor="@android:color/white"
-            android:text="Delivery Details"
-            android:gravity="center"
+            android:text="Delivery Details"            
             android:textStyle="bold"
-            android:textSize="24dp" />
+            android:textSize="24dp" />-->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:hint="Number"
             android:layout_margin="10dp"
             android:maxLines="1"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textColorEmptyBackground"
+            android:textSize="@dimen/text_size"
             android:gravity="center_vertical"
-            android:textSize="18dp"
             android:paddingLeft="15dp"
-            android:background="@drawable/bottomborder"
             android:id="@+id/lblBillNumber" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,11 +99,12 @@
             <Spinner
                 android:id="@+id/itemTypeSpinner"
                 android:layout_width="match_parent"
-                android:textSize="18dp"
+                android:minHeight="@dimen/minHeight"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
                 android:hint="Item"
-                android:layout_height="40dp" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     <!--<TextView
         android:layout_width="match_parent"
@@ -118,10 +126,10 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:textAllCaps="false"
+            android:textStyle="bold"
             android:id="@+id/btnUpdate"
-            android:textSize="@dimen/btn_text_size"
-            android:background="@android:color/white"
-            android:textColor="@color/borderColor" />
+            android:textSize="@dimen/button_text_size"
+            android:background="@color/buttonBackground"
+            android:textColor="@color/buttonTextColor" />
     </LinearLayout>
 </RelativeLayout>
