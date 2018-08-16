@@ -43,7 +43,19 @@ namespace FuelUED
             mainLayout = FindViewById<LinearLayout>(Resource.Id.layHolder);
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             mainHolder = FindViewById<RelativeLayout>(Resource.Id.mainRelativeHolder);
-
+            var alertDialog = new Android.App.AlertDialog.Builder(this);
+            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
+            {
+                alertDialog.SetTitle("Logout");
+                alertDialog.SetMessage("Do you want to logout ?");
+                alertDialog.SetPositiveButton("Yes", (se, ee) =>
+                {
+                    StartActivity(typeof(LogInActivity));
+                    Finish();
+                });
+                alertDialog.SetNegativeButton("No", (se, ee) => { });
+                alertDialog.Show();
+            };
             //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
             //Ipadress = pref.GetString(Utilities.IPAddress, string.Empty);
 
@@ -55,14 +67,14 @@ namespace FuelUED
             WebService.IPADDRESS = IpAddress;
 
 
-            FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
-            {
-                var alertDialog1 = new Android.App.AlertDialog.Builder(this);
-                alertDialog1.SetTitle("Logout");
-                alertDialog1.SetMessage("Do you want to exit ?");
-                alertDialog1.SetPositiveButton("OK", (ss, se) => Finish());
-                alertDialog1.Show();
-            };
+            //FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
+            //{
+            //    var alertDialog1 = new Android.App.AlertDialog.Builder(this);
+            //    alertDialog1.SetTitle("Logout");
+            //    alertDialog1.SetMessage("Do you want to exit ?");
+            //    alertDialog1.SetPositiveButton("OK", (ss, se) => Finish());
+            //    alertDialog1.Show();
+            //};
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
                  //VehicleList = FuelDB.Singleton.GetValue().ToList();

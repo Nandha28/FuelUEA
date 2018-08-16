@@ -162,7 +162,9 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <TransformFile Include="Resources\drawable\white_border.xml" />
+    <TransformFile Include="Resources\drawable\whiteborder.xml">
+      <SubType>Designer</SubType>
+    </TransformFile>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\DeliveryDetail.axml">
@@ -194,6 +196,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\signout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\blackOutterBox.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

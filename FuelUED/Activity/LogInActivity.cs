@@ -16,13 +16,26 @@ namespace FuelUED
 
             // Create your application here
             SetContentView(Resource.Layout.LogIn);
+
+            var ipAddress = AppPreferences.GetString(this, Utilities.IPAddress);
+            var did = AppPreferences.GetString(this, Utilities.DEVICEID);
+            var siteId = AppPreferences.GetString(this, Utilities.SITEID);
+
+
             var email = FindViewById<EditText>(Resource.Id.txtEmail);
             var password = FindViewById<EditText>(Resource.Id.txtPassword);
             FindViewById<Button>(Resource.Id.btnLogin).Click += (s, e) =>
              {
                  if (email.Text.Equals(Utilities.ADMIN) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     StartActivity(typeof(MainScreenActivity));
+                     if (ipAddress.Equals("") || did.Equals("") || siteId.Equals(""))
+                     {
+                         Toast.MakeText(this, "Please config device first", ToastLength.Short).Show();
+                     }
+                     else
+                     {
+                         StartActivity(typeof(MainScreenActivity));
+                     }
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
@@ -32,7 +45,7 @@ namespace FuelUED
                  {
                      Toast.MakeText(this, "Invalid Credentials", ToastLength.Short).Show();
                  }
-             };          
+             };
         }
     }
 }

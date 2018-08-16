@@ -1,46 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:background="#247185"
-    android:layout_width="match_parent">
+    android:background="@color/borderColor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <ImageView
+      android:layout_height="100dp"
+      android:layout_width="100dp"
+      android:layout_centerHorizontal="true"
+      android:layout_margin="20dp"
+      android:scaleType="fitXY"
+      android:src="@drawable/logo"
+      android:id="@+id/logo" />
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/logo"
+      android:textColor="@color/textColorEmptyBackground"
+      android:gravity="center"
+      android:textAllCaps="true"
+      android:text="Fuel Entry"
+      android:layout_centerHorizontal="true"
+      android:textStyle="bold"
+      android:textSize="@dimen/text_size"
+      android:layout_gravity="center" />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="60dp"
+      android:layout_alignParentBottom="true">
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:layout_margin="10dp"
-            android:textColor="@android:color/white"
-            android:id="@+id/txtEmail"
-            android:backgroundTint="@android:color/white"
-            android:hint="User Name"
-            android:textColorHint="#FFFFFF" />
-    <!--android:textColorHint="android:textColorHint"-->
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textColorHint="#FFFFFF"
-            android:textColor="@android:color/white"
-            android:id="@+id/txtPassword"
-            android:backgroundTint="@android:color/white"
-            android:inputType="textPassword"
-            android:hint="Password" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textAllCaps="false"
-            android:background="@android:color/white"
-            android:textColor="@color/borderColor"
-            android:id="@+id/btnLogin"
-            android:text="Sign In" />
+        android:layout_height="wrap_content">
+      <EditText
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textEmailAddress"
+          android:textSize="@dimen/text_size"
+          android:layout_margin="10dp"
+          android:padding="10dp"
+          android:background="@drawable/blackOutterBox"
+          android:textColor="@color/textColorEmptyBackground"
+          android:id="@+id/txtEmail"
+          android:hint="User Name"
+          android:textColorHint="@color/textColorEmptyBackground" />
+      <EditText
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/text_size"
+          android:layout_margin="10dp"
+          android:textColorHint="@color/textColorEmptyBackground"
+          android:textColor="@color/textColorEmptyBackground"
+          android:id="@+id/txtPassword"
+          android:padding="10dp"
+          android:background="@drawable/blackOutterBox"
+          android:inputType="textPassword"
+          android:hint="Password" />
+      <Button
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="10dp"
+          android:textSize="@dimen/button_text_size"
+          android:background="@color/buttonBackground"
+          android:textColor="@color/buttonTextColor"
+          android:id="@+id/btnLogin"
+          android:text="Sign In" />
     </LinearLayout>
+  </RelativeLayout>
 </RelativeLayout>

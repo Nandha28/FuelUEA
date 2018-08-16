@@ -6,20 +6,20 @@
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     android:descendantFocusability="beforeDescendants"
-    android:background="@android:color/white"
+    android:background="@color/borderColor"
     android:focusable="true"
     android:id="@+id/layFuelEntry"
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/textColorEmptyBackground"
         android:text="Fuel Entry"
         android:gravity="center"
         android:id="@+id/lblTittle"
         android:textStyle="bold"
-        android:textSize="24dp"
-        android:background="@color/borderColor" />
+        android:textSize="@dimen/text_size"
+        android:background="@color/headerTextBackground" />
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
@@ -30,42 +30,42 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:hint="Number"
                 android:layout_margin="10dp"
                 android:maxLines="1"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:minHeight="@dimen/minHeight"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
                 android:inputType="number"
-                android:textSize="15dp"
-                android:paddingLeft="15dp"
-                android:background="@drawable/bottomborder"
+                android:padding="5dp"
                 android:id="@+id/txtBillNumber" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="15dp"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:paddingLeft="15dp"
+                android:minHeight="@dimen/minHeight"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
+                android:padding="5dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/bottomborder"
                 android:id="@+id/lbldateTime" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder">
-                <Spinner
-                    android:id="@+id/fuelSpinner"
-                    android:textStyle="bold"
-                    android:textSize="15dp"
-                    android:padding="8dp" 
-                    android:textColor="@android:color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp" />
+              <Spinner
+                  android:id="@+id/fuelSpinner"
+                  android:textStyle="bold"
+                  android:minHeight="@dimen/minHeight"
+                  android:textColor="@color/textColorEmptyBackground"
+                  android:textSize="@dimen/text_size"
+                  android:layout_height="wrap_content"
+                  android:layout_width="match_parent"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,24 +76,26 @@
                     android:id="@+id/fuelFormSpinner"
                     android:layout_width="match_parent"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:textSize="15dp"
-                    android:layout_height="40dp" />
+                    android:minHeight="@dimen/minHeight"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         <!--Vehicle Number-->
             <AutoCompleteTextView
                 android:id="@+id/vehicleNumber"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
-                android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
+                android:background="@drawable/bottomborder"
+                android:minHeight="@dimen/minHeight"                
                 android:hint="Vehicle Number"
                 android:inputType="textCapCharacters"
-                android:paddingLeft="15dp"
+                android:padding="5dp"
                 android:theme="@style/Autocomplete"
-                android:background="@drawable/bottomborder"
-                android:layout_height="40dp" />
+                android:layout_height="wrap_content" />
         <!--Vehicle Type Eg: lorry, van-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,11 +105,12 @@
                 <Spinner
                     android:id="@+id/vehicleType"
                     android:layout_width="match_parent"
-                    android:textSize="15dp"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
                     android:hint="Vehicle Type"
-                    android:layout_height="40dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         <!--Driver Name-->
             <LinearLayout
@@ -117,12 +120,13 @@
                 android:background="@drawable/bottomborder">
                 <Spinner
                     android:id="@+id/driverName"
-                    android:textSize="15dp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:hint="Driver Name"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         <!--Fuel liters-->
             <LinearLayout
@@ -136,23 +140,24 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:inputType="number"
-                    android:textSize="15dp"
                     android:hint="Fuel"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="1"
-                    android:paddingLeft="15dp"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:background="@drawable/bottomborder"
+                    android:layout_weight="1"
+                    android:padding="5dp"
                     android:id="@+id/fuelToFill" />
                 <TextView
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"
                     android:text="(0lts)"
-                    android:textSize="15dp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:paddingRight="10dp"
-                    android:paddingLeft="5dp"
+                    android:padding="5dp"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
                     android:id="@+id/fuelAvailable" />
@@ -160,14 +165,15 @@
         <!--Check Box-->
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:paddingLeft="15dp"
+                android:padding="5dp"
                 android:id="@+id/txtFilledBy"
                 android:inputType="text"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="15dp"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
+                android:minHeight="@dimen/minHeight"
                 android:hint="Filled By"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder" />
@@ -175,7 +181,9 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Meter Fault"
-                android:textSize="15dp"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
+                android:minHeight="@dimen/minHeight"
                 android:id="@+id/chckMeterFault"
                 android:layout_margin="10dp"
                 android:textStyle="bold"
@@ -192,44 +200,46 @@
                     android:layout_width="match_parent">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:layout_weight="1"
                         android:id="@+id/txtOpeningKMS"
-                        android:textSize="15dp"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
                         android:text="0"
-                        android:paddingLeft="5dp"
+                        android:padding="5dp"
                         android:inputType="numberDecimal"
                         android:layout_margin="10dp" />
                     <EditText
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="15dp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
                         android:layout_weight="1"
                         android:hint="Closing KMS"
                         android:id="@+id/txtClosingKMS"
-                        android:paddingLeft="5dp"
+                        android:padding="5dp"
                         android:background="@drawable/bottomborder"
                         android:inputType="numberDecimal"
                         android:layout_margin="10dp" />
                 </LinearLayout>
             <!--KMPL-->
                 <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/lblkmpl"
-                    android:paddingLeft="15dp"
+                    android:padding="5dp"
                     android:gravity="center_vertical"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:textSize="15dp"
-                    android:background="@drawable/bottomborder"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
                     android:layout_margin="10dp"
                     android:text="KMPL" />
             </LinearLayout>
@@ -248,56 +258,59 @@
                     android:background="@drawable/bottomborder">
                     <Spinner
                         android:id="@+id/paymentMode"
-                        android:textSize="15dp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
                         android:layout_width="match_parent"
                         android:layout_height="40dp" />
                 </LinearLayout>
                 <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:paddingLeft="15dp"
+                    android:padding="5dp"
                     android:layout_margin="10dp"
                     android:hint="Rate/Liter"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
+                    android:textStyle="bold"                    
                     android:inputType="numberDecimal"
                     android:id="@+id/txtRate"
                     android:background="@drawable/bottomborder" />
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
                     android:hint="Amount"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:paddingLeft="15dp"
+                    android:textColor="@color/textColorEmptyBackground"  
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
+                    android:padding="5dp"
                     android:gravity="center_vertical"
                     android:layout_margin="10dp"
-                    android:id="@+id/lblTotalPrice"
-                    android:background="@drawable/bottomborder" />
+                    android:id="@+id/lblTotalPrice" />
             </LinearLayout>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textSize="15dp"
+                android:layout_height="wrap_content"
                 android:hint="Remaks"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textColorEmptyBackground"
+                android:textSize="@dimen/text_size"
+                android:minHeight="@dimen/minHeight"
                 android:id="@+id/txtRemarks"
                 android:inputType="text"
                 android:maxLines="1"
-                android:paddingLeft="15dp"
+                android:padding="5dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder" />
             <LinearLayout
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
-                android:clickable="true"
+                android:clickable="true"              
+                android:minHeight="@dimen/minHeight"
                 android:orientation="horizontal"
                 android:background="@color/borderColor"
                 android:id="@+id/btnStore"
@@ -307,14 +320,15 @@
                     android:layout_width="30dp"
                     android:id="@+id/imgFuel"
                     android:layout_gravity="center"
-                    android:src="@drawable/gas" />
+                    android:src="@drawable/gas"/>
                 <TextView
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:text="STORE"
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/button_text_size"                    
                     android:textAlignment="center"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content" />

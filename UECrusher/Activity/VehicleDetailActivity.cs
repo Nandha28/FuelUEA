@@ -182,7 +182,8 @@ namespace UECrusher.Activity
         {
             lblEmptyWeight.Text = string.Empty;
             ownerName.Text = string.Empty;
-            itemTypeSpinner.SetSelection(0);            
+            itemTypeSpinner.SetSelection(0);
+            cashRadioButton.Checked = true;
         }
 
         private void HideKeyboard()

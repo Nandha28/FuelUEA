@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2c3e50</color>
-    <color name="colorPrimaryDark">#1B3147</color>
-    <color name="colorAccent">#3498db</color>
-    <color name="borderColor">#247185</color>
+  <color name="colorPrimary">#2c3e50</color>
+  <color name="colorPrimaryDark">#1B3147</color>
+  <color name="colorAccent">#3498db</color>
+  <color name="borderColor">#FFBB02</color>
+  <color name="textColorEmptyBackground">@android:color/black</color>
+  <color name="textColorBorderBackground">@android:color/white</color>
+  <color name="headerTextBackground">#003644</color>
+  <color name="buttonBackground">@android:color/white</color>
+  <color name="buttonTextColor">@android:color/black</color>
   <!--Text Color-->
-    <color name="grey">#D3D3D3</color>
-    <color name="backgroundBunk">#F22626</color>
-    <color name="backgroundInward">#0CD164</color>
-    <color name="btnAndTitleBackgroundRed">#C60B0B</color>
-    <color name="btnAndTitleBackgroundGreen">#01682F</color>
-    <color name="btnTextColor">#5b2c00</color>
-    <color name="txtColor">#FFFFFF</color>
+  <color name="grey">#D3D3D3</color>
+  <color name="backgroundBunk">#F22626</color>
+  <color name="backgroundInward">#0CD164</color>
+  <color name="btnAndTitleBackgroundRed">#C60B0B</color>
+  <color name="btnAndTitleBackgroundGreen">#01682F</color>
+  <color name="btnTextColor">#5b2c00</color>
+  <color name="txtColor">#FFFFFF</color>
  
 </resources>
 <!--f22626 bunk background-->

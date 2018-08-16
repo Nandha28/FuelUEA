@@ -112,7 +112,7 @@ namespace FuelUED
             dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
             fuelTypeSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
-            fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards" });
+            fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards", "Shortage" });
 
             fuelFormSpinner = FindViewById<Spinner>(Resource.Id.fuelFormSpinner);
             fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, StockList);
@@ -280,11 +280,15 @@ namespace FuelUED
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     //StockList = new string[] { "Bunk" }; 
                 }
+                else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
+                {
+
+                }
                 else
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
-                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundColor(Color.White);
+                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     btnStore.SetBackgroundResource(Resource.Color.borderColor);
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
@@ -304,7 +308,7 @@ namespace FuelUED
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Gone;
                         btnStore.SetBackgroundResource(Resource.Color.borderColor);
                         lblTitle.SetBackgroundResource(Resource.Color.borderColor);
-                        FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundColor(Color.White);
+                        FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                         imgFuel.Visibility = Android.Views.ViewStates.Gone;
                     }
                     else

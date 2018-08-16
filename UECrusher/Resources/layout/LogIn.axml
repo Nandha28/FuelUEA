@@ -3,15 +3,6 @@
     android:background="@color/borderColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<!--<ScrollView
-        android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:background="@color/borderColor"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">-->
     <ImageView
         android:layout_height="100dp"
         android:layout_width="100dp"
@@ -43,13 +34,14 @@
             android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content"                
                 android:inputType="textEmailAddress"
                 android:textSize="@dimen/text_size"
-                android:layout_margin="10dp"
+                android:layout_margin="10dp" 
+                android:padding="10dp" 
+                android:background="@drawable/blackOutterBox"               
                 android:textColor="@color/textColorEmptyBackground"
                 android:id="@+id/txtEmail"
-                android:backgroundTint="@color/textColorEmptyBackground"
                 android:hint="User Name"
                 android:textColorHint="@color/textColorEmptyBackground" />
             <EditText
@@ -60,7 +52,8 @@
                 android:textColorHint="@color/textColorEmptyBackground"
                 android:textColor="@color/textColorEmptyBackground"
                 android:id="@+id/txtPassword"
-                android:backgroundTint="@color/textColorEmptyBackground"
+                android:padding="10dp" 
+                android:background="@drawable/blackOutterBox"  
                 android:inputType="textPassword"
                 android:hint="Password" />
             <Button
