@@ -7,7 +7,9 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using FuelApp.Modal;
 using FuelUED.Adapter;
+using FuelUED.CommonFunctions;
 using FuelUED.Modal;
+using FuelUED.Service;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -253,6 +255,32 @@ namespace FuelUED
                 //        alertDialog.Show();
                 //    }
                 //}
+                if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
+                {
+                    if (fuelToFill.Text == "")
+                    {
+                        Toast.MakeText(this, "Please enter shortage litres", ToastLength.Short).Show();
+                        return;
+                    }
+                    var list = new List<UploadDetails>
+                    {
+                        new UploadDetails
+                        {
+                            DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
+                            SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
+                            IsShortage = "1",
+                            ShortageLtr = 0.00m
+                        }
+                    };
+                    var deserializedData = JsonConvert.SerializeObject(list);
+                    //Console.WriteLine(deserializedData);
+                    var resposeAfterPost = WebService.PostAllDataToWebService("UPFStock", deserializedData);
+                    if (resposeAfterPost == null)
+                    {
+
+                    }
+                    return;
+                }
                 if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
                 {
                     Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
@@ -290,13 +318,13 @@ namespace FuelUED
                     lblButtonStore.Text = "Shortage Update";
                     fuelFormSpinner.Adapter = null;
                     vehicleNumber.Text = string.Empty;
-                   // fuelTypeSpinner.Adapter = null;
                     driverNameSpinner.Adapter = null;
-                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
-                    btnStore.SetBackgroundResource(Resource.Color.borderColor);
-                    layMeterFault.Visibility = Android.Views.ViewStates.Visible;
-                    checkBox.Visibility = Android.Views.ViewStates.Visible;
+                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
+                    btnStore.SetBackgroundColor(Color.White);
+                    layMeterFault.Visibility = Android.Views.ViewStates.Gone;
+                    checkBox.Visibility = Android.Views.ViewStates.Gone;
+                    imgFuel.Visibility = Android.Views.ViewStates.Gone;
                 }
                 else
                 {
@@ -305,7 +333,8 @@ namespace FuelUED
                     lblButtonStore.Text = "store";
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
-                    btnStore.SetBackgroundResource(Resource.Color.borderColor);
+                    lblTitle.SetTextColor(Color.Black);
+                    btnStore.SetBackgroundColor(Color.White);
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     checkBox.Visibility = Android.Views.ViewStates.Visible;
                     // StockList = new string[] { "Stock", "Bunk" };
@@ -321,7 +350,8 @@ namespace FuelUED
                     if (fuelFormSpinner.SelectedItem.Equals("Stock"))
                     {
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Gone;
-                        btnStore.SetBackgroundResource(Resource.Color.borderColor);
+                        lblTitle.SetTextColor(Color.Black);
+                        btnStore.SetBackgroundColor(Color.White);
                         lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                         FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                         imgFuel.Visibility = Android.Views.ViewStates.Gone;

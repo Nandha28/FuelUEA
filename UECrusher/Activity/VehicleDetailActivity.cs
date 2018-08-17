@@ -67,7 +67,6 @@ namespace UECrusher.Activity
             {
                 ShowText("Something went wrong");
             };
-            var alertDialog = new Android.App.AlertDialog.Builder(this);
             progressLoader = FindViewById<ProgressBar>(Resource.Id.loader);
             // progressLoader.Visibility = Android.Views.ViewStates.Visible;
             layScroll = FindViewById<ScrollView>(Resource.Id.layScroll);
@@ -100,6 +99,7 @@ namespace UECrusher.Activity
 
             FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
             {
+                var alertDialog = new Android.App.AlertDialog.Builder(this);
                 alertDialog.SetTitle("Logout");
                 alertDialog.SetMessage("Do you want to logout ?");
                 alertDialog.SetPositiveButton("Yes", (se, ee) =>
@@ -372,6 +372,7 @@ namespace UECrusher.Activity
                 intent.PutStringArrayListExtra("array", array);
                 intent.PutExtra("typeof", "UploadItemDetails");
                 StartActivity(intent);
+                Finish();
                 RunOnUiThread(() =>
                 {
                     progressLoader.Visibility = ViewStates.Gone;
@@ -415,5 +416,9 @@ namespace UECrusher.Activity
         //    IsExtraPrint = true;
         //    Toast.MakeText(this, "Press agin to exit..", ToastLength.Short).Show();
         //}
+        protected override void OnDestroy()
+        {            
+            base.OnDestroy();
+        }
     }
 }

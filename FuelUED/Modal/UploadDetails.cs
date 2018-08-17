@@ -27,5 +27,9 @@
         public string TAmount { get; set; } = DEFAULTVALUE;
         public string Remarks { get; set; } = DEFAULTVALUE;
         public string MeterFault { get; set; } = DEFAULTVALUE;
+        public string IsShortage { get; set; } = DEFAULTVALUE;
+        public decimal ShortageLtr { get; set; } = 0.00m;
+        public string IsExcess { get; set; } = DEFAULTVALUE;
+        public decimal ExcessLtr { get; set; } = 0.00m;
     }
 }

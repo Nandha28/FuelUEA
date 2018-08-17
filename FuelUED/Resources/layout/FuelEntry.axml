@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:textColor="@color/textColorEmptyBackground"
+        android:textColor="@color/textColorBorderBackground"
         android:text="Fuel Entry"
         android:gravity="center"
         android:id="@+id/lblTittle"
@@ -312,7 +312,7 @@
                 android:clickable="true"
                 android:minHeight="@dimen/minHeight"
                 android:orientation="horizontal"
-                android:background="@color/borderColor"
+                android:background="@color/textColorBorderBackground"
                 android:id="@+id/btnStore"
                 android:gravity="center">
                 <ImageView
