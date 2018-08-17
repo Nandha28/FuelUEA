@@ -48,6 +48,7 @@ namespace FuelUED
         private TextView lblTotalPrice;
         private EditText txtRemarks;
         private ImageView imgFuel;
+        private TextView lblButtonStore;
         private TextView lblTitle;
         private AutoCompleteTextView vehicleNumber;
         private TextView billNumber;
@@ -112,7 +113,8 @@ namespace FuelUED
             dateTimeNow = FindViewById<TextView>(Resource.Id.lbldateTime).Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
             fuelTypeSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
-            fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Outward", "Inwards", "Shortage" });
+            fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
+                new string[] { "Outward", "Inwards", "Shortage" });
 
             fuelFormSpinner = FindViewById<Spinner>(Resource.Id.fuelFormSpinner);
             fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, StockList);
@@ -156,6 +158,7 @@ namespace FuelUED
             lblTotalPrice = FindViewById<TextView>(Resource.Id.lblTotalPrice);
             txtRemarks = FindViewById<EditText>(Resource.Id.txtRemarks);
             imgFuel = FindViewById<ImageView>(Resource.Id.imgFuel);
+            lblButtonStore = FindViewById<TextView>(Resource.Id.lblButtonStore);
 
             fuelToFill.TextChanged += (s, e) => CheckFuelAvailbility();
             txtRate.TextChanged += (s, e) => CalculateFuelTotalAmount();
@@ -278,16 +281,28 @@ namespace FuelUED
                     btnStore.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
+                    lblButtonStore.Text = "store";
                     //StockList = new string[] { "Bunk" }; 
                 }
                 else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
-
+                    fuelAvailable.Text = "0 Ltrs.";
+                    lblButtonStore.Text = "Shortage Update";
+                    fuelFormSpinner.Adapter = null;
+                    vehicleNumber.Text = string.Empty;
+                   // fuelTypeSpinner.Adapter = null;
+                    driverNameSpinner.Adapter = null;
+                    FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
+                    lblTitle.SetBackgroundResource(Resource.Color.borderColor);
+                    btnStore.SetBackgroundResource(Resource.Color.borderColor);
+                    layMeterFault.Visibility = Android.Views.ViewStates.Visible;
+                    checkBox.Visibility = Android.Views.ViewStates.Visible;
                 }
                 else
                 {
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
+                    lblButtonStore.Text = "store";
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     btnStore.SetBackgroundResource(Resource.Color.borderColor);
@@ -376,7 +391,10 @@ namespace FuelUED
             availableFuel = float.Parse(billDetailsList?.AvailableLiters);
             if (string.IsNullOrEmpty(fuelToFill.Text))
             {
-                fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + " Ltrs.";
+                if (!fuelTypeSpinner.SelectedItem.Equals("Shortage"))
+                {
+                    fuelAvailable.Text = $"{billDetailsList.AvailableLiters}" + " Ltrs.";
+                }
                 return;
             }
             if (fuelTypeSpinner.SelectedItem.Equals("Outward"))

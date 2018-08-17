@@ -58,14 +58,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/bottomborder">
-              <Spinner
-                  android:id="@+id/fuelSpinner"
-                  android:textStyle="bold"
-                  android:minHeight="@dimen/minHeight"
-                  android:textColor="@color/textColorEmptyBackground"
-                  android:textSize="@dimen/text_size"
-                  android:layout_height="wrap_content"
-                  android:layout_width="match_parent"/>
+                <Spinner
+                    android:id="@+id/fuelSpinner"
+                    android:textStyle="bold"
+                    android:minHeight="@dimen/minHeight"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                     android:minHeight="@dimen/minHeight"
                     android:textColor="@color/textColorEmptyBackground"
                     android:textSize="@dimen/text_size"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         <!--Vehicle Number-->
             <AutoCompleteTextView
@@ -90,7 +90,7 @@
                 android:textColor="@color/textColorEmptyBackground"
                 android:textSize="@dimen/text_size"
                 android:background="@drawable/bottomborder"
-                android:minHeight="@dimen/minHeight"                
+                android:minHeight="@dimen/minHeight"
                 android:hint="Vehicle Number"
                 android:inputType="textCapCharacters"
                 android:padding="5dp"
@@ -275,7 +275,7 @@
                     android:textColor="@color/textColorEmptyBackground"
                     android:textSize="@dimen/text_size"
                     android:minHeight="@dimen/minHeight"
-                    android:textStyle="bold"                    
+                    android:textStyle="bold"
                     android:inputType="numberDecimal"
                     android:id="@+id/txtRate"
                     android:background="@drawable/bottomborder" />
@@ -284,7 +284,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Amount"
                     android:textStyle="bold"
-                    android:textColor="@color/textColorEmptyBackground"  
+                    android:textColor="@color/textColorEmptyBackground"
                     android:textSize="@dimen/text_size"
                     android:minHeight="@dimen/minHeight"
                     android:padding="5dp"
@@ -309,7 +309,7 @@
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
-                android:clickable="true"              
+                android:clickable="true"
                 android:minHeight="@dimen/minHeight"
                 android:orientation="horizontal"
                 android:background="@color/borderColor"
@@ -320,15 +320,17 @@
                     android:layout_width="30dp"
                     android:id="@+id/imgFuel"
                     android:layout_gravity="center"
-                    android:src="@drawable/gas"/>
+                    android:src="@drawable/gas" />
                 <TextView
                     android:layout_height="wrap_content"
                     android:text="STORE"
                     android:gravity="center"
                     android:paddingLeft="5dp"
+                    android:textAllCaps="true"
                     android:textStyle="bold"
+                    android:id="@+id/lblButtonStore"
                     android:textColor="@color/textColorEmptyBackground"
-                    android:textSize="@dimen/button_text_size"                    
+                    android:textSize="@dimen/button_text_size"
                     android:textAlignment="center"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content" />

@@ -296,8 +296,8 @@ namespace FuelUED
                     {
                         Toast.MakeText(this, "Something wrong ...Check connectivity..", ToastLength.Short).Show();
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
-                        return;
                     });
+                    return;
                 }
                 RunOnUiThread(() =>
                 {
