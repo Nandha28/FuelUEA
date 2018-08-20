@@ -195,14 +195,13 @@ namespace FuelUED
                     alertDialog.SetMessage("Do you want to proceed ?");
                     alertDialog.SetPositiveButton("OK", (ss, se) =>
                     {
-                        Print();
-
+                        PrintFromPrinter();
                     });
                     alertDialog.Show();
                 }
                 else
                 {
-                    Print();
+                    PrintFromPrinter();
                 }
                 //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
                 //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
@@ -270,7 +269,7 @@ namespace FuelUED
         //    return textheads;
         //}
 
-        private void Print()
+        private void PrintFromPrinter()
         {
             var bill = FuelDB.Singleton.GetBillDetails();
             var billall = bill.First();
@@ -284,20 +283,37 @@ namespace FuelUED
             FuelDB.Singleton.DeleteTable<BillDetails>();
             FuelDB.Singleton.CreateTable<BillDetails>();
             FuelDB.Singleton.InsertBillDetails(billDetails);
-            AgainPrint();
-            var intent = new Intent(this, typeof(MainScreenActivity));
-            intent.AddFlags(ActivityFlags.ClearTop);
-            StartActivity(intent);
-            Finish();
+            Print();           
         }
 
         private void AgainPrint()
+        {
+            var alertDialog = new Android.App.AlertDialog.Builder(this);
+            alertDialog.SetTitle("Print");
+            alertDialog.SetMessage("Do you want to print ?");
+            alertDialog.SetCancelable(false);
+            alertDialog.SetPositiveButton("Yes", (ss, se) =>
+            {
+                Print();
+            });
+            alertDialog.SetNegativeButton("No", (s, e) =>
+            {
+                var intent = new Intent(this, typeof(MainScreenActivity));
+                intent.AddFlags(ActivityFlags.ClearTop);
+                StartActivity(intent);
+                Finish();
+            });
+            alertDialog.Show();           
+        }
+
+        private void Print()
         {
             if (nGXPrinter != null)
             {
                 //nGXPrinter.PrintText(textName.Text);              
                 nGXPrinter.PrintImage(GetCanvas(layoutMain, mainScrollView.GetChildAt(0).Height, mainScrollView.GetChildAt(0).Width));
                 nGXPrinter.PrintText("\n");
+                AgainPrint();
             }
             else
             {

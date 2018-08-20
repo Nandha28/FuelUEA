@@ -164,8 +164,8 @@
                         android:padding="5dp"
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical"
-                        android:id="@+id/fuelAvailable" /> 
-                <TextView
+                        android:id="@+id/fuelAvailable" />
+                    <TextView
                         android:layout_height="50dp"
                         android:layout_width="wrap_content"
                         android:text="Ltrs."
@@ -176,7 +176,7 @@
                         android:paddingRight="10dp"
                         android:padding="5dp"
                         android:layout_alignParentRight="true"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical" />
                 </LinearLayout>
             <!--Check Box-->
                 <EditText
@@ -322,40 +322,62 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/bottomborder" />
                 <LinearLayout
-                    android:layout_height="50dp"
-                    android:layout_width="match_parent"
-                    android:layout_margin="10dp"
-                    android:clickable="true"
-                    android:minHeight="@dimen/minHeight"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@color/textColorBorderBackground"
-                    android:id="@+id/btnStore"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_height="30dp"
-                        android:layout_width="30dp"
-                        android:id="@+id/imgFuel"
-                        android:layout_gravity="center"
-                        android:src="@drawable/gas" />
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:text="STORE"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:textAllCaps="true"
-                        android:textStyle="bold"
-                        android:id="@+id/lblButtonStore"
-                        android:textColor="@color/textColorEmptyBackground"
+                    android:minHeight="@dimen/minHeight"
+                    android:weightSum="2"
+                    android:layout_width="match_parent">
+                    <Button
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
                         android:textSize="@dimen/button_text_size"
-                        android:textAlignment="center"
+                        android:text="Clear"
                         android:layout_gravity="center"
-                        android:layout_width="wrap_content" />
+                        android:layout_margin="10dp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:background="@color/textColorBorderBackground"
+                        android:textColor="@android:color/black"
+                        android:minHeight="@dimen/minHeight"
+                        android:layout_weight="1"
+                        android:id="@+id/btnClear" />
+                    <LinearLayout
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:layout_weight="1"
+                        android:minHeight="@dimen/minHeight"
+                        android:orientation="horizontal"
+                        android:background="@color/textColorBorderBackground"
+                        android:id="@+id/btnStore"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"
+                            android:id="@+id/imgFuel"
+                            android:layout_gravity="center"
+                            android:src="@drawable/gas" />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:text="STORE"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            android:id="@+id/lblButtonStore"
+                            android:textColor="@color/textColorEmptyBackground"
+                            android:textSize="@dimen/button_text_size"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-   <LinearLayout
-     android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:focusableInTouchMode="true"
         android:descendantFocusability="beforeDescendants"
@@ -363,12 +385,12 @@
         android:visibility="gone"
         android:id="@+id/layLoader"
         android:layout_height="match_parent">
-     <ProgressBar
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/loader"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />     
-   </LinearLayout>
+        <ProgressBar
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/loader"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
 </RelativeLayout>

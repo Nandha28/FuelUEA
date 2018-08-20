@@ -55,6 +55,7 @@ namespace FuelUED
         private TextView lblTitle;
         private ProgressBar loader;
         private LinearLayout layLoader;
+        private Button btnClear;
         private LinearLayout layFuelEntry;
         private AutoCompleteTextView vehicleNumber;
         private TextView billNumber;
@@ -107,6 +108,7 @@ namespace FuelUED
             lblTitle = FindViewById<TextView>(Resource.Id.lblTittle);
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             layLoader = FindViewById<LinearLayout>(Resource.Id.layLoader);
+            btnClear = FindViewById<Button>(Resource.Id.btnClear);
             layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
             vehicleNumber = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
             if (myVehiclelist != null)
@@ -136,7 +138,6 @@ namespace FuelUED
             cashModeSpinner = FindViewById<Spinner>(Resource.Id.paymentMode);
             cashModeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Cash", "Credit" });
 
-
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
             vehicleTypeAdapter =
                 new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
@@ -145,6 +146,7 @@ namespace FuelUED
             vehicleTypeSpinner.ItemSelected += VehicleTypeSpinner_ItemSelected;
 
             //VehicleTypeSpinner_ItemClick;
+            btnClear.Click += BtnClear_Click;
 
             var layMeterFault = FindViewById<LinearLayout>(Resource.Id.layMeterFault);
 
@@ -379,6 +381,7 @@ namespace FuelUED
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.backgroundInward);
                     lblTitle.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
                     btnStore.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
+                    btnClear.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     lblButtonStore.Text = "store";
@@ -394,6 +397,7 @@ namespace FuelUED
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     btnStore.SetBackgroundColor(Color.White);
+                    btnClear.SetBackgroundColor(Color.White);
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     imgFuel.Visibility = Android.Views.ViewStates.Gone;
@@ -407,6 +411,7 @@ namespace FuelUED
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetTextColor(Color.Black);
                     btnStore.SetBackgroundColor(Color.White);
+                    btnClear.SetBackgroundColor(Color.White);
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     checkBox.Visibility = Android.Views.ViewStates.Visible;
                     // StockList = new string[] { "Stock", "Bunk" };
@@ -424,6 +429,7 @@ namespace FuelUED
                         bunkDetailsLayout.Visibility = Android.Views.ViewStates.Gone;
                         lblTitle.SetTextColor(Color.Black);
                         btnStore.SetBackgroundColor(Color.White);
+                        btnClear.SetBackgroundColor(Color.White);
                         lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                         FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                         imgFuel.Visibility = Android.Views.ViewStates.Gone;
@@ -435,6 +441,7 @@ namespace FuelUED
                         {
                             FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.backgroundBunk);
                             btnStore.SetBackgroundColor(Color.Brown);
+                            btnClear.SetBackgroundColor(Color.Brown);
                             lblTitle.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundRed);
                         }
                         //else
@@ -447,6 +454,16 @@ namespace FuelUED
                         //btnStore.SetCompoundDrawables(Resources.GetDrawable(Resource.Drawable.ic_launcher), null, null, null);
                     }
                 };
+        }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            vehicleNumber.Text = string.Empty;
+            driverNameSpinner.Adapter = null;
+            vehicleTypeSpinner.Adapter = null;
+            fuelToFill.Text = string.Empty;
+            txtClosingKMS.Text = string.Empty;
+            txtRemarks.Text = string.Empty;
         }
 
         private void ShowLoader(bool isToShow)
