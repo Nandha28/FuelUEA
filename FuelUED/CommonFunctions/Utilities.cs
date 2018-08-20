@@ -11,5 +11,7 @@
         public const string BILLNUMBER = "billnumber";
         public const string DEVICESTATUS = "devicestatus";
         public const string IsDownloaded = "alreadydownloaded";
+        public const string DATE_MONTH_TIME_AMPM = "dd/MM/yyyy hh:mm:ss tt";
+        public const string MONTH_DATE_TIME = "MM/dd/yyyy hh:mm:ss";
     }
 }

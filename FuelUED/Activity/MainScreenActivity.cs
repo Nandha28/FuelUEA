@@ -312,7 +312,7 @@ namespace FuelUED
             thread.Start();
         }
 
-        private void CreateDatabaseOrModifyDatabase(List<VehicleDetails> vehicleList)
+        public void CreateDatabaseOrModifyDatabase(List<VehicleDetails> vehicleList)
         {
             DeleteDatabase(FuelDB.Singleton.DBPath);
             FuelDB.Singleton.CreateTable<VehicleDetails>();

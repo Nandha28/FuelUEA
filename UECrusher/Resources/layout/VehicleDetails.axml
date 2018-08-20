@@ -27,7 +27,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
-        android:layout_margin="10dp"
         android:scrollbars="none"
         android:layout_below="@id/lblTittle"
         android:visibility="visible"
@@ -57,7 +56,10 @@
                 android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
                 android:textColor="@color/textColorEmptyBackground"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/lbldateTime" />
         <!--W Mode-->
             <LinearLayout
@@ -70,6 +72,7 @@
                     android:layout_width="match_parent"
                     android:minHeight="@dimen/minHeight"
                     android:textSize="@dimen/text_size"
+                    android:paddingRight="20dp"
                     android:textStyle="bold"
                     android:textColor="@color/textColorEmptyBackground"
                     android:hint="W Mode"
@@ -95,11 +98,16 @@
                 android:textStyle="bold"
                 android:minHeight="@dimen/minHeight"
                 android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
                 android:textColor="@color/textColorEmptyBackground"
                 android:background="@drawable/bottomborder"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/lblOwnerName" />
         <!--Item Type-->
             <LinearLayout
@@ -113,6 +121,7 @@
                     android:textSize="@dimen/text_size"
                     android:minHeight="@dimen/minHeight"
                     android:textStyle="bold"
+                    android:paddingRight="20dp"
                     android:textColor="@color/textColorEmptyBackground"
                     android:hint="Item"
                     android:layout_height="wrap_content" />
@@ -125,13 +134,17 @@
                 android:textSize="@dimen/text_size"
                 android:gravity="center_vertical"
                 android:textColor="@color/textColorEmptyBackground"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/lblEmptyWeight" />
             <RadioGroup
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:id="@+id/radioPaymentMode"
                 android:layout_height="wrap_content">
                 <RadioButton
