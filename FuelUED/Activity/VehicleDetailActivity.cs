@@ -50,7 +50,7 @@ namespace FuelUED
         public VehicleDetailActivity()
         {
             InwardValues = new string[] { "Bill No.", "Date", "Type","Fuel From", "Vehicle No.", "Vehicle Type", "Driver Name",
-                "Ltrs.","Filled By","RatePerLtr","Price","Payment Type","Remarks"};
+                "Ltrs.","Filled By","Payment Type","RatePerLtr","Price","Remarks"};
 
             OutwardStock = new string[] {"Bill No.", "Date", "Type","Fuel From", "Vehicle No.", "Vehicle Type", "Driver Name",
                 "Ltrs.","Op. KMS","Cl. KMS","KMPL","Filled By","Remarks" };

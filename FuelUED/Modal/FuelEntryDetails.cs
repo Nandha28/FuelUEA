@@ -22,5 +22,7 @@
         public string Price { get; set; }
         public string Remarks { get; set; }       
         public string MeterFault { get; set; }
+        public string IsExcess { get; set; } = "0";
+        public decimal ExcessLtr { get; set; } = 0.00m;
     }
 }

@@ -8,6 +8,7 @@
         public const string IPAddress = "ip";
         public const string DEVICEID = "deviceid";
         public const string SITEID = "siteid";
+        public const string EXCESSLTRS = "excessltrs";
         public const string BILLNUMBER = "billnumber";
         public const string DEVICESTATUS = "devicestatus";
         public const string IsDownloaded = "alreadydownloaded";

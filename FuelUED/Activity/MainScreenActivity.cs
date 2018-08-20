@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace FuelUED
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainScreenActivity : AppCompatActivity
     {
         private LinearLayout mainLayout;
@@ -78,24 +78,31 @@ namespace FuelUED
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
                  //VehicleList = FuelDB.Singleton.GetValue().ToList();
-
-                 if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
+                 try
                  {
-                     if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals("1"))
+                     if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
                      {
-                         StartActivity(typeof(FuelActivity));
+                         if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals("1"))
+                         {
+                             Toast.MakeText(this, "Please wait...", ToastLength.Short).Show();
+                             StartActivity(typeof(FuelActivity));
+                         }
+                         else
+                         {
+                             Toast.MakeText(this, "Device not avalable", ToastLength.Short).Show();
+                         }
                      }
                      else
                      {
-                         Toast.MakeText(this, "Device not avalable", ToastLength.Short).Show();
+                         var alertDialog1 = new Android.App.AlertDialog.Builder(this);
+                         alertDialog1.SetTitle("you need to sync first");
+                         alertDialog1.SetPositiveButton("OK", (ss, se) => { });
+                         alertDialog1.Show();
                      }
                  }
-                 else
+                 catch
                  {
-                     var alertDialog1 = new Android.App.AlertDialog.Builder(this);
-                     alertDialog1.SetTitle("you need to sync first");
-                     alertDialog1.SetPositiveButton("OK", (ss, se) => { });
-                     alertDialog1.Show();
+                     Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
                  }
                  // SyncButton_Click();
              };
@@ -232,7 +239,9 @@ namespace FuelUED
                         Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
                         VehicleID = item.VID == string.Empty ? "0" : item.VID,
                         MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
-                        TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM
+                        TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM,
+                        IsExcess = item.IsExcess,
+                        ExcessLtr = item.ExcessLtr
                     });
                 }
                 Console.WriteLine(list);
