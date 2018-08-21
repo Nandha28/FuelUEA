@@ -54,7 +54,6 @@ namespace FuelUED
         private TextView lblButtonStore;
         private TextView lblTitle;
         private ProgressBar loader;
-        private LinearLayout layLoader;
         private Button btnClear;
         private LinearLayout layFuelEntry;
         private AutoCompleteTextView vehicleNumber;
@@ -90,6 +89,9 @@ namespace FuelUED
              });
             alertDialog.SetNegativeButton("Cancel", (s, e) => { });
             // var resposeString = WebService.GetDataFromWebService("LoadVD");
+            loader = FindViewById<ProgressBar>(Resource.Id.loader);
+            layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
+            ShowLoader(true);
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
@@ -106,10 +108,8 @@ namespace FuelUED
             }
 
             lblTitle = FindViewById<TextView>(Resource.Id.lblTittle);
-            loader = FindViewById<ProgressBar>(Resource.Id.loader);
-            layLoader = FindViewById<LinearLayout>(Resource.Id.layLoader);
+            // layLoader = FindViewById<LinearLayout>(Resource.Id.layLoader);
             btnClear = FindViewById<Button>(Resource.Id.btnClear);
-            layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
             vehicleNumber = FindViewById<AutoCompleteTextView>(Resource.Id.vehicleNumber);
             if (myVehiclelist != null)
             {
@@ -273,52 +273,20 @@ namespace FuelUED
                 //}                                
                 if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
-                    //RunOnUiThread(() =>
-                    //{                  
-                    //Task.Run(() =>
-                    ShowLoader(true);
-
-                    //});
+                    Task.Run(() => RunOnUiThread(() => ShowLoader(true)));
                     if (fuelToFill.Text == "")
                     {
                         Toast.MakeText(this, "Please enter shortage litres", ToastLength.Short).Show();
-                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
                         return;
                     }
-                    var list = new List<UploadDetails>
+                    Task.Run(async () =>
                     {
-                        new UploadDetails
-                        {
-                            DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
-                            SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
-                            IsShortage = "1",
-                            ShortageLtr = Convert.ToDecimal(fuelToFill.Text),
-                            FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.CurrentCulture)
-                        }
-                    };
-                    var deserializedData = JsonConvert.SerializeObject(list);
-                    //Console.WriteLine(deserializedData);
-                    var resposeString = WebService.PostAllDataToWebService("UPFStock", deserializedData);
-                    if (resposeString != null)
-                    {
-                        try
-                        {
-                            var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                            Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
-                            CreateDatabaseOrModifyDatabase(VehicleList);
-                        }
-                        catch
-                        {
-                            Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
-                            loader.Visibility = Android.Views.ViewStates.Gone;
-                        }
-                    }
-                    else
-                    {
-                        Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
-                    }
-                    loader.Visibility = Android.Views.ViewStates.Gone;
-                    return;
+                        await SentAndStoreShortage();
+                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
+                        return;
+                    });
+
                 }
                 if (fuelTypeSpinner.SelectedItem.Equals("Inwards") && !isAddedAlready)
                 {
@@ -336,12 +304,12 @@ namespace FuelUED
                         isAddedAlready = true;
                     });
                     alertDialog.Show();
-                    loader.Visibility = Android.Views.ViewStates.Gone;
+                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
                     return;
                 }
                 if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
                 {
-                    loader.Visibility = Android.Views.ViewStates.Gone;
+                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
                     Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
                     return;
                 }
@@ -350,13 +318,13 @@ namespace FuelUED
                     if (Convert.ToInt32(fuelAvailable.Text) < 1 && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
                     {
                         Toast.MakeText(this, "No stock availabe", ToastLength.Short).Show();
-                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
                         return;
                     }
                 }
                 catch
                 {
-                    loader.Visibility = Android.Views.ViewStates.Gone;
+                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
                     return;
                 }
                 if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
@@ -367,7 +335,7 @@ namespace FuelUED
                 {
                     StoreDetils();
                 }
-                loader.Visibility = Android.Views.ViewStates.Gone;
+                Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
             };
 
             fuelTypeSpinner.ItemSelected += (s, e) =>
@@ -454,6 +422,44 @@ namespace FuelUED
                         //btnStore.SetCompoundDrawables(Resources.GetDrawable(Resource.Drawable.ic_launcher), null, null, null);
                     }
                 };
+            ShowLoader(false);
+        }
+
+        private async Task SentAndStoreShortage()
+        {
+            var list = new List<UploadDetails>
+            {
+                new UploadDetails
+                {
+                    DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
+                    SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
+                    IsShortage = "1",
+                    ShortageLtr = Convert.ToDecimal(fuelToFill.Text),
+                    FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.CurrentCulture)
+                }
+            };
+            var deserializedData = JsonConvert.SerializeObject(list);
+            //Console.WriteLine(deserializedData);
+            var resposeString = WebService.PostAllDataToWebService("UPFStock", deserializedData);
+            if (resposeString != null)
+            {
+                try
+                {
+                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
+                    Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
+                    CreateDatabaseOrModifyDatabase(VehicleList);
+                }
+                catch
+                {
+                    Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
+                    loader.Visibility = Android.Views.ViewStates.Gone;
+                }
+            }
+            else
+            {
+                Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
+            }
+            Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
         }
 
         private void BtnClear_Click(object sender, EventArgs e)
@@ -470,19 +476,15 @@ namespace FuelUED
         {
             if (isToShow)
             {
-                //RunOnUiThread(() =>
-                //{
-                layLoader.Visibility = Android.Views.ViewStates.Visible;
+                loader.Visibility = Android.Views.ViewStates.Visible;
+                Window.SetFlags(Android.Views.WindowManagerFlags.NotTouchable, Android.Views.WindowManagerFlags.NotTouchable);
                 layFuelEntry.Alpha = 0.5f;
-                //});
             }
             else
             {
-                //RunOnUiThread(() =>
-                //{
-                layLoader.Visibility = Android.Views.ViewStates.Gone;
-                layFuelEntry.Alpha = 0.5f;
-                //});
+                loader.Visibility = Android.Views.ViewStates.Gone;
+                Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                layFuelEntry.Alpha = 1f;
             }
         }
 
@@ -509,7 +511,7 @@ namespace FuelUED
             FuelDB.Singleton.InsertValues(vehicleList);
             //btnDownloadData.Clickable = false;
             FuelDB.Singleton.InsertBillDetails(billDetails);
-            layLoader.Visibility = Android.Views.ViewStates.Gone;
+            //loader.Visibility = Android.Views.ViewStates.Gone;
             layFuelEntry.Alpha = 1f;
             Toast.MakeText(this, "Shortage uploaded successfully", ToastLength.Short).Show();
         }
