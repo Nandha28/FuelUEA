@@ -91,7 +91,7 @@ namespace FuelUED
             // var resposeString = WebService.GetDataFromWebService("LoadVD");
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
-            ShowLoader(true);
+            //ShowLoader(true);
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
@@ -247,46 +247,23 @@ namespace FuelUED
             var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
             {
-                //RunOnUiThread(() =>
-                //{
-                loader.Visibility = Android.Views.ViewStates.Visible;
-                //});
-                //if (fuelSpinner.SelectedItem.ToString() != null && fuelFormSpinner.SelectedItem.ToString() != null
-                //    && vehicleNumber.Text != string.Empty && vehicleTypeSpinner.SelectedItem.ToString() != null)
-                //{
-
-                //}
-                //else
-                //{
-                //    Toast.MakeText(this, "Please enter all the values..", ToastLength.Short).Show();
-                //}
-                //if (!string.IsNullOrEmpty(txtOpeningKMS.Text) && !string.IsNullOrEmpty(txtClosingKMS.Text))
-                //{
-                //    if (Convert.ToDecimal(txtClosingKMS.Text) < Convert.ToDecimal(txtOpeningKMS.Text))
-                //    {
-                //        var alertDialog = new Android.App.AlertDialog.Builder(this);
-                //        alertDialog.SetTitle("Enter valid destination KM");
-                //        alertDialog.SetMessage("Please check starting KM and closing KM");
-                //        alertDialog.SetPositiveButton("OK", (ss, se) => { });
-                //        alertDialog.Show();
-                //    }
-                //}                                
+                //loader.Visibility = Android.Views.ViewStates.Visible;
                 if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
-                    Task.Run(() => RunOnUiThread(() => ShowLoader(true)));
-                    if (fuelToFill.Text == "")
-                    {
-                        Toast.MakeText(this, "Please enter shortage litres", ToastLength.Short).Show();
-                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
-                        return;
-                    }
+                    //if (fuelToFill.Text == "")
+                    //{
+                    //    Toast.MakeText(this, "Please enter shortage litres", ToastLength.Short).Show();
+                    //}
+                    //else
+                    //{
+                    ShowLoader(true);
                     Task.Run(async () =>
                     {
                         await SentAndStoreShortage();
-                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
-                        return;
+                        ShowLoader(false);
                     });
-
+                    //}
+                    return;
                 }
                 if (fuelTypeSpinner.SelectedItem.Equals("Inwards") && !isAddedAlready)
                 {
@@ -304,29 +281,29 @@ namespace FuelUED
                         isAddedAlready = true;
                     });
                     alertDialog.Show();
-                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
+                    ShowLoader(false);
                     return;
                 }
                 if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
                 {
-                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
+                    ShowLoader(false);
                     Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
                     return;
                 }
-                try
-                {
-                    if (Convert.ToInt32(fuelAvailable.Text) < 1 && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
-                    {
-                        Toast.MakeText(this, "No stock availabe", ToastLength.Short).Show();
-                        Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
-                        return;
-                    }
-                }
-                catch
-                {
-                    Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
-                    return;
-                }
+                //try
+                //{
+                //    if (Convert.ToInt32(fuelAvailable.Text) < 1 && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
+                //    {
+                //        Toast.MakeText(this, "No stock availabe", ToastLength.Short).Show();
+                //        ShowLoader(false);
+                //        return;
+                //    }
+                //}
+                //catch
+                //{
+                //    ShowLoader(false);
+                //    return;
+                //}
                 if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
                 {
                     alertDialog.Show();
@@ -335,7 +312,7 @@ namespace FuelUED
                 {
                     StoreDetils();
                 }
-                Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
+                ShowLoader(false);
             };
 
             fuelTypeSpinner.ItemSelected += (s, e) =>
@@ -357,8 +334,7 @@ namespace FuelUED
                 }
                 else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
-                    fuelAvailable.Text = "0";
-                    lblButtonStore.Text = "Shortage Update";
+                    lblButtonStore.Text = "Update";
                     fuelFormSpinner.Adapter = null;
                     vehicleNumber.Text = string.Empty;
                     driverNameSpinner.Adapter = null;
@@ -434,8 +410,8 @@ namespace FuelUED
                     DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
                     SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
                     IsShortage = "1",
-                    ShortageLtr = Convert.ToDecimal(fuelToFill.Text),
-                    FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.CurrentCulture)
+                    ShortageLtr = Convert.ToDecimal(availableFuel),
+                    FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.InvariantCulture)
                 }
             };
             var deserializedData = JsonConvert.SerializeObject(list);
@@ -446,20 +422,28 @@ namespace FuelUED
                 try
                 {
                     var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                    Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
+                    RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
+                    });
                     CreateDatabaseOrModifyDatabase(VehicleList);
                 }
                 catch
                 {
-                    Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
-                    loader.Visibility = Android.Views.ViewStates.Gone;
+                    RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
+                    });
                 }
             }
             else
             {
-                Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
+                RunOnUiThread(() =>
+                {
+                    Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
+                });
             }
-            Task.Run(() => RunOnUiThread(() => ShowLoader(false)));
+            RunOnUiThread(() => ShowLoader(false));
         }
 
         private void BtnClear_Click(object sender, EventArgs e)
@@ -472,7 +456,7 @@ namespace FuelUED
             txtRemarks.Text = string.Empty;
         }
 
-        private void ShowLoader(bool isToShow)
+        private async Task ShowLoader(bool isToShow)
         {
             if (isToShow)
             {
@@ -513,7 +497,12 @@ namespace FuelUED
             FuelDB.Singleton.InsertBillDetails(billDetails);
             //loader.Visibility = Android.Views.ViewStates.Gone;
             layFuelEntry.Alpha = 1f;
+            //RunOnUiThread(() =>
+            //{
+            Finish();
+            StartActivity(Intent);
             Toast.MakeText(this, "Shortage uploaded successfully", ToastLength.Short).Show();
+            //});
         }
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
@@ -571,14 +560,12 @@ namespace FuelUED
                 {
                     if (!fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals("Stock"))
                     {
-                        if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters) + 10
-                            && Convert.ToInt32(billDetailsList.AvailableLiters) > 0)
+                        if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters) + 50)
                         {
                             if (float.Parse(fuelToFill.Text) > float.Parse(billDetailsList.AvailableLiters))
                             {
                                 ExcessLiter = float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters);
                                 isExcess = true;
-                                //AppPreferences.SaveString(this,"isexcessltrs",isExcess);
                             }
                             else
                             {
@@ -630,7 +617,7 @@ namespace FuelUED
                     fuelDetails = new FuelEntryDetails
                     {
                         BillNumber = billNumber.Text == string.Empty ? "0" : billNumber.Text,
-                        CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                        CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                         FuelType = fuelTypeSpinner.SelectedItem.ToString(),
                         FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
                         VehicleNumber = vehicleNumber.Text,
@@ -658,7 +645,7 @@ namespace FuelUED
                     fuelDetails = new FuelEntryDetails
                     {
                         BillNumber = billNumber.Text == string.Empty ? "0" : billNumber.Text,
-                        CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                        CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                         FuelType = fuelTypeSpinner.SelectedItem.ToString(),
                         FuelStockType = fuelFormSpinner.SelectedItem.ToString(),
                         VehicleNumber = vehicleNumber.Text,
@@ -686,6 +673,7 @@ namespace FuelUED
             catch (Exception ec)
             {
                 Console.WriteLine(ec.Message);
+                return;
             }
             //var fuelBalance = new BillDetails
             //{
@@ -708,7 +696,7 @@ namespace FuelUED
                 printDetails = new PrintDetails
                 {
                     BillNumber = fuelDetails.BillNumber,
-                    CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                    CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                     FuelType = fuelDetails.FuelType,
                     FuelStockType = fuelDetails.FuelStockType,
                     VehicleNumber = fuelDetails.VehicleNumber,
@@ -731,7 +719,7 @@ namespace FuelUED
                         printDetails = new PrintDetails
                         {
                             BillNumber = fuelDetails.BillNumber,
-                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                             FuelType = fuelDetails.FuelType,
                             FuelStockType = fuelDetails.FuelStockType,
                             VehicleNumber = fuelDetails.VehicleNumber,
@@ -750,7 +738,7 @@ namespace FuelUED
                         printDetails = new PrintDetails
                         {
                             BillNumber = fuelDetails.BillNumber,
-                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                             FuelType = fuelDetails.FuelType,
                             FuelStockType = fuelDetails.FuelStockType,
                             VehicleNumber = fuelDetails.VehicleNumber,
@@ -770,7 +758,7 @@ namespace FuelUED
                         printDetails = new PrintDetails
                         {
                             BillNumber = fuelDetails.BillNumber,
-                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                             FuelType = fuelDetails.FuelType,
                             FuelStockType = fuelDetails.FuelStockType,
                             VehicleNumber = fuelDetails.VehicleNumber,
@@ -792,7 +780,7 @@ namespace FuelUED
                         printDetails = new PrintDetails
                         {
                             BillNumber = fuelDetails.BillNumber,
-                            CurrentDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                            CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
                             FuelType = fuelDetails.FuelType,
                             FuelStockType = fuelDetails.FuelStockType,
                             VehicleNumber = fuelDetails.VehicleNumber,
