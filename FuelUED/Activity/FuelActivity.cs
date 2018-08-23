@@ -222,40 +222,13 @@ namespace FuelUED
                         lblkmpl.Text = "KMPL";
                     }
                 }
-            };
-
-            //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-            //var billnumber = pref.GetInt(Utilities.BILLNUMBER, 0);
-
-            //var billnumber = AppPreferences.GetInt(this, Utilities.BILLNUMBER);
-            // var billnumber = FuelDB.Singleton.GetBillDetails().First()?.BillCurrentNumber;
-
-            //Console.WriteLine(billnumber);
-
-            //if (billnumber == 0)
-            //{
-            //    billNumber.Text = Utilities.BILL_NUMBER.ToString();
-            //    //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber.Text));
-            //}
-            //else
-            //{
-            //    ++billnumber;
-            //    billNumber.Text = billnumber.ToString();
-            //}
-
+            };           
 
             var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
-            {
-                //loader.Visibility = Android.Views.ViewStates.Visible;
+            {                
                 if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
-                {
-                    //if (fuelToFill.Text == "")
-                    //{
-                    //    Toast.MakeText(this, "Please enter shortage litres", ToastLength.Short).Show();
-                    //}
-                    //else
-                    //{
+                {                    
                     ShowLoader(true);
                     Task.Run(async () =>
                     {
@@ -271,17 +244,18 @@ namespace FuelUED
                     alertDialog.SetTitle("Adding fuel");
                     alertDialog.SetMessage("Do you need to add fuel to existing");
                     alertDialog.SetCancelable(false);
-                    alertDialog.SetPositiveButton("OK", (ss, se) =>
+                    alertDialog.SetPositiveButton("Yes", (ss, se) =>
                     {
                         fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
                         isAddedAlready = true;
+                        StoreDetils();
                     });
-                    alertDialog.SetNegativeButton("Cancel", (ss, se) =>
+                    alertDialog.SetNegativeButton("No", (ss, se) =>
                     {
                         isAddedAlready = true;
+                        StoreDetils();
                     });
-                    alertDialog.Show();
-                    ShowLoader(false);
+                    alertDialog.Show();                    
                     return;
                 }
                 if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
@@ -673,6 +647,7 @@ namespace FuelUED
             catch (Exception ec)
             {
                 Console.WriteLine(ec.Message);
+                Toast.MakeText(this,"Error in storing the values", ToastLength.Short).Show();
                 return;
             }
             //var fuelBalance = new BillDetails
