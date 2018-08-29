@@ -303,8 +303,7 @@ namespace FuelUED
                     btnClear.SetBackgroundResource(Resource.Color.btnAndTitleBackgroundGreen);
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
-                    lblButtonStore.Text = "store";
-                    //StockList = new string[] { "Bunk" }; 
+                    lblButtonStore.Text = "store";                   
                 }
                 else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
@@ -534,7 +533,7 @@ namespace FuelUED
                 {
                     if (!fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals("Stock"))
                     {
-                        if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters) + 50)
+                        if (float.Parse(fuelToFill.Text) <= float.Parse(billDetailsList.AvailableLiters) + 500000)
                         {
                             if (float.Parse(fuelToFill.Text) > float.Parse(billDetailsList.AvailableLiters))
                             {
@@ -547,7 +546,7 @@ namespace FuelUED
                                 isExcess = false;
                             }
                             var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
-                            availableFuel = totalLtrs < 1 ? 0f : availableFuel;
+                            availableFuel = totalLtrs < 1 ? 0f : totalLtrs;
                         }
                         else
                         {
