@@ -87,7 +87,14 @@ namespace FuelUED
             layoutMain = FindViewById<LinearLayout>(Resource.Id.layPrinterBaseLayout);
             try
             {
-                enterdvalues = details?.Last();
+                if (details != null && details.Last().IsExcess == "0")
+                {
+                    enterdvalues = details?.Last();
+                }
+                else
+                {                    
+                    enterdvalues = details?.ElementAt(details.Count() - 2);
+                }
             }
             catch (Exception em)
             {
@@ -188,7 +195,7 @@ namespace FuelUED
                 //nGXPrinter.AddText(textField.Text);
                 //nGXPrinter.LineFeed(2);
                 //nGXPrinter.Print();
-                if (fuelStockType.Equals("Bunk"))
+                if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inwards"))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
                     alertDialog.SetTitle("Fuel is from petrol bunk");
@@ -283,7 +290,7 @@ namespace FuelUED
             FuelDB.Singleton.DeleteTable<BillDetails>();
             FuelDB.Singleton.CreateTable<BillDetails>();
             FuelDB.Singleton.InsertBillDetails(billDetails);
-            Print();           
+            Print();
         }
 
         private void AgainPrint()
@@ -303,7 +310,7 @@ namespace FuelUED
                 StartActivity(intent);
                 Finish();
             });
-            alertDialog.Show();           
+            alertDialog.Show();
         }
 
         private void Print()
