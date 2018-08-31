@@ -232,8 +232,7 @@ namespace FuelUED
                         alertDialog.SetPositiveButton("OK", (ss, es) =>
                         {
                             ExcessLiter = float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters);
-                            isExcess = true;
-                            StoreExcessValues();
+                            isExcess = true;                          
                             StoreDetils();
                         });
                         alertDialog.SetNegativeButton("Cancel", (ss, se) =>
@@ -241,6 +240,7 @@ namespace FuelUED
                             fuelToFill.Text = string.Empty;
                             ExcessLiter = 0f;
                             isExcess = false;
+                            alertDialog.Dispose();
                         });
                         alertDialog.Show();
                         var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
@@ -256,13 +256,22 @@ namespace FuelUED
 
                 if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
-                    ShowLoader(true);
-                    Task.Run(async () =>
+                    var alertDialog = new Android.App.AlertDialog.Builder(this);
+                    alertDialog.SetTitle($"Shortage {availableFuel} ltrs.");
+                    alertDialog.SetMessage("Do you want to proceed ?");
+                    alertDialog.SetCancelable(false);
+                    alertDialog.SetPositiveButton("YES", (ss, se) =>
                     {
-                        await SentAndStoreShortage();
-                        ShowLoader(false);
+                        UpdateShortageAndRefreshCurrentActivity();
+                        fuelAvailable.Text = string.Empty;
+                        availableFuel = 0;
+
                     });
-                    //}
+                    alertDialog.SetNegativeButton("NO", (ss, se) =>
+                    {
+                        alertDialog.Dispose();
+                    });
+                    alertDialog.Show();
                     return;
                 }
                 if (fuelTypeSpinner.SelectedItem.Equals("Inwards") && !isAddedAlready)
@@ -284,6 +293,7 @@ namespace FuelUED
                         {
                             isAddedAlready = true;
                             StoreDetils();
+                            alertDialog.Dispose();
                         });
                         alertDialog.Show();
                         return;
@@ -314,10 +324,16 @@ namespace FuelUED
 
             fuelTypeSpinner.ItemSelected += (s, e) =>
             {
+                ClearAllFields();
                 fuelFormSpinner.Adapter = null;
-                //StockList = null;
+                fuelToFill.Enabled = true;
+                vehicleNumber.Enabled = true;
+                vehicleNumber.Focusable = true;
+                fuelToFill.Focusable = true;
+                fuelToFill.FocusableInTouchMode = true;
                 if (fuelTypeSpinner.SelectedItem.Equals("Inwards"))
                 {
+                    vehicleNumber.Text = string.Empty;
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.backgroundInward);
@@ -327,13 +343,18 @@ namespace FuelUED
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     lblButtonStore.Text = "store";
+
                 }
                 else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                 {
                     lblButtonStore.Text = "Update";
                     fuelFormSpinner.Adapter = null;
-                    vehicleNumber.Text = string.Empty;
+                    vehicleTypeSpinner.Adapter = null;
                     driverNameSpinner.Adapter = null;
+                    vehicleNumber.Enabled = false;
+                    fuelToFill.Focusable = false;
+                    fuelToFill.Text = availableFuel.ToString();
+                    vehicleNumber.Text = "0";
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     btnStore.SetBackgroundColor(Color.White);
@@ -347,6 +368,7 @@ namespace FuelUED
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Stock", "Bunk" });
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     lblButtonStore.Text = "store";
+                    vehicleNumber.Text = string.Empty;
                     FindViewById<LinearLayout>(Resource.Id.layFuelEntry).SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetBackgroundResource(Resource.Color.borderColor);
                     lblTitle.SetTextColor(Color.Black);
@@ -355,7 +377,6 @@ namespace FuelUED
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     checkBox.Visibility = Android.Views.ViewStates.Visible;
                 }
-                ClearAllFields();
             };
 
 
@@ -387,52 +408,103 @@ namespace FuelUED
             ShowLoader(false);
         }
 
-        private async Task SentAndStoreShortage()
+        private void UpdateShortageAndRefreshCurrentActivity()
         {
-            var list = new List<UploadDetails>
+            fuelDetails = new FuelEntryDetails
             {
-                new UploadDetails
-                {
-                    DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" 
-                    : AppPreferences.GetString(this, Utilities.DEVICEID),
-                    SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" 
-                    : AppPreferences.GetString(this, Utilities.SITEID),
-                    IsShortage = "1",
-                    ShortageLtr = Convert.ToDecimal(availableFuel),
-                    FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.InvariantCulture)
-                }
+                BillNumber = billNumber.Text == string.Empty ? "0" : billNumber.Text,
+                CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
+                FuelType = "Shortage",
+                FuelStockType = "0",
+                VehicleNumber = "0",
+                VehicleType = "0",
+                DriverName = "0",
+                FuelInLtrs = "0",
+                FilledBy = "0",
+                ClosingKMS = "0",
+                Kmpl = "0",
+                OpeningKMS = "0",
+                PaymentType = "0",
+                Price = "0",
+                RatePerLtr = "0",
+                Remarks = "0",
+                VID = "0",
+                DriverID_PK = "0",
+                MeterFault = "0",
+                TotalKM = "0",
+                IsExcess = "0",
+                ExcessLtr = 0,
+                IsShortage = "1",
+                ShortageLtr = Convert.ToDecimal(availableFuel)
             };
-            var deserializedData = JsonConvert.SerializeObject(list);
-            //Console.WriteLine(deserializedData);
-            var resposeString = WebService.PostAllDataToWebService("UPFStock", deserializedData);
-            if (resposeString != null)
-            {
-                try
-                {
-                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                    RunOnUiThread(() =>
-                    {
-                        Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
-                    });
-                    CreateDatabaseOrModifyDatabase(VehicleList);
-                }
-                catch
-                {
-                    RunOnUiThread(() =>
-                    {
-                        Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
-                    });
-                }
-            }
-            else
-            {
-                RunOnUiThread(() =>
-                {
-                    Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
-                });
-            }
-            RunOnUiThread(() => ShowLoader(false));
+            SaveDetailsToDb();
+            InsertUpadatedBillDetails(); 
+            RefreshCurrent(); 
         }
+
+        private void InsertUpadatedBillDetails()
+        {
+            var bill = FuelDB.Singleton.GetBillDetails();
+            var billall = bill.First();
+            var billDetails = new BillDetails
+            {
+                AvailableLiters = "0",
+                BillCurrentNumber = (Convert.ToInt32(billall.BillCurrentNumber) + 1).ToString(),
+                BillPrefix = billall.BillPrefix,
+                DeviceStatus = billall.DeviceStatus
+            };
+            FuelDB.Singleton.DeleteTable<BillDetails>();
+            FuelDB.Singleton.CreateTable<BillDetails>();
+            FuelDB.Singleton.InsertBillDetails(billDetails);
+            availableFuel = 0f;
+        }
+
+        //private async Task SentAndStoreShortage()
+        //{
+        //    var list = new List<UploadDetails>
+        //    {
+        //        new UploadDetails
+        //        {
+        //            DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0"
+        //            : AppPreferences.GetString(this, Utilities.DEVICEID),
+        //            SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0"
+        //            : AppPreferences.GetString(this, Utilities.SITEID),
+        //            IsShortage = "1",
+        //            ShortageLtr = Convert.ToDecimal(availableFuel),
+        //            FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.InvariantCulture)
+        //        }
+        //    };
+        //    var deserializedData = JsonConvert.SerializeObject(list);
+        //    //Console.WriteLine(deserializedData);
+        //    var resposeString = WebService.PostAllDataToWebService("UPFStock", deserializedData);
+        //    if (resposeString != null)
+        //    {
+        //        try
+        //        {
+        //            var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
+        //            RunOnUiThread(() =>
+        //            {
+        //                Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
+        //            });
+        //            CreateDatabaseOrModifyDatabase(VehicleList);
+        //        }
+        //        catch
+        //        {
+        //            RunOnUiThread(() =>
+        //            {
+        //                Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
+        //            });
+        //        }
+        //    }
+        //    else
+        //    {
+        //        RunOnUiThread(() =>
+        //        {
+        //            Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
+        //        });
+        //    }
+        //    RunOnUiThread(() => ShowLoader(false));
+        //}
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
@@ -481,9 +553,6 @@ namespace FuelUED
             FuelDB.Singleton.InsertValues(vehicleList);
             FuelDB.Singleton.InsertBillDetails(billDetails);
             layFuelEntry.Alpha = 1f;
-            Finish();
-            StartActivity(Intent);
-            Toast.MakeText(this, "Shortage uploaded successfully", ToastLength.Short).Show();
         }
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
@@ -505,8 +574,6 @@ namespace FuelUED
         private void ClearAllFields()
         {
             fuelToFill.Text = string.Empty;
-            // fuelAvailable.Text = string.Empty;
-            //txtOpeningKMS.Text = string.Empty;
             txtClosingKMS.Text = string.Empty;
             txtFilledBy.Text = string.Empty;
             txtRate.Text = string.Empty;
@@ -547,16 +614,16 @@ namespace FuelUED
             }
         }
 
-        private void StoreExcessValues()
-        {
-            excessDetails = new FuelEntryDetails
-            {
-                VehicleNumber = vehicleNumber.Text,
-                CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
-                IsExcess = "1",
-                ExcessLtr = Convert.ToDecimal(ExcessLiter)
-            };
-        }
+        //private void StoreExcessValues()
+        //{
+        //    excessDetails = new FuelEntryDetails
+        //    {
+        //        VehicleNumber = vehicleNumber.Text,
+        //        CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
+        //        IsExcess = "1",
+        //        ExcessLtr = Convert.ToDecimal(ExcessLiter)
+        //    };
+        //}
 
         private void StoreDetils()
         {
@@ -586,8 +653,8 @@ namespace FuelUED
                         DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
                         MeterFault = checkBox.Checked == true ? "1" : "0",
                         TotalKM = (Convert.ToDouble(txtClosingKMS.Text) - Convert.ToDouble(txtOpeningKMS.Text)).ToString(),
-                        IsExcess = "0",
-                        ExcessLtr = 0
+                        IsExcess = isExcess ? "1" : "0",
+                        ExcessLtr = isExcess ? Convert.ToDecimal(ExcessLiter) : 0m
                     };
                 }
                 else
@@ -614,8 +681,8 @@ namespace FuelUED
                         DriverID_PK = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).First().DriverID_PK,
                         MeterFault = checkBox.Checked == true ? "1" : "0",
                         TotalKM = "0",
-                        IsExcess = "0",
-                        ExcessLtr = 0
+                        IsExcess = isExcess ? "1" : "0",
+                        ExcessLtr = isExcess ? Convert.ToDecimal(ExcessLiter) : 0m
                     };
                 }
             }
@@ -626,27 +693,34 @@ namespace FuelUED
                 Toast.MakeText(this, "Error in storing the values", ToastLength.Short).Show();
                 return;
             }
-            //var fuelBalance = new BillDetails
-            //{
-            //    AvailableLiters = availableFuel.ToString()
-            //};    
-            SaveAndNavigate();            
+            SaveDetailsToDb();
+            NavigateToPrintScreen();
         }
 
-        private void SaveAndNavigate()
+        private void RefreshCurrent()
         {
-            FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-            if (isExcess)
-            {
-                FuelDB.Singleton.InsertFuelEntryValues(excessDetails);
-            }
-            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
-            var printValues = StorePrintDetails(fuelDetails);
+            Finish();
+            StartActivity(Intent);
+            Toast.MakeText(this, "Shortage uploaded successfully", ToastLength.Short).Show();
+        }
 
+        private void NavigateToPrintScreen()
+        {
+            var printValues = StorePrintDetails(fuelDetails);
             Intent intent = new Intent(this, typeof(VehicleDetailActivity));
             intent.PutExtra("printDetails", JsonConvert.SerializeObject(printValues));
             StartActivity(intent);
+        }
+
+        private void SaveDetailsToDb()
+        {
+            FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
+            //if (isExcess)
+            //{
+            //    FuelDB.Singleton.InsertFuelEntryValues(excessDetails);
+            //}
+            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)

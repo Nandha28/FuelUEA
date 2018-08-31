@@ -241,7 +241,9 @@ namespace FuelUED
                         MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
                         TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM,
                         IsExcess = item.IsExcess,
-                        ExcessLtr = item.ExcessLtr
+                        ExcessLtr = item.ExcessLtr,
+                        IsShortage = item.IsShortage,
+                        ShortageLtr = item.ShortageLtr
                     });
                 }
                 Console.WriteLine(list);

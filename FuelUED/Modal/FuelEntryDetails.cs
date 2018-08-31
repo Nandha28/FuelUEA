@@ -24,5 +24,7 @@
         public string MeterFault { get; set; }
         public string IsExcess { get; set; } = "0";
         public decimal ExcessLtr { get; set; } = 0.00m;
+        public string IsShortage { get; set; } = "0";
+        public decimal ShortageLtr { get; set; } = 0.00m;
     }
 }
