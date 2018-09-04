@@ -141,6 +141,49 @@ namespace FuelUED
                 try
                 {
                     fuelDetails = FuelDB.Singleton.GetFuelValues();
+
+                    if (fuelDetails != null && fuelDetails?.Count() > 0)
+                    {
+                        btnUploadData.Clickable = true;
+                        btnDownloadData.Clickable = false;
+                        AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
+                        var result = UploadValues();
+                        if (result)
+                        {
+                            RunOnUiThread(() =>
+                            {
+                                Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
+                            });
+                            btnDownloadData.Clickable = true;
+                            AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+                        }
+                        else
+                        {
+                            RunOnUiThread(() =>
+                            {
+                                Toast.MakeText(this, "Upload Failed", ToastLength.Short).Show();
+                            });
+                        }
+                        RunOnUiThread(() =>
+                        {
+                            loader.Visibility = Android.Views.ViewStates.Gone;
+                            mainHolder.Alpha = 1f;
+                            Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                        });
+                    }
+                    else
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            loader.Visibility = Android.Views.ViewStates.Gone;
+                            mainHolder.Alpha = 1f;
+                            Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                            Toast.MakeText(this, "No Data to upload", ToastLength.Short).Show();
+                        });
+                        btnUploadData.Clickable = true;
+                        btnDownloadData.Clickable = true;
+                        AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+                    }
                 }
                 catch
                 {
@@ -155,52 +198,6 @@ namespace FuelUED
                     btnDownloadData.Clickable = true;
                     AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     return;
-                }
-                if (fuelDetails != null)
-                {
-                    //btnUploadData.Clickable = true;
-                    //btnDownloadData.Clickable = true;
-                    //AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
-
-                    btnUploadData.Clickable = true;
-                    btnDownloadData.Clickable = false;
-                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
-                    var result = UploadValues();
-                    if (result)
-                    {
-                        RunOnUiThread(() =>
-                        {
-                            Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
-                        });
-                        btnDownloadData.Clickable = true;
-                        AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
-                    }
-                    else
-                    {
-                        RunOnUiThread(() =>
-                        {
-                            Toast.MakeText(this, "Upload Failed", ToastLength.Short).Show();
-                        });
-                    }
-                    RunOnUiThread(() =>
-                    {
-                        loader.Visibility = Android.Views.ViewStates.Gone;
-                        mainHolder.Alpha = 1f;
-                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
-                    });
-                }
-                else
-                {
-                    RunOnUiThread(() =>
-                    {
-                        loader.Visibility = Android.Views.ViewStates.Gone;
-                        mainHolder.Alpha = 1f;
-                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
-                        Toast.MakeText(this, "No Data to upload", ToastLength.Short).Show();
-                    });
-                    btnUploadData.Clickable = true;
-                    btnDownloadData.Clickable = true;
-                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                 }
             }));
             thread.Start();
@@ -306,6 +303,9 @@ namespace FuelUED
                     RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "Something wrong ...Check connectivity..", ToastLength.Short).Show();
+                        loader.Visibility = Android.Views.ViewStates.Gone;
+                        mainHolder.Alpha = 1f;
+                        Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     });
                     return;
@@ -354,11 +354,6 @@ namespace FuelUED
         }
         public override void OnBackPressed()
         {
-            //var intent = new Intent(Intent.Action);
-            //intent.AddCategory(Intent.CategoryHome);
-            //intent.AddFlags(ActivityFlags.NewTask);
-            //StartActivity(intent);
-            //Finish();
             if (IsExitApp)
             {
                 base.OnBackPressed();

@@ -61,11 +61,7 @@ namespace FuelUED
             if (DBExists())
             {
                 localDB = new SQLiteConnection(DBPath);
-                var table = localDB.Table<FuelEntryDetails>();
-                foreach (var s in table)
-                {
-                    Console.WriteLine(s.DriverName + " " + s.VehicleNumber);
-                }
+                var table = localDB.Table<FuelEntryDetails>();                
                 return table;
             }
             return null;

@@ -101,65 +101,10 @@ namespace FuelUED
                 Console.WriteLine(em.Message);
             }
             mainScrollView = FindViewById<ScrollView>(Resource.Id.mainScrollView);
-            // textName.Text = GetTextHeads().ToString();
-            //textValue.Text = GetTextValues().ToString();
-            //if (enterdvalues.FuelType.Equals("Inwards"))
-
-
-            //var s = Array.Sort(OutwardValues,);
-
-            //{
-            //    textField.Text = "Bill No. \t\t:\t" + enterdvalues?.BillNumber +
-            //                    "\n\nDate \t:\t" + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture) +
-            //                    "\n\nType \t:\t" + enterdvalues?.FuelType +
-            //                    "\n\nFuel From \t:\t" + enterdvalues?.FuelStockType +
-            //                    "\n\nVehicle No \t:\t" + enterdvalues?.VehicleNumber +
-            //                    "\n\nVehicle \t:\t" + enterdvalues?.VehicleType +
-            //                    "\n\nDriver Name \t:\t" + enterdvalues?.DriverName +
-            //                    "\n\nLtrs. \t:\t" + enterdvalues?.FuelInLtrs +
-            //                     "\n\nFilled By :\t" + enterdvalues?.FilledBy +
-            //                     "\n\nPayment \t:\t" + enterdvalues?.PaymentType +
-            //                     "\n\nRatePerLtr\t :\t" + enterdvalues?.RatePerLtr +
-            //                     "\n\nPrice \t:\t" + enterdvalues?.Price +
-            //                     "\n\nRemarks \t:\t" + enterdvalues?.Remarks + "\n\n";
-            //}
-            //else
-            //{
-            //    textField.Text = "Bill No: \t:\t\t" + enterdvalues?.BillNumber +
-            //                     "\n\nDate \t:\t" + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture) +
-            //                     "\n\nType \t:\t" + enterdvalues?.FuelType +
-            //                     "\n\nFuel From \t:\t" + enterdvalues?.FuelStockType +
-            //                     "\n\nVehicle No \t:\t" + enterdvalues?.VehicleNumber +
-            //                     "\n\nVehicle \t:\t" + enterdvalues?.VehicleType +
-            //                     "\n\nDriver Name \t:\t" + enterdvalues?.DriverName +
-            //                     "\n\nLtrs. \t:\t" + enterdvalues?.FuelInLtrs +
-            //                      "\n\nOp. KMS \t:\t" + enterdvalues?.OpeningKMS +
-            //                      "\n\nCl. KMS \t:\t" + enterdvalues?.ClosingKMS +
-            //                      "\n\nKmpl \t:\t" + enterdvalues?.Kmpl +
-            //                      "\n\nFilled By \t:\t" + enterdvalues?.FilledBy +
-            //                      "\n\nPayment \t:\t" + enterdvalues?.PaymentType +
-            //                      "\n\nRatePerLtr \t:\t" + enterdvalues?.RatePerLtr +
-            //                      "\n\nPrice \t:\t" + enterdvalues?.Price +
-            //                      "\n\nRemarks \t:\t" + enterdvalues?.Remarks + "\n\n";
-            //}
+           
             billNumber = enterdvalues?.BillNumber;
             fuelStockType = enterdvalues?.FuelStockType;
-            //enterdvalues.Find();
-            //var index = 0;
-            //foreach (var item in enterdvalues.GetType().GetProperties())
-            //{
-            //    //Console.WriteLine(item.Name+" : "+item.GetValue(enterdvalues,null).ToString());
-            //    if (!item.GetValue(enterdvalues, null).ToString().Equals("0")
-            //        && !item.GetValue(enterdvalues, null).ToString().Equals(string.Empty))
-            //    {
-            //        var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
-            //        View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
-            //        view.FindViewById<TextView>(Resource.Id.txtName).Text = item.Name;
-            //        view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(enterdvalues, null).ToString();       
-            //        layoutMain.AddView(view, index);
-            //        index++;
-            //    }
-            //}
+           
             if (enterdvalues.FuelType.Equals("Inwards"))
             {
                 DrawPrintView(InwardValues);
@@ -191,10 +136,7 @@ namespace FuelUED
             }
 
             btnPrint.Click += (s, e) =>
-            {
-                //nGXPrinter.AddText(textField.Text);
-                //nGXPrinter.LineFeed(2);
-                //nGXPrinter.Print();
+            {           
                 if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inwards"))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
@@ -209,32 +151,13 @@ namespace FuelUED
                 else
                 {
                     PrintFromPrinter();
-                }
-                //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-                //pref.Edit().PutInt("billnumber", Convert.ToInt32(billNumber)).Apply();
-
-                //AppPreferences.SaveInt(this,Utilities.BILLNUMBER, Convert.ToInt32(billNumber));
+                }                
             };
         }
 
         private void DrawPrintView(string[] inwardValues)
         {
-            var index = 0;
-            //foreach (var item in enterdvalues.GetType().GetProperties())
-            //{
-            //    //Console.WriteLine(item.Name+" : "+item.GetValue(enterdvalues,null).ToString());
-            //    if (!item.GetValue(enterdvalues, null).ToString().Equals("0")
-            //        && !item.GetValue(enterdvalues, null).ToString().Equals(string.Empty) &&
-            //        !item.Name.Equals("VID") && !item.Name.Equals("DriverID_PK"))
-            //    {
-            //        var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
-            //        View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
-            //        view.FindViewById<TextView>(Resource.Id.txtName).Text = inwardValues[index];
-            //        view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(enterdvalues, null).ToString();
-            //        layoutMain.AddView(view, index);
-            //        index++;
-            //    }
-            //}
+            var index = 0;            
             foreach (var item in user.GetType().GetProperties())
             {
                 try
@@ -258,23 +181,7 @@ namespace FuelUED
                     btnPrint.Visibility = ViewStates.Visible;
                 }
             }
-        }
-
-        //private StringBuilder GetTextValues()
-        //{
-        //    var textheads = new StringBuilder();
-        //    foreach (var item in enterdvalues.GetType().GetProperties())
-        //    {
-        //        //Console.WriteLine(item.Name+" : "+item.GetValue(enterdvalues,null).ToString());
-        //        if (!item.GetValue(enterdvalues, null).ToString().Equals("0")
-        //            && !item.GetValue(enterdvalues, null).ToString().Equals(string.Empty))
-        //        {
-        //            textheads.Append(item.GetValue(enterdvalues, null).ToString()+"\n");
-        //            //textValue.Text = item.GetValue(enterdvalues, null).ToString();
-        //        }
-        //    }
-        //    return textheads;
-        //}
+        }        
 
         private void PrintFromPrinter()
         {
@@ -346,21 +253,7 @@ namespace FuelUED
             {
                 base.OnBackPressed();
             }
-            IsExtraPrint = true;
-            //var alertDialog = new Android.App.AlertDialog.Builder(this);
-            //alertDialog.SetTitle("Additional Print");
-            //alertDialog.SetMessage("Do you want to print agin ?");
-            //alertDialog.SetPositiveButton("Yes", (ss, se) =>
-            //{
-            //    AgainPrint();
-            //});
-            //alertDialog.SetNegativeButton("No", (s, e) =>
-            //{
-            //    IsExtraPrint = false;
-            //    base.OnBackPressed();
-            //});
-            //alertDialog.SetCancelable(true);
-            //alertDialog.Show();
+            IsExtraPrint = true;           
         }
     }
 }

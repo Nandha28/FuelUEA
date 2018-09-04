@@ -34,6 +34,7 @@ namespace FuelUED
         public string[] StockList;
 
         private List<VehicleDetails> VehicleList;
+        private List<FuelEntryDetails> billEntryList;
         private BillDetails billDetailsList;
         Android.App.AlertDialog.Builder alertDialog;
 
@@ -98,7 +99,7 @@ namespace FuelUED
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
                 var allvAl = FuelDB.Singleton.GetBillDetails().ToList();
                 billDetailsList = allvAl.FirstOrDefault();
-                // FuelLiters = FuelDB.Singleton.GetFuel().ToList();
+                billEntryList = FuelDB.Singleton.GetFuelValues()?.ToList();
             }
             catch (Exception w)
             {
@@ -458,54 +459,7 @@ namespace FuelUED
             FuelDB.Singleton.InsertBillDetails(billDetails);
             availableFuel = 0f;
         }
-
-        //private async Task SentAndStoreShortage()
-        //{
-        //    var list = new List<UploadDetails>
-        //    {
-        //        new UploadDetails
-        //        {
-        //            DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0"
-        //            : AppPreferences.GetString(this, Utilities.DEVICEID),
-        //            SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0"
-        //            : AppPreferences.GetString(this, Utilities.SITEID),
-        //            IsShortage = "1",
-        //            ShortageLtr = Convert.ToDecimal(availableFuel),
-        //            FuelDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME,CultureInfo.InvariantCulture)
-        //        }
-        //    };
-        //    var deserializedData = JsonConvert.SerializeObject(list);
-        //    //Console.WriteLine(deserializedData);
-        //    var resposeString = WebService.PostAllDataToWebService("UPFStock", deserializedData);
-        //    if (resposeString != null)
-        //    {
-        //        try
-        //        {
-        //            var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-        //            RunOnUiThread(() =>
-        //            {
-        //                Toast.MakeText(this, "Please wait", ToastLength.Short).Show();
-        //            });
-        //            CreateDatabaseOrModifyDatabase(VehicleList);
-        //        }
-        //        catch
-        //        {
-        //            RunOnUiThread(() =>
-        //            {
-        //                Toast.MakeText(this, "Something went wrong...", ToastLength.Short).Show();
-        //            });
-        //        }
-        //    }
-        //    else
-        //    {
-        //        RunOnUiThread(() =>
-        //        {
-        //            Toast.MakeText(this, "Error in shortage update", ToastLength.Short).Show();
-        //        });
-        //    }
-        //    RunOnUiThread(() => ShowLoader(false));
-        //}
-
+        
         private void BtnClear_Click(object sender, EventArgs e)
         {
             vehicleNumber.Text = string.Empty;
@@ -531,39 +485,18 @@ namespace FuelUED
                 layFuelEntry.Alpha = 1f;
             }
         }
-
-        public async Task CreateDatabaseOrModifyDatabase(List<VehicleDetails> vehicleList)
-        {
-            DeleteDatabase(FuelDB.Singleton.DBPath);
-            FuelDB.Singleton.CreateTable<VehicleDetails>();
-            FuelDB.Singleton.CreateTable<BillDetails>();
-
-            var details = vehicleList?.First();
-            vehicleList.RemoveAt(0);
-            var billDetails = new BillDetails
-            {
-                AvailableLiters = details.VID,
-                BillCurrentNumber = details.DriverID_PK,
-                BillPrefix = details.RegNo,
-                DeviceStatus = details.DriverName
-            };
-
-            AppPreferences.SaveString(this, Utilities.DEVICESTATUS, billDetails.DeviceStatus);
-            AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
-            FuelDB.Singleton.InsertValues(vehicleList);
-            FuelDB.Singleton.InsertBillDetails(billDetails);
-            layFuelEntry.Alpha = 1f;
-        }
+        
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             if (!isVehicleTypeSpinnerSelected)
             {
                 isVehicleTypeSpinnerSelected = true;
-                vehicleTypeSpinner.PerformClick();
+                vehicleTypeSpinner.PerformClick();                
             }
             else
             {
-                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
+                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();               
+                txtOpeningKMS.Text = billEntryList?.Where(I=>I.VehicleNumber == vehicleNumber.Text).Last().ClosingKMS;
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
                 driverNameSpinner.PerformClick();
 
@@ -614,16 +547,6 @@ namespace FuelUED
             }
         }
 
-        //private void StoreExcessValues()
-        //{
-        //    excessDetails = new FuelEntryDetails
-        //    {
-        //        VehicleNumber = vehicleNumber.Text,
-        //        CurrentDate = DateTime.Now.ToString(Utilities.MONTH_DATE_TIME, CultureInfo.InvariantCulture),
-        //        IsExcess = "1",
-        //        ExcessLtr = Convert.ToDecimal(ExcessLiter)
-        //    };
-        //}
 
         private void StoreDetils()
         {
@@ -716,10 +639,6 @@ namespace FuelUED
         {
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
             FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-            //if (isExcess)
-            //{
-            //    FuelDB.Singleton.InsertFuelEntryValues(excessDetails);
-            //}
             FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
         }
 
@@ -829,29 +748,11 @@ namespace FuelUED
                             Remarks = fuelDetails.Remarks
                         };
                     }
-                }
-                //var json = 
+                }       
             }
             return printDetails;
         }
-        //FuelType = new FuelType
-        //{
-        //    IsInward = false,
-        //    Outward = new Outward
-        //    {
-        //        MeterDetails = new MeterDetails
-        //        {
-        //            IsMeterFault = fuelDetails.MeterFault == "0" ? false : true,
-        //            OpeningKM = fuelDetails.OpeningKMS,
-        //            ClosingKM = fuelDetails.ClosingKMS,
-        //            KMPL = fuelDetails.Kmpl
-        //        },
-        //        StockType = new StockType
-        //        {
-        //            IsStock = true
-        //        }
-        //    }
-        //},
+       
         private void CalculateFuelTotalAmount()
         {
             if (!fuelToFill.Text.Equals(string.Empty) && !txtRate.Text.Equals(string.Empty))
