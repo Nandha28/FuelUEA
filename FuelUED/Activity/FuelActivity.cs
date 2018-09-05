@@ -72,7 +72,6 @@ namespace FuelUED
         private bool isDriverNameSpinnerSelected;
         private float ExcessLiter;
         private bool isExcess;
-        private bool isAddedAlready;
         private FuelEntryDetails excessDetails;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -129,7 +128,7 @@ namespace FuelUED
 
             fuelTypeSpinner = FindViewById<Spinner>(Resource.Id.fuelSpinner);
             fuelTypeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
-                new string[] { "Outward", "Inwards", "Shortage" });
+                new string[] { "Outward", "Inward", "Shortage" });
 
             fuelFormSpinner = FindViewById<Spinner>(Resource.Id.fuelFormSpinner);
             fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, StockList);
@@ -275,7 +274,7 @@ namespace FuelUED
                     alertDialog.Show();
                     return;
                 }
-                if (fuelTypeSpinner.SelectedItem.Equals("Inwards") && !isAddedAlready)
+                if (fuelTypeSpinner.SelectedItem.Equals("Inward"))
                 {
                     if (!fuelAvailable.Text.Equals("0"))
                     {
@@ -286,14 +285,11 @@ namespace FuelUED
                         alertDialog.SetPositiveButton("Yes", (ss, se) =>
                         {
                             fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
-                            availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
-                            isAddedAlready = true;
+                            availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);                          
                             StoreDetils();
                         });
                         alertDialog.SetNegativeButton("No", (ss, se) =>
-                        {
-                            isAddedAlready = true;
-                            StoreDetils();
+                        {                                                    
                             alertDialog.Dispose();
                         });
                         alertDialog.Show();
@@ -312,7 +308,7 @@ namespace FuelUED
                     Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
                     return;
                 }
-                if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inwards"))
+                if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inward"))
                 {
                     alertDialog.Show();
                 }
@@ -332,7 +328,7 @@ namespace FuelUED
                 vehicleNumber.Focusable = true;
                 fuelToFill.Focusable = true;
                 fuelToFill.FocusableInTouchMode = true;
-                if (fuelTypeSpinner.SelectedItem.Equals("Inwards"))
+                if (fuelTypeSpinner.SelectedItem.Equals("Inward"))
                 {
                     vehicleNumber.Text = string.Empty;
                     fuelFormSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Bunk" });
@@ -495,8 +491,15 @@ namespace FuelUED
             }
             else
             {
-                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();               
-                txtOpeningKMS.Text = billEntryList?.Where(I=>I.VehicleNumber == vehicleNumber.Text).Last().ClosingKMS;
+                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
+                try
+                {
+                    txtOpeningKMS.Text = billEntryList?.Where(I => I.VehicleNumber == vehicleNumber.Text).Last().ClosingKMS;
+                }
+                catch
+                {
+                    txtOpeningKMS.Text = "0";
+                }
                 driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
                 driverNameSpinner.PerformClick();
 
@@ -644,7 +647,7 @@ namespace FuelUED
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
         {
-            if (fuelDetails.FuelType.Equals("Inwards"))
+            if (fuelDetails.FuelType.Equals("Inward"))
             {
                 printDetails = new PrintDetails
                 {
@@ -773,7 +776,7 @@ namespace FuelUED
 
         private void VehicleNumber_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            if (VehicleList != null)
+            if (VehicleList != null && !fuelTypeSpinner.SelectedItem.Equals("Shortage"))
             {
                 vehicleTypeSpinner.Adapter = vehicleTypeAdapter;
                 vehicleTypeSpinner.PerformClick();

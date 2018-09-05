@@ -5,382 +5,382 @@
     android:background="@color/borderColor"
     android:layout_width="match_parent"
     android:id="@+id/mainRelativeHolder"
-    android:layout_height="match_parent">  
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:orientation="vertical"
-      android:focusableInTouchMode="true"
-      android:descendantFocusability="beforeDescendants"
-      android:background="@color/borderColor"
-      android:focusable="true"      
-      android:id="@+id/layFuelEntry"
-      android:layout_height="match_parent">
-    <TextView
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textColor="@color/textColorBorderBackground"
-        android:text="Fuel Entry"
-        android:gravity="center"
-        android:id="@+id/lblTittle"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size"
-        android:background="@color/headerTextBackground" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="wrap_content">
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        android:descendantFocusability="beforeDescendants"
+        android:background="@color/borderColor"
+        android:focusable="true"
+        android:id="@+id/layFuelEntry"
+        android:layout_height="match_parent">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number"
-            android:layout_margin="10dp"
-            android:maxLines="1"
+            android:layout_height="60dp"
+            android:textColor="@color/textColorBorderBackground"
+            android:text="Fuel Entry"
+            android:gravity="center"
+            android:id="@+id/lblTittle"
             android:textStyle="bold"
-            android:minHeight="@dimen/minHeight"
-            android:textColor="@color/textColorEmptyBackground"
             android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:inputType="number"
-            android:padding="5dp"
-            android:id="@+id/txtBillNumber" />
-        <TextView
+            android:background="@color/headerTextBackground" />
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/minHeight"
-            android:textColor="@color/textColorEmptyBackground"
-            android:textSize="@dimen/text_size"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:id="@+id/lbldateTime" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder">
-          <Spinner
-              android:id="@+id/fuelSpinner"
-              android:textStyle="bold"
-              android:minHeight="@dimen/minHeight"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:layout_height="wrap_content"
-              android:layout_width="match_parent" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder">
-          <Spinner
-              android:id="@+id/fuelFormSpinner"
-              android:layout_width="match_parent"
-              android:textStyle="bold"
-              android:minHeight="@dimen/minHeight"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:layout_height="wrap_content" />
-        </LinearLayout>
-        <!--Vehicle Number-->
-        <AutoCompleteTextView
-            android:id="@+id/vehicleNumber"
-            android:layout_width="match_parent"
-            android:layout_margin="10dp"
-            android:textStyle="bold"
-            android:textColor="@color/textColorEmptyBackground"
-            android:textSize="@dimen/text_size"
-            android:background="@drawable/bottomborder"
-            android:minHeight="@dimen/minHeight"
-            android:hint="Vehicle Number"
-            android:inputType="textCapCharacters"
-            android:padding="5dp"
-            android:theme="@style/Autocomplete"
-            android:layout_height="wrap_content" />
-        <!--Vehicle Type Eg: lorry, van-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder">
-          <Spinner
-              android:id="@+id/vehicleType"
-              android:layout_width="match_parent"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:textStyle="bold"
-              android:hint="Vehicle Type"
-              android:layout_height="wrap_content" />
-        </LinearLayout>
-        <!--Driver Name-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder">
-          <Spinner
-              android:id="@+id/driverName"
-              android:textStyle="bold"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:hint="Driver Name"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-        </LinearLayout>
-        <!--Fuel liters-->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent">
-          <EditText
-              android:layout_height="50dp"
-              android:layout_width="wrap_content"
-              android:maxLines="1"
-              android:singleLine="true"
-              android:inputType="number"
-              android:hint="Fuel"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:background="@drawable/bottomborder"
-              android:layout_weight="1"
-              android:padding="5dp"
-              android:id="@+id/fuelToFill" />
-          <TextView
-              android:layout_height="50dp"
-              android:layout_width="wrap_content"
-              android:textStyle="bold"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:paddingRight="10dp"
-              android:padding="5dp"
-              android:layout_alignParentRight="true"
-              android:gravity="center_vertical"
-              android:id="@+id/fuelAvailable" />
-          <TextView
-              android:layout_height="50dp"
-              android:layout_width="wrap_content"
-              android:text="Ltrs."
-              android:textStyle="bold"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:paddingRight="10dp"
-              android:padding="5dp"
-              android:layout_alignParentRight="true"
-              android:gravity="center_vertical" />
-        </LinearLayout>
-        <!--Check Box-->
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:padding="5dp"
-            android:id="@+id/txtFilledBy"
-            android:inputType="text"
-            android:textStyle="bold"
-            android:textColor="@color/textColorEmptyBackground"
-            android:textSize="@dimen/text_size"
-            android:minHeight="@dimen/minHeight"
-            android:hint="Filled By"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder" />
-        <CheckBox
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Meter Fault"
-            android:textColor="@color/textColorEmptyBackground"
-            android:textSize="@dimen/text_size"
-            android:minHeight="@dimen/minHeight"
-            android:id="@+id/chckMeterFault"
-            android:layout_margin="10dp"
-            android:textStyle="bold"
-            android:checked="false" />
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:id="@+id/layMeterFault"
-            android:orientation="vertical"
-            android:layout_width="match_parent">
-          <LinearLayout
-              android:layout_height="wrap_content"
-              android:weightSum="2"
-              android:orientation="horizontal"
-              android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:layout_weight="1"
-                android:id="@+id/txtOpeningKMS"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/textColorEmptyBackground"
-                android:textSize="@dimen/text_size"
-                android:minHeight="@dimen/minHeight"
-                android:text="0"
-                android:padding="5dp"
-                android:inputType="numberDecimal"
-                android:layout_margin="10dp" />
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textStyle="bold"
-                android:textColor="@color/textColorEmptyBackground"
-                android:textSize="@dimen/text_size"
-                android:minHeight="@dimen/minHeight"
-                android:layout_weight="1"
-                android:hint="Closing KMS"
-                android:id="@+id/txtClosingKMS"
-                android:padding="5dp"
-                android:background="@drawable/bottomborder"
-                android:inputType="numberDecimal"
-                android:layout_margin="10dp" />
-          </LinearLayout>
-          <!--KMPL-->
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/lblkmpl"
-              android:padding="5dp"
-              android:gravity="center_vertical"
-              android:textStyle="bold"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:layout_margin="10dp"
-              android:text="KMPL" />
-        </LinearLayout>
-        <!--Bunk Show Details-->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            android:id="@+id/layBunkDetails">
-          <!--Payment Mode-->
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="10dp"
-              android:background="@drawable/bottomborder">
-            <Spinner
-                android:id="@+id/paymentMode"
-                android:textStyle="bold"
-                android:textColor="@color/textColorEmptyBackground"
-                android:textSize="@dimen/text_size"
-                android:minHeight="@dimen/minHeight"
+            android:fillViewport="true"
+            android:layout_height="wrap_content">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
-          </LinearLayout>
-          <EditText
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:maxLines="1"
-              android:padding="5dp"
-              android:layout_margin="10dp"
-              android:hint="Rate/Liter"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:textStyle="bold"
-              android:inputType="numberDecimal"
-              android:id="@+id/txtRate"
-              android:background="@drawable/bottomborder" />
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:hint="Amount"
-              android:textStyle="bold"
-              android:textColor="@color/textColorEmptyBackground"
-              android:textSize="@dimen/text_size"
-              android:minHeight="@dimen/minHeight"
-              android:padding="5dp"
-              android:gravity="center_vertical"
-              android:layout_margin="10dp"
-              android:id="@+id/lblTotalPrice" />
-        </LinearLayout>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Remaks"
-            android:textColor="@color/textColorEmptyBackground"
-            android:textSize="@dimen/text_size"
-            android:minHeight="@dimen/minHeight"
-            android:id="@+id/txtRemarks"
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/bottomborder" />
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="@dimen/minHeight"
-            android:weightSum="2"
-            android:layout_width="match_parent">
-          <Button
-              android:layout_height="50dp"
-              android:layout_width="wrap_content"
-              android:textSize="@dimen/button_text_size"
-              android:text="Clear"
-              android:layout_gravity="center"
-              android:layout_margin="10dp"
-              android:textStyle="bold"
-              android:gravity="center"
-              android:background="@color/textColorBorderBackground"
-              android:textColor="@android:color/black"
-              android:minHeight="@dimen/minHeight"
-              android:layout_weight="1"
-              android:id="@+id/btnClear" />
-          <LinearLayout
-              android:layout_height="50dp"
-              android:layout_width="wrap_content"
-              android:layout_margin="10dp"
-              android:clickable="true"
-              android:layout_weight="1"
-              android:minHeight="@dimen/minHeight"
-              android:orientation="horizontal"
-              android:background="@color/textColorBorderBackground"
-              android:id="@+id/btnStore"
-              android:gravity="center">
-            <ImageView
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:id="@+id/imgFuel"
-                android:layout_gravity="center"
-                android:src="@drawable/gas" />
-            <TextView
-                android:layout_height="wrap_content"
-                android:text="STORE"
-                android:gravity="center"
-                android:paddingLeft="5dp"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:id="@+id/lblButtonStore"
-                android:textColor="@color/textColorEmptyBackground"
-                android:textSize="@dimen/button_text_size"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content" />
-          </LinearLayout>
-        </LinearLayout>
-      </LinearLayout>
-    </ScrollView>
-  </LinearLayout>
- <ProgressBar
-      android:id="@+id/loader"
-      android:visibility="invisible"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_centerHorizontal="true" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Number"
+                    android:layout_margin="10dp"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:minHeight="@dimen/minHeight"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:gravity="center_vertical"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:id="@+id/txtBillNumber" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/minHeight"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:padding="5dp"
+                    android:layout_margin="10dp"
+                    android:id="@+id/lbldateTime" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder">
+                    <Spinner
+                        android:id="@+id/fuelSpinner"
+                        android:textStyle="bold"
+                        android:minHeight="@dimen/minHeight"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder">
+                    <Spinner
+                        android:id="@+id/fuelFormSpinner"
+                        android:layout_width="match_parent"
+                        android:textStyle="bold"
+                        android:minHeight="@dimen/minHeight"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            <!--Vehicle Number-->
+                <AutoCompleteTextView
+                    android:id="@+id/vehicleNumber"
+                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:background="@drawable/bottomborder"
+                    android:minHeight="@dimen/minHeight"
+                    android:hint="Vehicle Number"
+                    android:inputType="textCapCharacters"
+                    android:padding="5dp"
+                    android:theme="@style/Autocomplete"
+                    android:layout_height="wrap_content" />
+            <!--Vehicle Type Eg: lorry, van-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder">
+                    <Spinner
+                        android:id="@+id/vehicleType"
+                        android:layout_width="match_parent"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:textStyle="bold"
+                        android:hint="Vehicle Type"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            <!--Driver Name-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder">
+                    <Spinner
+                        android:id="@+id/driverName"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:hint="Driver Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            <!--Fuel liters-->
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent">
+                    <EditText
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:inputType="number"
+                        android:hint="Fuel"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:background="@drawable/bottomborder"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:id="@+id/fuelToFill" />
+                    <TextView
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:paddingRight="10dp"
+                        android:padding="5dp"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:id="@+id/fuelAvailable" />
+                    <TextView
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:text="Ltrs."
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:paddingRight="10dp"
+                        android:padding="5dp"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+            <!--Check Box-->
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:id="@+id/txtFilledBy"
+                    android:inputType="text"
+                    android:textStyle="bold"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
+                    android:hint="Filled By"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder" />
+                <CheckBox
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Meter Fault"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
+                    android:id="@+id/chckMeterFault"
+                    android:layout_margin="10dp"
+                    android:textStyle="bold"
+                    android:checked="false" />
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layMeterFault"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent">
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:weightSum="2"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:layout_weight="1"
+                            android:id="@+id/txtOpeningKMS"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorEmptyBackground"
+                            android:textSize="@dimen/text_size"
+                            android:minHeight="@dimen/minHeight"
+                            android:text="0"
+                            android:padding="5dp"
+                            android:inputType="numberDecimal"
+                            android:layout_margin="10dp" />
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorEmptyBackground"
+                            android:textSize="@dimen/text_size"
+                            android:minHeight="@dimen/minHeight"
+                            android:layout_weight="1"
+                            android:hint="Closing KMS"
+                            android:id="@+id/txtClosingKMS"
+                            android:padding="5dp"
+                            android:background="@drawable/bottomborder"
+                            android:inputType="numberDecimal"
+                            android:layout_margin="10dp" />
+                    </LinearLayout>
+                <!--KMPL-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lblkmpl"
+                        android:padding="5dp"
+                        android:gravity="center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:layout_margin="10dp"
+                        android:text="KMPL" />
+                </LinearLayout>
+            <!--Bunk Show Details-->
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:id="@+id/layBunkDetails">
+                <!--Payment Mode-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/bottomborder">
+                        <Spinner
+                            android:id="@+id/paymentMode"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorEmptyBackground"
+                            android:textSize="@dimen/text_size"
+                            android:minHeight="@dimen/minHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+                    </LinearLayout>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:padding="5dp"
+                        android:layout_margin="10dp"
+                        android:hint="Rate/Liter"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:textStyle="bold"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/txtRate"
+                        android:background="@drawable/bottomborder" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Amount"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorEmptyBackground"
+                        android:textSize="@dimen/text_size"
+                        android:minHeight="@dimen/minHeight"
+                        android:padding="5dp"
+                        android:gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:id="@+id/lblTotalPrice" />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Remarks"
+                    android:textColor="@color/textColorEmptyBackground"
+                    android:textSize="@dimen/text_size"
+                    android:minHeight="@dimen/minHeight"
+                    android:id="@+id/txtRemarks"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bottomborder" />
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:minHeight="@dimen/minHeight"
+                    android:weightSum="2"
+                    android:layout_width="match_parent">
+                    <Button
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/button_text_size"
+                        android:text="Clear"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:background="@color/textColorBorderBackground"
+                        android:textColor="@android:color/black"
+                        android:minHeight="@dimen/minHeight"
+                        android:layout_weight="1"
+                        android:id="@+id/btnClear" />
+                    <LinearLayout
+                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:layout_weight="1"
+                        android:minHeight="@dimen/minHeight"
+                        android:orientation="horizontal"
+                        android:background="@color/textColorBorderBackground"
+                        android:id="@+id/btnStore"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"
+                            android:id="@+id/imgFuel"
+                            android:layout_gravity="center"
+                            android:src="@drawable/gas" />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:text="STORE"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            android:id="@+id/lblButtonStore"
+                            android:textColor="@color/textColorEmptyBackground"
+                            android:textSize="@dimen/button_text_size"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/loader"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
