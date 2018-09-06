@@ -104,23 +104,7 @@ namespace FuelUED
 
             billNumber = enterdvalues?.BillNumber;
             fuelStockType = enterdvalues?.FuelStockType;
-            // if (enterdvalues.FuelType.Equals("Inwards"))
-            //enterdvalues.Find();
-            //var index = 0;
-            //foreach (var item in enterdvalues.GetType().GetProperties())
-            //{
-            //    //Console.WriteLine(item.Name+" : "+item.GetValue(enterdvalues,null).ToString());
-            //    if (!item.GetValue(enterdvalues, null).ToString().Equals("0")
-            //        && !item.GetValue(enterdvalues, null).ToString().Equals(string.Empty))
-            //    {
-            //        var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
-            //        View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
-            //        view.FindViewById<TextView>(Resource.Id.txtName).Text = item.Name;
-            //        view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(enterdvalues, null).ToString();       
-            //        layoutMain.AddView(view, index);
-            //        index++;
-            //    }
-            //}
+          
             if (enterdvalues.FuelType.Equals("Inward"))
             {
                 DrawPrintView(InwardValues);
@@ -152,12 +136,7 @@ namespace FuelUED
             }
 
             btnPrint.Click += (s, e) =>
-            {
-                //if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inwards"))
-                //{
-                //nGXPrinter.AddText(textField.Text);
-                //nGXPrinter.LineFeed(2);
-                //nGXPrinter.Print();
+            {               
                 if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inward"))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
@@ -174,7 +153,6 @@ namespace FuelUED
                     PrintFromPrinter();
                 }
             };
-            //};
         }
 
         private void DrawPrintView(string[] inwardValues)
@@ -246,7 +224,6 @@ namespace FuelUED
         {
             if (nGXPrinter != null)
             {
-                //nGXPrinter.PrintText(textName.Text);              
                 nGXPrinter.PrintImage(GetCanvas(layoutMain, mainScrollView.GetChildAt(0).Height, mainScrollView.GetChildAt(0).Width));
                 nGXPrinter.PrintText("\n");
                 AgainPrint();

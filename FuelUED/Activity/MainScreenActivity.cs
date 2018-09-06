@@ -1,5 +1,4 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -12,9 +11,7 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FuelUED
 {
@@ -55,9 +52,7 @@ namespace FuelUED
                 });
                 alertDialog.SetNegativeButton("No", (se, ee) => { });
                 alertDialog.Show();
-            };
-            //var pref = PreferenceManager.GetDefaultSharedPreferences(this);
-            //Ipadress = pref.GetString(Utilities.IPAddress, string.Empty);
+            };            
 
             //Get IPAdress for preference
             IpAddress = AppPreferences.GetString(this, Utilities.IPAddress);
@@ -65,19 +60,9 @@ namespace FuelUED
             deviceId = AppPreferences.GetString(this, Utilities.DEVICEID);
 
             WebService.IPADDRESS = IpAddress;
-
-
-            //FindViewById<ImageButton>(Resource.Id.btnLogout).Click += (s, e) =>
-            //{
-            //    var alertDialog1 = new Android.App.AlertDialog.Builder(this);
-            //    alertDialog1.SetTitle("Logout");
-            //    alertDialog1.SetMessage("Do you want to exit ?");
-            //    alertDialog1.SetPositiveButton("OK", (ss, se) => Finish());
-            //    alertDialog1.Show();
-            //};
+            
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
-                 //VehicleList = FuelDB.Singleton.GetValue().ToList();
                  try
                  {
                      if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
@@ -104,7 +89,6 @@ namespace FuelUED
                  {
                      Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
                  }
-                 // SyncButton_Click();
              };
 
             btnDownloadData = FindViewById<Button>(Resource.Id.btnDownloadData);
@@ -274,7 +258,6 @@ namespace FuelUED
             if (IpAddress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
             {
                 Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
-                //StartActivity(typeof(ConfigActivity));
                 return;
             }
             RunOnUiThread(() =>
@@ -288,14 +271,10 @@ namespace FuelUED
             var thread = new Thread(new ThreadStart(delegate
             {
                 var resposeString = WebService.PostDeviceAndSiteIDToWebService("GetVD", deviceId, siteId);
-                //var fuelStockRes = WebService.GetDataFromWebService("LoadFStock");
                 try
                 {
-                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
-                    //var fuelStoc = JsonConvert.DeserializeObject<List<Fuel>>(fuelStockRes);
-                    //Console.WriteLine(fuelStoc);
+                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);                    
                     CreateDatabaseOrModifyDatabase(VehicleList);
-
                 }
                 catch (Exception ec)
                 {
@@ -328,8 +307,6 @@ namespace FuelUED
             DeleteDatabase(FuelDB.Singleton.DBPath);
             FuelDB.Singleton.CreateTable<VehicleDetails>();
             FuelDB.Singleton.CreateTable<BillDetails>();
-
-            //FuelDB.Singleton.CreateDatabase<Fuel>();
 
             var details = vehicleList?.First();
             vehicleList.RemoveAt(0);

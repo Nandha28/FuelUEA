@@ -6,10 +6,8 @@ using Android.Support.V7.App;
 using Android.Views.InputMethods;
 using Android.Widget;
 using FuelApp.Modal;
-using FuelUED.Adapter;
 using FuelUED.CommonFunctions;
 using FuelUED.Modal;
-using FuelUED.Service;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -89,10 +87,8 @@ namespace FuelUED
                  StoreDetils();
              });
             alertDialog.SetNegativeButton("Cancel", (s, e) => { });
-            // var resposeString = WebService.GetDataFromWebService("LoadVD");
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
-            //ShowLoader(true);
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
