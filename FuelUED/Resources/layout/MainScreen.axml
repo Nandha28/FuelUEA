@@ -59,6 +59,10 @@
             android:id="@+id/btnUploadData"
             android:textColor="@color/buttonTextColor"
             android:text="Upload Data" />
+		<Button android:text="History"
+			android:layout_width="250dp" 
+			android:id="@+id/history"
+            android:layout_height="wrap_content">
     </LinearLayout>
     <ProgressBar
         android:id="@+id/loader"

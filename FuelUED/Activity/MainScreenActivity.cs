@@ -3,6 +3,7 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelApp.Modal;
+using FuelUED.Activity;
 using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using FuelUED.Service;
@@ -52,7 +53,7 @@ namespace FuelUED
                 });
                 alertDialog.SetNegativeButton("No", (se, ee) => { });
                 alertDialog.Show();
-            };            
+            };
 
             //Get IPAdress for preference
             IpAddress = AppPreferences.GetString(this, Utilities.IPAddress);
@@ -60,7 +61,12 @@ namespace FuelUED
             deviceId = AppPreferences.GetString(this, Utilities.DEVICEID);
 
             WebService.IPADDRESS = IpAddress;
-            
+
+            FindViewById<Button>(Resource.Id.history).Click += (S, E) =>
+            {
+                StartActivity(typeof(HistoryActivity));
+            };
+
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
                  try
@@ -273,7 +279,7 @@ namespace FuelUED
                 var resposeString = WebService.PostDeviceAndSiteIDToWebService("GetVD", deviceId, siteId);
                 try
                 {
-                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);                    
+                    var VehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeString);
                     CreateDatabaseOrModifyDatabase(VehicleList);
                 }
                 catch (Exception ec)
