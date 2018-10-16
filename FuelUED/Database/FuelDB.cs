@@ -49,6 +49,12 @@ namespace FuelUED
         {
             localDB.Insert(fuelEntryDetails);
         }
+
+        public void InsertBillHistoryValues(BillHistory billHistory)
+        {
+            localDB.Insert(billHistory);
+        }
+
         public void UpdateFuel(string value)
         {
             var sa = localDB.Table<BillDetails>().First();
@@ -62,6 +68,17 @@ namespace FuelUED
             {
                 localDB = new SQLiteConnection(DBPath);
                 var table = localDB.Table<FuelEntryDetails>();                
+                return table;
+            }
+            return null;
+        }
+
+        public TableQuery<BillHistory> GetBillHitory()
+        {
+            if (DBExists())
+            {
+                localDB = new SQLiteConnection(DBPath);
+                var table = localDB.Table<BillHistory>();
                 return table;
             }
             return null;

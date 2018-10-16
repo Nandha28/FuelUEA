@@ -58,6 +58,7 @@
     <Compile Include="Activity\ConfigActivity.cs" />
     <Compile Include="Activity\HistoryActivity.cs" />
     <Compile Include="Adapter\AutoSuggestAdapter.cs" />
+    <Compile Include="Adapter\BillHistoryListAdapter.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="Database\FuelDB.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Activity\MainActivity1.cs" />
     <Compile Include="Activity\MainScreenActivity.cs" />
     <Compile Include="Modal\BillDetails.cs" />
+    <Compile Include="Modal\BillHistory.cs" />
     <Compile Include="Modal\Bunk.cs" />
     <Compile Include="Modal\Fuel.cs" />
     <Compile Include="Modal\FuelEntryDetails.cs" />
@@ -210,6 +212,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_home.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

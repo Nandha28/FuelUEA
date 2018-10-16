@@ -10,16 +10,18 @@
 		android:layout_height="wrap_content">
 		
 		<TextView android:text="Date"
-			android:layout_width="wrap_content"
+			android:layout_width="100dp"
 			android:layout_height="wrap_content" 
 			android:layout_weight="1"
-			android:textStyle="bold"
+			android:textStyle="bold" 
+			android:textColor="@android:color/black"
 			android:textSize="18dp"
 			android:gravity="center"/>
-		<TextView android:text="Vehicle Number"
+		<TextView android:text="Vehicle No."
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
 			android:layout_weight="1"
+			android:textColor="@android:color/black"
 			android:textStyle="bold"
 			android:textSize="18dp"
 			android:gravity="center"/>
@@ -27,13 +29,54 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
 			android:layout_weight="1"
+			android:layout_marginRight="25dp"
+			android:textColor="@android:color/black"
 			android:textStyle="bold"
 			android:textSize="18dp"
 			android:gravity="center"/>			
 	</LinearLayout>
 	<ListView 
-		android:id="@+id/listView"
+		android:id="@+id/historylistView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+		android:layout_weight="1"/>	
+	<LinearLayout 
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" 
-		android:layout_weight="1">		
+		android:layout_margin="10dp"
+		android:orientation="horizontal">
+
+		<Button 
+			android:id="@+id/btnHomeFromHistory"
+			android:layout_width="50dp"
+			android:layout_height="50dp"  
+			android:scaleType="fitCenter" 			
+			android:layout_gravity="center"
+			android:layout_margin="5dp"
+			android:background="@drawable/ic_home"/>
+		<Button 
+			android:id="@+id/btnClearHistory"
+			android:text="Clear" 
+			android:textAllCaps="false"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:background="@color/buttonBackground"
+			android:textSize="@dimen/button_text_size"
+            android:textColor="@color/buttonTextColor"
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"/>
+		<Button 
+			android:id="@+id/btnHistoryPrint"
+			android:text="Print"
+			android:textAllCaps="false"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:background="@color/buttonBackground"
+			android:textSize="@dimen/button_text_size"
+            android:textColor="@color/buttonTextColor"
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"/>
+
+	</LinearLayout>
 </LinearLayout>

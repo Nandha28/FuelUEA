@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="match_parent" 
-	android:layerMargin="10dp"
+    android:layout_width="match_parent"  
     android:layout_height="match_parent">
 	
-	<TextView android:id="@+id/date"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:layout_weight="1"
-			android:textStyle="bold"
-			android:textSize="18dp" android:text="kbsdfkb"
-			android:gravity="center"/>
-		<TextView android:id="@+id/vehNumber"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:layout_weight="1"
-			android:textStyle="bold" android:text="kbsdfkb"
-			android:textSize="18dp"
-			android:gravity="center"/>
-		<TextView android:id="@+id/litre"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:layout_weight="1" android:text="kbsdfkb"
-			android:textStyle="bold"
-			android:textSize="18dp"
-			android:gravity="center"/>	
-	<ImageView android:id="@+id/arrow" 
+	<TextView 
+				android:id="@+id/date"
+				android:layout_width="100dp"
+				android:layout_height="50dp" 		
+				android:maxLines="2" 
+				android:textColor="@android:color/black"
+				android:layout_gravity="center"
+				android:inputType="textMultiLine"
+				android:layout_weight="1"
+				android:textSize="15dp"/>
+	<TextView
+				android:id="@+id/vehNumber"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@android:color/black"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:textSize="15dp"/>
+	<TextView 
+				android:id="@+id/litre"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" 		
+				android:inputType="textMultiLine"
+				android:textColor="@android:color/black"
+				android:layout_gravity="center"				
+				android:layout_weight="1"
+				android:textSize="15dp"/>
+	<ImageView 
+		android:id="@+id/inwardsarrow" 
 		android:layout_width="20dp"
-		android:layout_height="20dp"
-		android:background="@drawable/arrow>
+		android:layout_height="20dp" 
+		android:rotation="180"
+		android:layout_marginRight="10dp"
+		android:layout_gravity="center"
+		android:background="@drawable/arrow"/>
 
 </LinearLayout>

@@ -70,7 +70,7 @@ namespace FuelUED
         private bool isDriverNameSpinnerSelected;
         private float ExcessLiter;
         private bool isExcess;
-        private FuelEntryDetails excessDetails;
+        private bool isInward;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -228,7 +228,7 @@ namespace FuelUED
                         alertDialog.SetPositiveButton("OK", (ss, es) =>
                         {
                             ExcessLiter = float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters);
-                            isExcess = true;                          
+                            isExcess = true;
                             StoreDetils();
                         });
                         alertDialog.SetNegativeButton("Cancel", (ss, se) =>
@@ -281,11 +281,11 @@ namespace FuelUED
                         alertDialog.SetPositiveButton("Yes", (ss, se) =>
                         {
                             fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
-                            availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);                          
+                            availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
                             StoreDetils();
                         });
                         alertDialog.SetNegativeButton("No", (ss, se) =>
-                        {                                                    
+                        {
                             alertDialog.Dispose();
                         });
                         alertDialog.Show();
@@ -336,6 +336,7 @@ namespace FuelUED
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     lblButtonStore.Text = "store";
+                    isInward = true;
 
                 }
                 else if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
@@ -355,6 +356,7 @@ namespace FuelUED
                     layMeterFault.Visibility = Android.Views.ViewStates.Gone;
                     checkBox.Visibility = Android.Views.ViewStates.Gone;
                     imgFuel.Visibility = Android.Views.ViewStates.Gone;
+                    isInward = false;
                 }
                 else
                 {
@@ -369,6 +371,7 @@ namespace FuelUED
                     btnClear.SetBackgroundColor(Color.White);
                     layMeterFault.Visibility = Android.Views.ViewStates.Visible;
                     checkBox.Visibility = Android.Views.ViewStates.Visible;
+                    isInward = false;
                 }
             };
 
@@ -431,8 +434,8 @@ namespace FuelUED
                 ShortageLtr = Convert.ToDecimal(availableFuel)
             };
             SaveDetailsToDb();
-            InsertUpadatedBillDetails(); 
-            RefreshCurrent(); 
+            InsertUpadatedBillDetails();
+            RefreshCurrent();
         }
 
         private void InsertUpadatedBillDetails()
@@ -451,7 +454,7 @@ namespace FuelUED
             FuelDB.Singleton.InsertBillDetails(billDetails);
             availableFuel = 0f;
         }
-        
+
         private void BtnClear_Click(object sender, EventArgs e)
         {
             vehicleNumber.Text = string.Empty;
@@ -477,13 +480,13 @@ namespace FuelUED
                 layFuelEntry.Alpha = 1f;
             }
         }
-        
+
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             if (!isVehicleTypeSpinnerSelected)
             {
                 isVehicleTypeSpinnerSelected = true;
-                vehicleTypeSpinner.PerformClick();                
+                vehicleTypeSpinner.PerformClick();
             }
             else
             {
@@ -637,8 +640,17 @@ namespace FuelUED
         private void SaveDetailsToDb()
         {
             FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+            FuelDB.Singleton.CreateTable<BillHistory>();
+            var billhistory = new BillHistory
+            {
+                CurrentDate = fuelDetails.CurrentDate,
+                FuelInLtrs = fuelDetails.FuelInLtrs,
+                VehicleNumber = fuelDetails.VehicleNumber,
+                IsInward = isInward
+            };
             FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
+            FuelDB.Singleton.InsertBillHistoryValues(billhistory);
+            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());            
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
@@ -747,11 +759,11 @@ namespace FuelUED
                             Remarks = fuelDetails.Remarks
                         };
                     }
-                }       
+                }
             }
             return printDetails;
         }
-       
+
         private void CalculateFuelTotalAmount()
         {
             if (!fuelToFill.Text.Equals(string.Empty) && !txtRate.Text.Equals(string.Empty))
