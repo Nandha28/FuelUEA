@@ -21,9 +21,8 @@ using Utilities;
 namespace UECrusher.Activity
 {
     [Activity(Theme = "@style/AppTheme.NoActionBar")]
-    public class VehicleDetailActivity : AppCompatActivity, INGXCallback
+    public class VehicleDetailActivity : AppCompatActivity
     {
-        NGXPrinter nGXPrinter;
         private TextView lblBillNumber;
         private TextView lblDate;
         private TextView lblEmptyWeight;
@@ -52,20 +51,10 @@ namespace UECrusher.Activity
             SetContentView(Resource.Layout.VehicleDetails);
             ExceptionLog.LogDetails(this, "Vehicle Entry Details...");
 
-            try
-            {
-                nGXPrinter = NGXPrinter.NgxPrinterInstance;
-                nGXPrinter.InitService(this, this);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                ExceptionLog.LogDetails(this, "Printer not connected...");
-            }
-
             TaskScheduler.UnobservedTaskException += (s, e) =>
             {
                 ShowText("Something went wrong");
+                ExceptionLog.LogDetails(this, "Exception in Vehicle Details Activity...");
             };
             progressLoader = FindViewById<ProgressBar>(Resource.Id.loader);
             // progressLoader.Visibility = Android.Views.ViewStates.Visible;
@@ -205,16 +194,16 @@ namespace UECrusher.Activity
             {
                 try
                 {
-                    var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS, 
+                    var result = await WebService.Singleton.PostDataToWebService(Utilities.GET_VEHICLE_DETAILS,
                                                                                  did, siteId, Utilities.GET_VEHICLE_RESULT);
                     vehiclDetailList = JsonConvert.DeserializeObject<List<VehicleDetails>>(result);
-                    var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS, 
+                    var itemType = await WebService.Singleton.PostDataToWebService(Utilities.GET_ITEM_DETAILS,
                                                                                    did, siteId, Utilities.GET_ITEM_RESULT);
                     itemDetails = JsonConvert.DeserializeObject<List<ItemDetails>>(itemType);
 
                     var response = await WebService.Singleton.PostDataToWebService(Utilities.GET_CURRENT_BILL,
                         did, siteId, Utilities.GET_CURRENT_BILL_RES);
-                    var currentBill  = JsonConvert.DeserializeObject<List<UploadFirstResult>>(response);
+                    var currentBill = JsonConvert.DeserializeObject<List<UploadFirstResult>>(response);
                     RunOnUiThread(() =>
                     {
                         lblBillNumber.Text = currentBill.First().CUNUM;
@@ -417,7 +406,7 @@ namespace UECrusher.Activity
         //    Toast.MakeText(this, "Press agin to exit..", ToastLength.Short).Show();
         //}
         protected override void OnDestroy()
-        {            
+        {
             base.OnDestroy();
         }
     }

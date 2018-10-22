@@ -79,7 +79,7 @@ namespace UECrusher.Activity
             };
             btnSave = FindViewById<Button>(Resource.Id.btnSave);
             btnSave.Click += BtnSave_Click;
-            if (listType.Equals("UploadItemDetails"))
+            if (listType != null && listType.Equals("UploadItemDetails"))
             {
                 var deserializeResult = JsonConvert.DeserializeObject<List<UploadItemDetails>>(data);
                 Print(deserializeResult.First(), array);
