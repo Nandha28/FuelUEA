@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace FuelUED.Activity
 {
-    [Activity(Theme = "@style/AppTheme.NoActionBar")]
+    [Activity(Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
     public class HistoryActivity : AppCompatActivity, INGXCallback
     {
         private ListView historyList;
@@ -23,6 +23,8 @@ namespace FuelUED.Activity
         private TableQuery<BillHistory> billHistory;
         private Android.App.AlertDialog.Builder alertDialog;
         private BillHistoryListAdapter adapter;
+        private bool IsExitApp;
+        private Button btnclearHistory;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -30,6 +32,16 @@ namespace FuelUED.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.History);
+
+            try
+            {
+                nGXPrinter = NGXPrinter.NgxPrinterInstance;
+                nGXPrinter.InitService(this, this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             alertDialog = new Android.App.AlertDialog.Builder(this);
             alertDialog.SetTitle("Clear History");
@@ -42,13 +54,16 @@ namespace FuelUED.Activity
 
             var home = FindViewById<Button>(Resource.Id.btnHomeFromHistory);
             var btnPrint = FindViewById<Button>(Resource.Id.btnHistoryPrint);
-            var btnclearHistory = FindViewById<Button>(Resource.Id.btnClearHistory);
+            btnclearHistory = FindViewById<Button>(Resource.Id.btnClearHistory);
+            var btnHome = FindViewById<Button>(Resource.Id.btnHomeFromHistory);
 
             btnclearHistory.Click += (s, e) =>
             {
                 alertDialog.Show();
             };
             btnPrint.Click += BtnPrint_Click;
+
+            btnHome.Click += BtnHome_Click;
 
             historyList = FindViewById<ListView>(Resource.Id.historylistView);
             billHistory = FuelDB.Singleton.GetBillHitory();
@@ -58,22 +73,36 @@ namespace FuelUED.Activity
                 {
                     adapter = new BillHistoryListAdapter(this, billHistory.ToList());
                     historyList.Adapter = adapter;
+                    DisableClearButton(true);
                 }
                 else
                 {
                     Toast.MakeText(this, "There is no history to show..", ToastLength.Short).Show();
+                    DisableClearButton(false);
                 }
             }
             catch
             {
+                Toast.MakeText(this, "There is no history to show..", ToastLength.Short).Show();
+                DisableClearButton(false);
             }
+        }
+
+        private void DisableClearButton(bool disable)
+        {
+            btnclearHistory.Clickable = disable;
+        }
+
+        private void BtnHome_Click(object sender, EventArgs e)
+        {
+            StartActivity(typeof(MainScreenActivity));
         }
 
         private void BtnPrint_Click(object sender, EventArgs e)
         {
             if (nGXPrinter != null)
             {
-                PrintHistory();               
+                PrintHistory();
                 //if (listType.Equals("UploadItemDetails"))
                 //{
                 //    nGXPrinter.PrintText("\n\n\n\n\n");
@@ -144,6 +173,7 @@ namespace FuelUED.Activity
             historyList.Adapter = null;
             historyList.Invalidate();
             Toast.MakeText(this, "Successfully cleared history", ToastLength.Short).Show();
+            DisableClearButton(false);
         }
 
         public void OnRaiseException(int p0, string p1)
@@ -156,6 +186,25 @@ namespace FuelUED.Activity
 
         public void OnRunResult(bool p0)
         {
+        }
+        protected override void OnStart()
+        {
+            base.OnStart();
+            //Recreate();
+        }
+        protected override void OnResume()
+        {
+            IsExitApp = false;
+            base.OnResume();
+        }
+        public override void OnBackPressed()
+        {
+            if (IsExitApp)
+            {
+                base.OnBackPressed();
+            }
+            IsExitApp = true;
+            Toast.MakeText(this, "Press agin to exit app..", ToastLength.Short).Show();
         }
     }
 }

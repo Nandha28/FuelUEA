@@ -34,7 +34,7 @@ namespace FuelUED
                      }
                      else
                      {
-                         StartActivity(typeof(MainScreenActivity));
+                         StartActivity(typeof(HistoryActivity));
                      }
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))

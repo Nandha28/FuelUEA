@@ -31,7 +31,6 @@ namespace FuelUED
         private string deviceId;
         private Button btnUploadData;
         private TableQuery<FuelEntryDetails> fuelDetails;
-        private bool IsExitApp;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -62,10 +61,10 @@ namespace FuelUED
 
             WebService.IPADDRESS = IpAddress;
 
-            FindViewById<Button>(Resource.Id.history).Click += (S, E) =>
-            {
-                StartActivity(typeof(HistoryActivity));
-            };
+            //FindViewById<Button>(Resource.Id.history).Click += (S, E) =>
+            //{
+            //    StartActivity(typeof(HistoryActivity));
+            //};
 
             FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
              {
@@ -330,19 +329,10 @@ namespace FuelUED
             btnDownloadData.Clickable = false;
             FuelDB.Singleton.InsertBillDetails(billDetails);
         }
-        protected override void OnResume()
-        {
-            IsExitApp = false;
-            base.OnResume();
-        }
         public override void OnBackPressed()
         {
-            if (IsExitApp)
-            {
-                base.OnBackPressed();
-            }
-            IsExitApp = true;
-            Toast.MakeText(this, "Press agin to exit app..", ToastLength.Short).Show();
+            StartActivity(typeof(HistoryActivity));
+            Finish();
         }
     }
 }

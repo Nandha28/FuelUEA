@@ -49,7 +49,7 @@ namespace UECrusher.Activity
 
             // Create your application here
             SetContentView(Resource.Layout.VehicleDetails);
-            ExceptionLog.LogDetails(this, "Vehicle Entry Details...");
+            ExceptionLog.LogDetails(this, "Vehicle Entry Details...");    
 
             TaskScheduler.UnobservedTaskException += (s, e) =>
             {

@@ -63,7 +63,6 @@ namespace FuelUED
 
             OutwardBunkMeterFault = new string[] { "Bill No.", "Date", "Type","Fuel From", "Vehicle No.", "Vehicle Type",
                 "Driver Name", "Ltrs.","Meter fault","Filled By","Payment Type","RatePerLtr","Price","Remarks"};
-
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -104,7 +103,7 @@ namespace FuelUED
 
             billNumber = enterdvalues?.BillNumber;
             fuelStockType = enterdvalues?.FuelStockType;
-          
+
             if (enterdvalues.FuelType.Equals("Inward"))
             {
                 DrawPrintView(InwardValues);
@@ -136,7 +135,7 @@ namespace FuelUED
             }
 
             btnPrint.Click += (s, e) =>
-            {               
+            {
                 if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inward"))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
@@ -212,12 +211,17 @@ namespace FuelUED
             });
             alertDialog.SetNegativeButton("No", (s, e) =>
             {
-                var intent = new Intent(this, typeof(MainScreenActivity));
-                intent.AddFlags(ActivityFlags.ClearTop);
-                StartActivity(intent);
-                Finish();
+                NavigateToMainActivity();
             });
             alertDialog.Show();
+        }
+
+        private void NavigateToMainActivity()
+        {
+            var intent = new Intent(this, typeof(MainScreenActivity));
+            intent.AddFlags(ActivityFlags.ClearTop);
+            StartActivity(intent);
+            Finish();
         }
 
         private void Print()
@@ -231,6 +235,7 @@ namespace FuelUED
             else
             {
                 Toast.MakeText(this, "Printer not connected", ToastLength.Short).Show();
+                NavigateToMainActivity();
             }
         }
 
@@ -248,11 +253,11 @@ namespace FuelUED
         }
         public override void OnBackPressed()
         {
-            if (IsExtraPrint)
-            {
-                base.OnBackPressed();
-            }
-            IsExtraPrint = true;
+            //if (IsExtraPrint)
+            //{
+            //  base.OnBackPressed();
+            //}
+            //IsExtraPrint = true;
         }
     }
 }
