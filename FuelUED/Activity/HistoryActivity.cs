@@ -17,7 +17,7 @@ using static Android.Views.View;
 
 namespace FuelUED.Activity
 {
-    [Activity(Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
+    [Activity(Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class HistoryActivity : AppCompatActivity, INGXCallback
     {
         private ListView historyList;
@@ -28,6 +28,8 @@ namespace FuelUED.Activity
         private bool IsExitApp;
         private Button btnclearHistory;
         private LinearLayout linearLayout;
+
+        public LinearLayout ParentLinearLayout { get; private set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -61,12 +63,13 @@ namespace FuelUED.Activity
             var btnHome = FindViewById<Button>(Resource.Id.btnHomeFromHistory);
 
             linearLayout = FindViewById<LinearLayout>(Resource.Id.baseLinearLayout);
+            ParentLinearLayout = FindViewById<LinearLayout>(Resource.Id.parentLinearLayout);
 
             btnclearHistory.Click += (s, e) =>
             {
                 alertDialog.Show();
             };
-            btnPrint.Click += BtnPrint_Click;
+            // btnPrint.Click += BtnPrint_Click;
 
             btnHome.Click += BtnHome_Click;
 
@@ -155,21 +158,22 @@ namespace FuelUED.Activity
         {
             nGXPrinter.PrintText("\n");
             //nGXPrinter.PrintImage(getWholeListViewItemsToBitmap());
-            PrintListView();
+            nGXPrinter.PrintImage(GetCanvas(historyList, ParentLinearLayout.GetChildAt(0).Height, ParentLinearLayout.GetChildAt(0).Width));
+            // PrintListView();
             nGXPrinter.PrintText("\n\n\n");
             PrintAgain();
         }
 
         private void PrintListView()
         {
-            foreach (var item in getWholeListViewItemsToBitmap())
+            foreach (var item in GetWholeListViewItemsToBitmap())
             {
                 nGXPrinter.PrintImage(item);
             }
             //nGXPrinter.PrintImage(GetCanvas(historyList, historyList.GetChildAt(i).Height, historyList.GetChildAt(i).Width));
         }
 
-        public Bitmap getBitmapFromView(View view)
+        public Bitmap GetBitmapFromView(View view)
         {
 
             Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
@@ -197,7 +201,7 @@ namespace FuelUED.Activity
         }
 
 
-        public List<Bitmap> getWholeListViewItemsToBitmap()
+        public List<Bitmap> GetWholeListViewItemsToBitmap()
         {
 
             ListView listview = historyList;
@@ -208,7 +212,6 @@ namespace FuelUED.Activity
 
             for (int i = 0; i < itemscount; i++)
             {
-
                 View childView = adapter.GetView(i, null, listview);
                 childView.Measure(MeasureSpec.MakeMeasureSpec(listview.Width, MeasureSpecMode.Exactly),
                         MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));

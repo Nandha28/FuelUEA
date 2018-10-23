@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -331,7 +332,9 @@ namespace FuelUED
         }
         public override void OnBackPressed()
         {
-            StartActivity(typeof(HistoryActivity));
+            var intent = new Intent(this, typeof(HistoryActivity));
+            intent.SetFlags(ActivityFlags.ClearTop);
+            StartActivity(intent);
             Finish();
         }
     }

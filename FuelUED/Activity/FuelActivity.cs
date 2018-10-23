@@ -135,9 +135,6 @@ namespace FuelUED
             cashModeSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, new string[] { "Cash", "Credit" });
 
             vehicleTypeSpinner = FindViewById<Spinner>(Resource.Id.vehicleType);
-            vehicleTypeAdapter =
-                new ArrayAdapter(this, Resource.Layout.select_dialog_item_material,
-                new string[] { "Select", "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
 
             vehicleTypeSpinner.ItemSelected += VehicleTypeSpinner_ItemSelected;
 
@@ -215,104 +212,114 @@ namespace FuelUED
             var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
             {
-                if (fuelTypeSpinner.SelectedItem.Equals("Outward") &&
-                !fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals("Stock"))
+                try
                 {
-                    if (float.Parse(fuelToFill.Text) > float.Parse(billDetailsList.AvailableLiters))
+                    btnStore.Clickable = false;
+                    ShowLoader(true);
+                    if (fuelTypeSpinner.SelectedItem.Equals("Outward") &&
+                    !fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals("Stock"))
+                    {
+                        if (float.Parse(fuelToFill.Text) > float.Parse(billDetailsList.AvailableLiters))
+                        {
+                            var alertDialog = new Android.App.AlertDialog.Builder(this);
+                            alertDialog.SetTitle("Fuel exceeds stock");
+                            alertDialog.SetMessage($"Do you want add " +
+                                $"{float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters)} ltrs. to excess fuel");
+                            alertDialog.SetCancelable(false);
+                            alertDialog.SetPositiveButton("OK", (ss, es) =>
+                            {
+                                ExcessLiter = float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters);
+                                isExcess = true;
+                                StoreDetils();
+                            });
+                            alertDialog.SetNegativeButton("Cancel", (ss, se) =>
+                            {
+                                fuelToFill.Text = string.Empty;
+                                ExcessLiter = 0f;
+                                isExcess = false;
+                                alertDialog.Dispose();
+                            });
+                            alertDialog.Show();
+                            var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
+                            availableFuel = totalLtrs < 1 ? 0f : totalLtrs;
+                            return;
+                        }
+                        else
+                        {
+                            var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
+                            availableFuel = totalLtrs < 1 ? 0f : totalLtrs;
+                        }
+                    }
+
+                    if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
                     {
                         var alertDialog = new Android.App.AlertDialog.Builder(this);
-                        alertDialog.SetTitle("Fuel exceeds stock");
-                        alertDialog.SetMessage($"Do you want add " +
-                            $"{float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters)} ltrs. to excess fuel");
+                        alertDialog.SetTitle($"Shortage {availableFuel} ltrs.");
+                        alertDialog.SetMessage("Do you want to proceed ?");
                         alertDialog.SetCancelable(false);
-                        alertDialog.SetPositiveButton("OK", (ss, es) =>
+                        alertDialog.SetPositiveButton("YES", (ss, se) =>
                         {
-                            ExcessLiter = float.Parse(fuelToFill.Text) - float.Parse(billDetailsList.AvailableLiters);
-                            isExcess = true;
-                            StoreDetils();
+                            UpdateShortageAndRefreshCurrentActivity();
+                            fuelAvailable.Text = string.Empty;
+                            availableFuel = 0;
+
                         });
-                        alertDialog.SetNegativeButton("Cancel", (ss, se) =>
+                        alertDialog.SetNegativeButton("NO", (ss, se) =>
                         {
-                            fuelToFill.Text = string.Empty;
-                            ExcessLiter = 0f;
-                            isExcess = false;
                             alertDialog.Dispose();
                         });
                         alertDialog.Show();
-                        var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
-                        availableFuel = totalLtrs < 1 ? 0f : totalLtrs;
                         return;
                     }
-                    else
+                    if (fuelTypeSpinner.SelectedItem.Equals("Inward"))
                     {
-                        var totalLtrs = (float.Parse(billDetailsList?.AvailableLiters) - float.Parse(fuelToFill.Text));
-                        availableFuel = totalLtrs < 1 ? 0f : totalLtrs;
-                    }
-                }
-
-                if (fuelTypeSpinner.SelectedItem.Equals("Shortage"))
-                {
-                    var alertDialog = new Android.App.AlertDialog.Builder(this);
-                    alertDialog.SetTitle($"Shortage {availableFuel} ltrs.");
-                    alertDialog.SetMessage("Do you want to proceed ?");
-                    alertDialog.SetCancelable(false);
-                    alertDialog.SetPositiveButton("YES", (ss, se) =>
-                    {
-                        UpdateShortageAndRefreshCurrentActivity();
-                        fuelAvailable.Text = string.Empty;
-                        availableFuel = 0;
-
-                    });
-                    alertDialog.SetNegativeButton("NO", (ss, se) =>
-                    {
-                        alertDialog.Dispose();
-                    });
-                    alertDialog.Show();
-                    return;
-                }
-                if (fuelTypeSpinner.SelectedItem.Equals("Inward"))
-                {
-                    if (!fuelAvailable.Text.Equals("0"))
-                    {
-                        var alertDialog = new Android.App.AlertDialog.Builder(this);
-                        alertDialog.SetTitle("Adding fuel");
-                        alertDialog.SetMessage("Do you need to add fuel to existing");
-                        alertDialog.SetCancelable(false);
-                        alertDialog.SetPositiveButton("Yes", (ss, se) =>
+                        if (!fuelAvailable.Text.Equals("0"))
+                        {
+                            var alertDialog = new Android.App.AlertDialog.Builder(this);
+                            alertDialog.SetTitle("Adding fuel");
+                            alertDialog.SetMessage("Do you need to add fuel to existing");
+                            alertDialog.SetCancelable(false);
+                            alertDialog.SetPositiveButton("Yes", (ss, se) =>
+                            {
+                                fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
+                                availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
+                                StoreDetils();
+                            });
+                            alertDialog.SetNegativeButton("No", (ss, se) =>
+                            {
+                                alertDialog.Dispose();
+                            });
+                            alertDialog.Show();
+                            return;
+                        }
+                        else
                         {
                             fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
                             availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
-                            StoreDetils();
-                        });
-                        alertDialog.SetNegativeButton("No", (ss, se) =>
-                        {
-                            alertDialog.Dispose();
-                        });
+                        }
+
+                    }
+                    //if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
+                    //{
+                    //    ShowLoader(false);
+                    //    Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
+                    //    return;
+                    //}
+                    if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inward"))
+                    {
                         alertDialog.Show();
-                        return;
                     }
                     else
                     {
-                        fuelAvailable.Text = (Convert.ToInt32(fuelAvailable.Text) + Convert.ToInt32(fuelToFill.Text)).ToString();
-                        availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
+                        StoreDetils();
                     }
-
-                }
-                if (vehicleTypeSpinner.SelectedItemPosition.Equals(0))
-                {
                     ShowLoader(false);
-                    Toast.MakeText(this, "Select Vehicle Type...", ToastLength.Short).Show();
-                    return;
                 }
-                if (fuelFormSpinner.SelectedItem.Equals("Bunk") && !fuelTypeSpinner.SelectedItem.Equals("Inward"))
+                catch
                 {
-                    alertDialog.Show();
+                    Toast.MakeText(this, "Check all fields are filled...", ToastLength.Short).Show();
+                    ShowLoader(false);
                 }
-                else
-                {
-                    StoreDetils();
-                }
-                ShowLoader(false);
             };
 
             fuelTypeSpinner.ItemSelected += (s, e) =>
@@ -483,27 +490,27 @@ namespace FuelUED
 
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            if (!isVehicleTypeSpinnerSelected)
+            //if (!isVehicleTypeSpinnerSelected)
+            //{
+            //    isVehicleTypeSpinnerSelected = true;
+            //    vehicleTypeSpinner.PerformClick();
+            //}
+            //else
+            //{
+            DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
+            try
             {
-                isVehicleTypeSpinnerSelected = true;
-                vehicleTypeSpinner.PerformClick();
+                txtOpeningKMS.Text = billEntryList?.Where(I => I.VehicleNumber == vehicleNumber.Text).Last().ClosingKMS;
             }
-            else
+            catch
             {
-                DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
-                try
-                {
-                    txtOpeningKMS.Text = billEntryList?.Where(I => I.VehicleNumber == vehicleNumber.Text).Last().ClosingKMS;
-                }
-                catch
-                {
-                    txtOpeningKMS.Text = "0";
-                }
-                driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
-                driverNameSpinner.PerformClick();
+                txtOpeningKMS.Text = "0";
+            }
+            driverNameSpinner.Adapter = new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, DriverNames);
+            driverNameSpinner.PerformClick();
 
-                isDriverNameSpinnerSelected = false;
-            }
+            isDriverNameSpinnerSelected = false;
+            //}
         }
 
         private void ClearAllFields()
@@ -650,7 +657,7 @@ namespace FuelUED
             };
             FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
             FuelDB.Singleton.InsertBillHistoryValues(billhistory);
-            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());            
+            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
@@ -786,8 +793,12 @@ namespace FuelUED
         {
             if (VehicleList != null && !fuelTypeSpinner.SelectedItem.Equals("Shortage"))
             {
+                var vehicleTypes = VehicleList.Where(q => q.RegNo == vehicleNumber.Text).Select(t => t.TypeName);
+                vehicleTypeAdapter =
+                    new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, vehicleTypes.ToArray());
+                //new string[] { "Select", "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
                 vehicleTypeSpinner.Adapter = vehicleTypeAdapter;
-                vehicleTypeSpinner.PerformClick();
+                //vehicleTypeSpinner.PerformClick();
                 isVehicleTypeSpinnerSelected = false;
 
                 InputMethodManager inputManager = (InputMethodManager)GetSystemService(InputMethodService);
