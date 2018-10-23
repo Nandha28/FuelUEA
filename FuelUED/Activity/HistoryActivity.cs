@@ -11,7 +11,9 @@ using FuelUED.Adapter;
 using FuelUED.Modal;
 using SQLite;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using static Android.Views.View;
 
 namespace FuelUED.Activity
 {
@@ -25,6 +27,7 @@ namespace FuelUED.Activity
         private BillHistoryListAdapter adapter;
         private bool IsExitApp;
         private Button btnclearHistory;
+        private LinearLayout linearLayout;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -56,6 +59,8 @@ namespace FuelUED.Activity
             var btnPrint = FindViewById<Button>(Resource.Id.btnHistoryPrint);
             btnclearHistory = FindViewById<Button>(Resource.Id.btnClearHistory);
             var btnHome = FindViewById<Button>(Resource.Id.btnHomeFromHistory);
+
+            linearLayout = FindViewById<LinearLayout>(Resource.Id.baseLinearLayout);
 
             btnclearHistory.Click += (s, e) =>
             {
@@ -149,9 +154,33 @@ namespace FuelUED.Activity
         private void PrintHistory()
         {
             nGXPrinter.PrintText("\n");
-            nGXPrinter.PrintImage(GetCanvas(historyList, historyList.GetChildAt(0).Height, historyList.GetChildAt(0).Width));
+            //nGXPrinter.PrintImage(getWholeListViewItemsToBitmap());
+            PrintListView();
             nGXPrinter.PrintText("\n\n\n");
             PrintAgain();
+        }
+
+        private void PrintListView()
+        {
+            foreach (var item in getWholeListViewItemsToBitmap())
+            {
+                nGXPrinter.PrintImage(item);
+            }
+            //nGXPrinter.PrintImage(GetCanvas(historyList, historyList.GetChildAt(i).Height, historyList.GetChildAt(i).Width));
+        }
+
+        public Bitmap getBitmapFromView(View view)
+        {
+
+            Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
+            Canvas canvas = new Canvas(returnedBitmap);
+            Drawable bgDrawable = view.Background;
+            if (bgDrawable != null)
+                bgDrawable.Draw(canvas);
+            else
+                canvas.DrawColor(Color.White);
+            view.Draw(canvas);
+            return returnedBitmap;
         }
 
         public Bitmap GetCanvas(View view, int height, int width)
@@ -167,6 +196,50 @@ namespace FuelUED.Activity
             return bitmap;
         }
 
+
+        public List<Bitmap> getWholeListViewItemsToBitmap()
+        {
+
+            ListView listview = historyList;
+            var adapter = listview.Adapter;
+            int itemscount = adapter.Count;
+            int allitemsheight = 0;
+            List<Bitmap> bmps = new List<Bitmap>();
+
+            for (int i = 0; i < itemscount; i++)
+            {
+
+                View childView = adapter.GetView(i, null, listview);
+                childView.Measure(MeasureSpec.MakeMeasureSpec(listview.Width, MeasureSpecMode.Exactly),
+                        MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+
+                childView.Layout(0, 0, childView.MeasuredWidth, childView.MeasuredHeight);
+                childView.DrawingCacheEnabled = true;
+                childView.BuildDrawingCache();
+                bmps.Add(childView.DrawingCache);
+                allitemsheight += childView.MeasuredHeight;
+            }
+
+            Bitmap bigbitmap = Bitmap.CreateBitmap(listview.MeasuredWidth, allitemsheight, Bitmap.Config.Argb8888);
+            Canvas bigcanvas = new Canvas(bigbitmap);
+
+            Paint paint = new Paint();
+            int iHeight = 0;
+
+            for (int i = 0; i < bmps.Count; i++)
+            {
+                Bitmap bmp = bmps[i];
+                bigcanvas.DrawBitmap(bmp, 0, iHeight, paint);
+                iHeight += bmp.Height;
+
+                if (bmp != null && !bmp.IsRecycled)
+                {
+                    bmp.Recycle();
+                    bmp = null;
+                }
+            }
+            return bmps;
+        }
         private void ClearHistory()
         {
             FuelDB.Singleton.DeleteTable<BillHistory>();

@@ -6,7 +6,8 @@
 	<LinearLayout     
 		android:orientation="horizontal"
 		android:layout_width="match_parent" 
-		android:layout_margin="10dp"
+		android:layout_margin="10dp" 
+		android:id="@+id/baseLinearLayout"
 		android:background="@color/grey"
 		android:layout_height="wrap_content">
 		
