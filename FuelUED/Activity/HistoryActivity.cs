@@ -69,7 +69,7 @@ namespace FuelUED.Activity
             {
                 alertDialog.Show();
             };
-            // btnPrint.Click += BtnPrint_Click;
+            btnPrint.Click += BtnPrint_Click;
 
             btnHome.Click += BtnHome_Click;
 
@@ -157,9 +157,9 @@ namespace FuelUED.Activity
         private void PrintHistory()
         {
             nGXPrinter.PrintText("\n");
-            //nGXPrinter.PrintImage(getWholeListViewItemsToBitmap());
-            nGXPrinter.PrintImage(GetCanvas(historyList, ParentLinearLayout.GetChildAt(0).Height, ParentLinearLayout.GetChildAt(0).Width));
-            // PrintListView();
+            nGXPrinter.PrintImage(GetBitmapFromView(linearLayout));
+            nGXPrinter.PrintText("\n");
+            PrintListView();
             nGXPrinter.PrintText("\n\n\n");
             PrintAgain();
         }
@@ -170,7 +170,6 @@ namespace FuelUED.Activity
             {
                 nGXPrinter.PrintImage(item);
             }
-            //nGXPrinter.PrintImage(GetCanvas(historyList, historyList.GetChildAt(i).Height, historyList.GetChildAt(i).Width));
         }
 
         public Bitmap GetBitmapFromView(View view)
@@ -203,7 +202,6 @@ namespace FuelUED.Activity
 
         public List<Bitmap> GetWholeListViewItemsToBitmap()
         {
-
             ListView listview = historyList;
             var adapter = listview.Adapter;
             int itemscount = adapter.Count;
@@ -219,28 +217,29 @@ namespace FuelUED.Activity
                 childView.Layout(0, 0, childView.MeasuredWidth, childView.MeasuredHeight);
                 childView.DrawingCacheEnabled = true;
                 childView.BuildDrawingCache();
+                childView.SetBackgroundColor(Color.White);
                 bmps.Add(childView.DrawingCache);
-                allitemsheight += childView.MeasuredHeight;
+                //allitemsheight += childView.MeasuredHeight;
             }
 
-            Bitmap bigbitmap = Bitmap.CreateBitmap(listview.MeasuredWidth, allitemsheight, Bitmap.Config.Argb8888);
-            Canvas bigcanvas = new Canvas(bigbitmap);
+            //Bitmap bigbitmap = Bitmap.CreateBitmap(listview.MeasuredWidth, allitemsheight, Bitmap.Config.Argb8888);
+            //Canvas bigcanvas = new Canvas(bigbitmap);
 
-            Paint paint = new Paint();
-            int iHeight = 0;
+            //Paint paint = new Paint();
+            //int iHeight = 0;
 
-            for (int i = 0; i < bmps.Count; i++)
-            {
-                Bitmap bmp = bmps[i];
-                bigcanvas.DrawBitmap(bmp, 0, iHeight, paint);
-                iHeight += bmp.Height;
+            //for (int i = 0; i < bmps.Count; i++)
+            //{
+            //    Bitmap bmp = bmps[i];
+            //    bigcanvas.DrawBitmap(bmp, 0, iHeight, paint);
+            //    iHeight += bmp.Height;
 
-                if (bmp != null && !bmp.IsRecycled)
-                {
-                    bmp.Recycle();
-                    bmp = null;
-                }
-            }
+            //    //if (bmp != null && !bmp.IsRecycled)
+            //    //{
+            //    //    bmp.Recycle();
+            //    //    bmp = null;
+            //    //}
+            //}
             return bmps;
         }
         private void ClearHistory()
