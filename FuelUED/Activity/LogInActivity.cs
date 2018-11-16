@@ -7,7 +7,7 @@ using FuelUED.CommonFunctions;
 
 namespace FuelUED
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = false, NoHistory = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, NoHistory = true)]
     public class LogInActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

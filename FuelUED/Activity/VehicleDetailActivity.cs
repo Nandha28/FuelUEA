@@ -8,6 +8,7 @@ using Android.Views;
 using Android.Widget;
 using Com.Ngx.Mp100sdk;
 using Com.Ngx.Mp100sdk.Intefaces;
+using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using Newtonsoft.Json;
 using System;
@@ -86,7 +87,7 @@ namespace FuelUED
             layoutMain = FindViewById<LinearLayout>(Resource.Id.layPrinterBaseLayout);
             try
             {
-                if (details != null && details.Last().IsExcess == "0")
+                if (details != null && details.Last().IsExcess == ConstantValues.ZERO)
                 {
                     enterdvalues = details?.Last();
                 }
@@ -104,15 +105,15 @@ namespace FuelUED
             billNumber = enterdvalues?.BillNumber;
             fuelStockType = enterdvalues?.FuelStockType;
 
-            if (enterdvalues.FuelType.Equals("Inward"))
+            if (enterdvalues.FuelType.Equals(ConstantValues.INWARD))
             {
                 DrawPrintView(InwardValues);
             }
             else
             {
-                if (enterdvalues.FuelStockType.Equals("Stock"))
+                if (enterdvalues.FuelStockType.Equals(ConstantValues.STOCK))
                 {
-                    if (enterdvalues.MeterFault.Equals("0"))
+                    if (enterdvalues.MeterFault.Equals(ConstantValues.ZERO))
                     {
                         DrawPrintView(OutwardStock);
                     }
@@ -123,7 +124,7 @@ namespace FuelUED
                 }
                 else
                 {
-                    if (enterdvalues.MeterFault.Equals("0"))
+                    if (enterdvalues.MeterFault.Equals(ConstantValues.ZERO))
                     {
                         DrawPrintView(OutwardBunk);
                     }
@@ -136,12 +137,12 @@ namespace FuelUED
 
             btnPrint.Click += (s, e) =>
             {
-                if (fuelStockType.Equals("Bunk") && !enterdvalues.FuelType.Equals("Inward"))
+                if (fuelStockType.Equals(ConstantValues.BUNK) && !enterdvalues.FuelType.Equals(ConstantValues.INWARD))
                 {
                     var alertDialog = new Android.App.AlertDialog.Builder(this);
                     alertDialog.SetTitle("Fuel is from petrol bunk");
-                    alertDialog.SetMessage("Do you want to proceed ?");
-                    alertDialog.SetPositiveButton("OK", (ss, se) =>
+                    alertDialog.SetMessage(ConstantValues.PROCEED);
+                    alertDialog.SetPositiveButton(ConstantValues.OK, (ss, se) =>
                     {
                         PrintFromPrinter();
                     });
@@ -205,11 +206,11 @@ namespace FuelUED
             alertDialog.SetTitle("Print");
             alertDialog.SetMessage("Do you want to print ?");
             alertDialog.SetCancelable(false);
-            alertDialog.SetPositiveButton("Yes", (ss, se) =>
+            alertDialog.SetPositiveButton(ConstantValues.YES, (ss, se) =>
             {
                 Print();
             });
-            alertDialog.SetNegativeButton("No", (s, e) =>
+            alertDialog.SetNegativeButton(ConstantValues.NO, (s, e) =>
             {
                 NavigateToMainActivity();
             });

@@ -66,17 +66,19 @@ namespace FuelUED
             //{
             //    StartActivity(typeof(HistoryActivity));
             //};
-
-            FindViewById<Button>(Resource.Id.btnFuelEntry).Click += (s, e) =>
+            var btnFuelEntry = FindViewById<Button>(Resource.Id.btnFuelEntry);
+            btnFuelEntry.Click += (s, e) =>
              {
                  try
                  {
                      if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
                      {
-                         if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals("1"))
-                         {
+                         if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals(ConstantValues.ONE))
+                         {                             
                              Toast.MakeText(this, "Please wait...", ToastLength.Short).Show();
+                             btnFuelEntry.Enabled = false;
                              StartActivity(typeof(FuelActivity));
+                             btnFuelEntry.Enabled = true;
                          }
                          else
                          {
@@ -203,39 +205,39 @@ namespace FuelUED
                 {
                     list.Add(new UploadDetails
                     {
-                        CID = billDetails.BillCurrentNumber == string.Empty ? "0" : billDetails.BillCurrentNumber,
-                        DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.DEVICEID),
-                        SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? "0" : AppPreferences.GetString(this, Utilities.SITEID),
-                        CStock = billDetails.AvailableLiters == string.Empty ? "0" : billDetails.AvailableLiters,
-                        ClosingKM = item.ClosingKMS == string.Empty ? "0" : item.ClosingKMS,
-                        DriverID = item.DriverID_PK == string.Empty ? "0" : item.DriverID_PK,
-                        DriverName = item.DriverName == string.Empty ? "0" : item.DriverName,
-                        FilledBy = item.FilledBy == string.Empty ? "0" : item.FilledBy,
-                        FuelDate = item.CurrentDate == string.Empty ? "0" : item.CurrentDate,
-                        FuelLts = item.FuelInLtrs == string.Empty ? "0" : item.FuelInLtrs,
-                        FuelNo = item.BillNumber == string.Empty ? "0" : item.BillNumber,
-                        FuelSource = item.FuelStockType == string.Empty ? "0" : item.FuelStockType,
-                        KMPL = item.Kmpl == "KMPL" ? "0" : item.Kmpl,
-                        OpeningKM = item.OpeningKMS == string.Empty ? "0" : item.OpeningKMS,
-                        RegNo = item.VehicleNumber == string.Empty ? "0" : item.VehicleNumber,
-                        VType = item.VehicleType == string.Empty ? "0" : item.VehicleType,
-                        Rate = item.RatePerLtr == string.Empty ? "0" : item.RatePerLtr,
-                        TAmount = item.Price == string.Empty ? "0" : item.Price,
-                        Remarks = item.Remarks == string.Empty ? "0" : item.Remarks,
-                        TransType = item.FuelType == string.Empty ? "0" : item.FuelType,
-                        Mode = item.PaymentType == string.Empty ? "0" : item.PaymentType,
-                        VehicleID = item.VID == string.Empty ? "0" : item.VID,
-                        MeterFault = item.MeterFault == string.Empty ? "0" : item.MeterFault,
-                        TotalKM = item.TotalKM == string.Empty ? "0" : item.TotalKM,
+                        CID = billDetails.BillCurrentNumber == string.Empty ? ConstantValues.ZERO : billDetails.BillCurrentNumber,
+                        DID = AppPreferences.GetString(this, Utilities.DEVICEID) == string.Empty ? ConstantValues.ZERO : AppPreferences.GetString(this, Utilities.DEVICEID),
+                        SID = AppPreferences.GetString(this, Utilities.SITEID) == string.Empty ? ConstantValues.ZERO : AppPreferences.GetString(this, Utilities.SITEID),
+                        CStock = billDetails.AvailableLiters == string.Empty ? ConstantValues.ZERO : billDetails.AvailableLiters,
+                        ClosingKM = item.ClosingKMS == string.Empty ? ConstantValues.ZERO : item.ClosingKMS,
+                        DriverID = item.DriverID_PK == string.Empty ? ConstantValues.ZERO : item.DriverID_PK,
+                        DriverName = item.DriverName == string.Empty ? ConstantValues.ZERO : item.DriverName,
+                        FilledBy = item.FilledBy == string.Empty ? ConstantValues.ZERO : item.FilledBy,
+                        FuelDate = item.CurrentDate == string.Empty ? ConstantValues.ZERO : item.CurrentDate,
+                        FuelLts = item.FuelInLtrs == string.Empty ? ConstantValues.ZERO : item.FuelInLtrs,
+                        FuelNo = item.BillNumber == string.Empty ? ConstantValues.ZERO : item.BillNumber,
+                        FuelSource = item.FuelStockType == string.Empty ? ConstantValues.ZERO : item.FuelStockType,
+                        KMPL = item.Kmpl == ConstantValues.KMPL ? ConstantValues.ZERO : item.Kmpl,
+                        OpeningKM = item.OpeningKMS == string.Empty ? ConstantValues.ZERO : item.OpeningKMS,
+                        RegNo = item.VehicleNumber == string.Empty ? ConstantValues.ZERO : item.VehicleNumber,
+                        VType = item.VehicleType == string.Empty ? ConstantValues.ZERO : item.VehicleType,
+                        Rate = item.RatePerLtr == string.Empty ? ConstantValues.ZERO : item.RatePerLtr,
+                        TAmount = item.Price == string.Empty ? ConstantValues.ZERO : item.Price,
+                        Remarks = item.Remarks == string.Empty ? ConstantValues.ZERO : item.Remarks,
+                        TransType = item.FuelType == string.Empty ? ConstantValues.ZERO : item.FuelType,
+                        Mode = item.PaymentType == string.Empty ? ConstantValues.ZERO : item.PaymentType,
+                        VehicleID = item.VID == string.Empty ? ConstantValues.ZERO : item.VID,
+                        MeterFault = item.MeterFault == string.Empty ? ConstantValues.ZERO : item.MeterFault,
+                        TotalKM = item.TotalKM == string.Empty ? ConstantValues.ZERO : item.TotalKM,
                         IsExcess = item.IsExcess,
                         ExcessLtr = item.ExcessLtr,
                         IsShortage = item.IsShortage,
                         ShortageLtr = item.ShortageLtr
                     });
                 }
-                Console.WriteLine(list);
+                //Console.WriteLine(list);
                 var deserializedData = JsonConvert.SerializeObject(list);
-                Console.WriteLine(deserializedData);
+                //Console.WriteLine(deserializedData);
                 var resposeAfterPost = WebService.PostAllDataToWebService("UPFStock", deserializedData);
                 try
                 {
@@ -253,7 +255,7 @@ namespace FuelUED
                     });
                     return false;
                 }
-                Console.WriteLine(resposeAfterPost);
+                //Console.WriteLine(resposeAfterPost);
             }
             return true;
         }
@@ -284,7 +286,7 @@ namespace FuelUED
                 }
                 catch (Exception ec)
                 {
-                    Console.WriteLine(ec.Message);
+                    //Console.WriteLine(ec.Message);
                     RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "Something wrong ...Check connectivity..", ToastLength.Short).Show();

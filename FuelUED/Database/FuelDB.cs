@@ -61,13 +61,13 @@ namespace FuelUED
             sa.AvailableLiters = value;
             localDB.Update(sa);
         }
-        
+
         public TableQuery<FuelEntryDetails> GetFuelValues()
         {
             if (DBExists())
             {
                 localDB = new SQLiteConnection(DBPath);
-                var table = localDB.Table<FuelEntryDetails>();                
+                var table = localDB.Table<FuelEntryDetails>();
                 return table;
             }
             return null;
@@ -104,12 +104,11 @@ namespace FuelUED
             if (DBExists())
             {
                 localDB = new SQLiteConnection(DBPath);
-                var table = localDB.Table<VehicleDetails>();
-                foreach (var s in table)
-                {
-                    Console.WriteLine(s.RegNo + " " + s.DriverName);
-                }
-                return table;
+                //foreach (var s in table)
+                //{
+                //    Console.WriteLine(s.RegNo + " " + s.DriverName);
+                //}
+                return localDB.Table<VehicleDetails>();
             }
             return null;
         }

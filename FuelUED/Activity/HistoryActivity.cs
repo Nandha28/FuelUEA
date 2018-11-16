@@ -17,13 +17,12 @@ using static Android.Views.View;
 
 namespace FuelUED.Activity
 {
-    [Activity(Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
     public class HistoryActivity : AppCompatActivity, INGXCallback
     {
         private ListView historyList;
         private NGXPrinter nGXPrinter;
         private TableQuery<BillHistory> billHistory;
-        private Android.App.AlertDialog.Builder alertDialog;
         private BillHistoryListAdapter adapter;
         private bool IsExitApp;
         private Button btnclearHistory;
@@ -48,14 +47,14 @@ namespace FuelUED.Activity
                 Console.WriteLine(ex.Message);
             }
 
-            alertDialog = new Android.App.AlertDialog.Builder(this);
-            alertDialog.SetTitle("Clear History");
-            alertDialog.SetMessage("Do you want to clear history ?");
-            alertDialog.SetPositiveButton("OK", (ss, se) =>
+            var clearAlertDialog = new Android.App.AlertDialog.Builder(this);
+            clearAlertDialog.SetTitle("Clear History");
+            clearAlertDialog.SetMessage("Do you want to clear history ?");
+            clearAlertDialog.SetPositiveButton("OK", (ss, se) =>
             {
                 ClearHistory();
             });
-            alertDialog.SetNegativeButton("Cancel", (ss, se) => { });
+            clearAlertDialog.SetNegativeButton("Cancel", (ss, se) => { });
 
             var home = FindViewById<Button>(Resource.Id.btnHomeFromHistory);
             var btnPrint = FindViewById<Button>(Resource.Id.btnHistoryPrint);
@@ -67,7 +66,7 @@ namespace FuelUED.Activity
 
             btnclearHistory.Click += (s, e) =>
             {
-                alertDialog.Show();
+                clearAlertDialog.Show();
             };
             btnPrint.Click += BtnPrint_Click;
 

@@ -17,7 +17,7 @@ namespace FuelUED.Service
             // request.AddHeader("postman-token", "6e4a4235-cc51-e3fb-79df-3c66df033c77");
             //request.AddHeader("cache-control", "no-cache");
             IRestResponse response = client.Execute(request);
-            System.Console.WriteLine(response.Content);
+            //System.Console.WriteLine(response.Content);
             //var data = new String("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://tempuri.org/\">
             //[{\"VehicleID_PK\":\"1635\",\"RegNo\":\"TN21AX4273\",\"DriverID_PK\":\"158\",\"DriverName\":\"MITTU\",\"TypeName\":\
             //"Line Vehicle\"},{\"VehicleID_PK\":\"1635\",\"RegNo\":\"TN21AX4273\",\"DriverID_PK\":\"159\",\"DriverName\":\"TULLU\",\"
