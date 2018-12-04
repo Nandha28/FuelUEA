@@ -38,6 +38,8 @@ namespace FuelUED
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.MainScreen);
 
+            ExceptionLog.LogDetails(this, "App at MainScreen " + DateTime.Now);
+
             mainLayout = FindViewById<LinearLayout>(Resource.Id.layHolder);
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             mainHolder = FindViewById<RelativeLayout>(Resource.Id.mainRelativeHolder);
@@ -49,6 +51,7 @@ namespace FuelUED
                 alertDialog.SetPositiveButton("Yes", (se, ee) =>
                 {
                     StartActivity(typeof(LogInActivity));
+                    ExceptionLog.LogDetails(this, "Logged out " + DateTime.Now);
                     Finish();
                 });
                 alertDialog.SetNegativeButton("No", (se, ee) => { });
@@ -74,7 +77,7 @@ namespace FuelUED
                      if (FuelDB.Singleton.DBExists() && FuelDB.Singleton.GetBillDetails() != null)
                      {
                          if (AppPreferences.GetString(this, Utilities.DEVICESTATUS).Equals(ConstantValues.ONE))
-                         {                             
+                         {
                              Toast.MakeText(this, "Please wait...", ToastLength.Short).Show();
                              btnFuelEntry.Enabled = false;
                              StartActivity(typeof(FuelActivity));
@@ -88,35 +91,56 @@ namespace FuelUED
                      else
                      {
                          var alertDialog1 = new Android.App.AlertDialog.Builder(this);
-                         alertDialog1.SetTitle("you need to sync first");
+                         alertDialog1.SetTitle("You need to sync first");
                          alertDialog1.SetPositiveButton("OK", (ss, se) => { });
                          alertDialog1.Show();
                      }
                  }
-                 catch
+                 catch (Exception ex)
                  {
-                     Toast.MakeText(this, "Something went wrong", ToastLength.Short).Show();
+                     ExceptionLog.LogDetails(this, "Button fuel entry " + ex.Message);
+                     Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
                  }
              };
 
             btnDownloadData = FindViewById<Button>(Resource.Id.btnDownloadData);
-            btnDownloadData.Click += (s, e) =>
+            btnDownloadData.Click += BtnDownloadData_Click;
+
+            btnUploadData = FindViewById<Button>(Resource.Id.btnUploadData);
+            btnUploadData.Click += BtnUploadData_Click;
+        }
+
+        private void BtnUploadData_Click(object sender, EventArgs e)
+        {
+            if (ExceptionLog.IsNetworkConected(this))
+            {
+                ExceptionLog.LogDetails(this, "Upload server started.." + DateTime.Now);
+                UploadDetailsToServer();
+            }
+            else
+            {
+                Toast.MakeText(this, "Check with Internet Connectivity", ToastLength.Short).Show();
+            }
+        }
+
+        private void BtnDownloadData_Click(object sender, EventArgs e)
+        {
+            if (ExceptionLog.IsNetworkConected(this))
             {
                 if (!AppPreferences.GetBool(this, Utilities.IsDownloaded))
                 {
+                    ExceptionLog.LogDetails(this, "Download button Clicked.." + DateTime.Now);
                     SyncButton_Click();
                 }
                 else
                 {
                     Toast.MakeText(this, "Please Upload Data and Try again..", ToastLength.Short).Show();
                 }
-            };
-
-            btnUploadData = FindViewById<Button>(Resource.Id.btnUploadData);
-            btnUploadData.Click += (s, e) =>
+            }
+            else
             {
-                UploadDetailsToServer();
-            };
+                Toast.MakeText(this, "Check with Internet Connectivity", ToastLength.Short).Show();
+            }
         }
 
         private void UploadDetailsToServer()
@@ -146,6 +170,7 @@ namespace FuelUED
                             {
                                 Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
                             });
+                            ExceptionLog.LogDetails(this, "Upload Success at .." + DateTime.Now);
                             btnDownloadData.Clickable = true;
                             AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                         }
@@ -153,7 +178,10 @@ namespace FuelUED
                         {
                             RunOnUiThread(() =>
                             {
-                                Toast.MakeText(this, "Upload Failed", ToastLength.Short).Show();
+                                loader.Visibility = Android.Views.ViewStates.Gone;
+                                mainHolder.Alpha = 1f;
+                                Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                                Toast.MakeText(this, "Upload Failed...", ToastLength.Short).Show();
                             });
                         }
                         RunOnUiThread(() =>
@@ -177,7 +205,7 @@ namespace FuelUED
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     RunOnUiThread(() =>
                     {
@@ -186,6 +214,7 @@ namespace FuelUED
                         Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                         Toast.MakeText(this, "No Data to Upload", ToastLength.Short).Show();
                     });
+                    ExceptionLog.LogDetails(this, "Upload Exception" + DateTime.Now + ex.Message);
                     btnUploadData.Clickable = true;
                     btnDownloadData.Clickable = true;
                     AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
@@ -247,8 +276,9 @@ namespace FuelUED
                         CreateDatabaseOrModifyDatabase(vehicleList);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ExceptionLog.LogDetails(this, "UPFStock response error " + ex.Message + DateTime.Now);
                     RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "Error in Upload", ToastLength.Short).Show();
@@ -286,26 +316,17 @@ namespace FuelUED
                 }
                 catch (Exception ec)
                 {
-                    //Console.WriteLine(ec.Message);
                     RunOnUiThread(() =>
                     {
-                        Toast.MakeText(this, "Something wrong ...Check connectivity..", ToastLength.Short).Show();
+                        Toast.MakeText(this, "Something wrong.. Check connectivity..", ToastLength.Short).Show();
                         loader.Visibility = Android.Views.ViewStates.Gone;
                         mainHolder.Alpha = 1f;
                         Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     });
+                    ExceptionLog.LogDetails(this, "GetVd error in fuel Activity " + ec.Message);
                     return;
-                }
-                RunOnUiThread(() =>
-                {
-                    loader.Visibility = Android.Views.ViewStates.Gone;
-                    mainHolder.Alpha = 1f;
-                    Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
-                    Toast.MakeText(this, "success..", ToastLength.Short).Show();
-                    btnDownloadData.Clickable = false;
-                    AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
-                });
+                }        
             }));
             thread.Start();
         }
@@ -331,6 +352,16 @@ namespace FuelUED
             FuelDB.Singleton.InsertValues(vehicleList);
             btnDownloadData.Clickable = false;
             FuelDB.Singleton.InsertBillDetails(billDetails);
+
+            RunOnUiThread(() =>
+            {
+                loader.Visibility = Android.Views.ViewStates.Gone;
+                mainHolder.Alpha = 1f;
+                Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
+                Toast.MakeText(this, "success..", ToastLength.Short).Show();
+                btnDownloadData.Clickable = false;
+                AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
+            });
         }
         public override void OnBackPressed()
         {

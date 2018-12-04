@@ -39,11 +39,11 @@ namespace FuelUED.Service
                 " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n  " +
                 "<soap:Body>\r\n    " +
-                "<" + method + " xmlns=\"http://tempuri.org/\">\r\n   " +
-                "   <DID>" + deviceID + "</DID>\r\n    " +
-                "  <SiteID>" + siteId + "</SiteID>\r\n" +
-                "    </" + method + ">\r\n " +
-                " </soap:Body>\r\n" +
+                "<" + method + " xmlns=\"http://tempuri.org/\">\r\n" +
+                "<DID>" + deviceID + "</DID>\r\n    " +
+                "<SiteID>" + siteId + "</SiteID>\r\n" +
+                "</" + method + ">\r\n " +
+                "</soap:Body>\r\n" +
                 "</soap:Envelope>", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
             //var resp = new string("<GetVDResult>" +

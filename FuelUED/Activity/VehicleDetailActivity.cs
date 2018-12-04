@@ -29,7 +29,7 @@ namespace FuelUED
         private LinearLayout layoutMain;
         static string[] InwardValues, OutwardBunk, OutwardStock;
         static string[] OutwardStockMeterFault, OutwardBunkMeterFault;
-        private PrintDetails user;
+        private PrintDetails printDetails;
 
         public bool IsExtraPrint { get; private set; }
 
@@ -71,7 +71,7 @@ namespace FuelUED
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.content_main);
-            user = JsonConvert.DeserializeObject<PrintDetails>(Intent.GetStringExtra("printDetails"));
+            printDetails = JsonConvert.DeserializeObject<PrintDetails>(Intent.GetStringExtra("printDetails"));
 
             try
             {
@@ -98,6 +98,7 @@ namespace FuelUED
             }
             catch (Exception em)
             {
+                ExceptionLog.LogDetails(this, "enterd values null " + em.Message);
                 Console.WriteLine(em.Message);
             }
             mainScrollView = FindViewById<ScrollView>(Resource.Id.mainScrollView);
@@ -158,22 +159,23 @@ namespace FuelUED
         private void DrawPrintView(string[] inwardValues)
         {
             var index = 0;
-            foreach (var item in user.GetType().GetProperties())
+            foreach (var item in printDetails.GetType().GetProperties())
             {
                 try
                 {
-                    if (item.GetValue(user) != null)
+                    if (item.GetValue(printDetails) != null)
                     {
                         var layoutInf = (LayoutInflater)GetSystemService(LayoutInflaterService);
                         View view = layoutInf.Inflate(Resource.Layout.PrintView, null);
                         view.FindViewById<TextView>(Resource.Id.txtName).Text = inwardValues[index];
-                        view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(user, null).ToString();
+                        view.FindViewById<TextView>(Resource.Id.txtValue).Text = item.GetValue(printDetails, null).ToString();
                         layoutMain.AddView(view, index);
                         index++;
                     }
                 }
                 catch (Exception ex)
                 {
+                    ExceptionLog.LogDetails(this, "Error in retriving print details " + ex.Message);
                     Console.WriteLine(ex.Message);
                 }
                 finally

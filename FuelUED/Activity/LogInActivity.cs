@@ -1,9 +1,11 @@
 ﻿using Android.App;
+using Android.Net;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using FuelUED.Activity;
 using FuelUED.CommonFunctions;
+using System;
 
 namespace FuelUED
 {
@@ -16,11 +18,11 @@ namespace FuelUED
 
             // Create your application here
             SetContentView(Resource.Layout.LogIn);
+            ExceptionLog.LogDetails(this, ConstantValues.NEWLINE + ConstantValues.NEWLINE + "App Log in at " + DateTime.Now);
 
             var ipAddress = AppPreferences.GetString(this, Utilities.IPAddress);
             var did = AppPreferences.GetString(this, Utilities.DEVICEID);
-            var siteId = AppPreferences.GetString(this, Utilities.SITEID);
-
+            var siteId = AppPreferences.GetString(this, Utilities.SITEID);            
 
             var email = FindViewById<EditText>(Resource.Id.txtEmail);
             var password = FindViewById<EditText>(Resource.Id.txtPassword);
@@ -34,11 +36,13 @@ namespace FuelUED
                      }
                      else
                      {
+                         ExceptionLog.LogDetails(this, "App entering History " + DateTime.Now);
                          StartActivity(typeof(HistoryActivity));
                      }
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
+                     ExceptionLog.LogDetails(this, "Appgone to onfig " + DateTime.Now);
                      StartActivity(typeof(ConfigActivity));
                  }
                  else

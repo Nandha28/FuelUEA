@@ -8,6 +8,7 @@ using Android.Widget;
 using Com.Ngx.Mp100sdk;
 using Com.Ngx.Mp100sdk.Intefaces;
 using FuelUED.Adapter;
+using FuelUED.CommonFunctions;
 using FuelUED.Modal;
 using SQLite;
 using System;
@@ -44,6 +45,7 @@ namespace FuelUED.Activity
             }
             catch (Exception ex)
             {
+                ExceptionLog.LogDetails(this, "Printer not connected " + ex.Message);
                 Console.WriteLine(ex.Message);
             }
 
@@ -132,6 +134,7 @@ namespace FuelUED.Activity
             alertDialog.SetPositiveButton("Yes", (ss, se) =>
             {
                 PrintHistory();
+
             });
             alertDialog.SetNegativeButton("No", (ss, ee) =>
             {
@@ -246,6 +249,7 @@ namespace FuelUED.Activity
             FuelDB.Singleton.DeleteTable<BillHistory>();
             historyList.Adapter = null;
             historyList.Invalidate();
+            ExceptionLog.LogDetails(this, "History Cleared at" + DateTime.Now);
             Toast.MakeText(this, "Successfully cleared history", ToastLength.Short).Show();
             DisableClearButton(false);
         }

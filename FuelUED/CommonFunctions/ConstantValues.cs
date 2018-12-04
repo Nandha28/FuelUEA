@@ -20,5 +20,6 @@
         public const string ZERO = "0";
         public const string PROCEED = "Do you want to proceed ?";
         public const string ONE = "1";
+        public const string NEWLINE = "\n";
     }
 }

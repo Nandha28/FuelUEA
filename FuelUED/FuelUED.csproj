@@ -61,6 +61,7 @@
     <Compile Include="Adapter\BillHistoryListAdapter.cs" />
     <Compile Include="CommonFunctions\AppPreferences.cs" />
     <Compile Include="CommonFunctions\ConstantValues.cs" />
+    <Compile Include="CommonFunctions\ExceptionLog.cs" />
     <Compile Include="CommonFunctions\Utilities.cs" />
     <Compile Include="Database\FuelDB.cs" />
     <Compile Include="Activity\FuelActivity.cs" />
@@ -119,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.2</Version>
+      <Version>12.0.1</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>106.5.4</Version>

@@ -34,7 +34,6 @@ namespace FuelUED
         private List<VehicleDetails> VehicleList;
         private List<FuelEntryDetails> billEntryList;
         private BillDetails billDetailsList;
-        Android.App.AlertDialog.Builder alertDialog;
 
         private string[] myVehiclelist;
         private string[] DriverNames;
@@ -79,26 +78,19 @@ namespace FuelUED
             // Create your application here
             SetContentView(Resource.Layout.FuelEntry);
 
-            alertDialog = new Android.App.AlertDialog.Builder(this);
-            alertDialog.SetTitle("Fuel is from petrol bunk");
-            alertDialog.SetMessage(ConstantValues.PROCEED);
-            alertDialog.SetPositiveButton(ConstantValues.OK, (s, e) =>
-             {
-                 StoreDetils();
-             });
-            alertDialog.SetNegativeButton(ConstantValues.CANCEL, (s, e) => { });
             loader = FindViewById<ProgressBar>(Resource.Id.loader);
             layFuelEntry = FindViewById<LinearLayout>(Resource.Id.layFuelEntry);
             try
             {
                 VehicleList = FuelDB.Singleton.GetValue().ToList();
-                var allvAl = FuelDB.Singleton.GetBillDetails().ToList();
-                billDetailsList = allvAl.FirstOrDefault();
+                var allVal = FuelDB.Singleton.GetBillDetails().ToList();
+                billDetailsList = allVal.FirstOrDefault();
                 billEntryList = FuelDB.Singleton.GetFuelValues()?.ToList();
             }
-            catch (Exception w)
+            catch (Exception ex)
             {
                 //Console.WriteLine(w.Message);
+                ExceptionLog.LogDetails(this, "Error in loading vehicle List or GetbillDetails --" + ex.Message);
             }
             if (VehicleList != null)
             {
@@ -312,9 +304,20 @@ namespace FuelUED
                             availableFuel = float.Parse(billDetailsList?.AvailableLiters) + float.Parse(fuelToFill.Text);
                         }
 
-                    }              
+                    }
                     if (fuelFormSpinner.SelectedItem.Equals(ConstantValues.BUNK) && !fuelTypeSpinner.SelectedItem.Equals(ConstantValues.INWARD))
                     {
+                        var alertDialog = new Android.App.AlertDialog.Builder(this);
+                        alertDialog.SetTitle("Fuel is from petrol bunk");
+                        alertDialog.SetMessage(ConstantValues.PROCEED);
+                        alertDialog.SetPositiveButton(ConstantValues.OK, (ss, se) =>
+                        {
+                            StoreDetils();
+                        });
+                        alertDialog.SetNegativeButton(ConstantValues.CANCEL, (ss, se) =>
+                        {
+                            btnStore.Clickable = true;
+                        });
                         alertDialog.Show();
                     }
                     else
@@ -506,7 +509,7 @@ namespace FuelUED
         }
 
         private void VehicleTypeSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {            
+        {
             DriverNames = VehicleList.Where(I => I.RegNo == vehicleNumber.Text).Select(I => I.DriverName).Distinct().ToArray();
             try
             {
@@ -559,9 +562,10 @@ namespace FuelUED
                     GetKMPL();
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 Toast.MakeText(this, "Could not load data please sync again", ToastLength.Short).Show();
+                ExceptionLog.LogDetails(this, "Sync problem " + ex.Message);
             }
         }
 
@@ -632,6 +636,7 @@ namespace FuelUED
             {
                 //Console.WriteLine(ec.Message);
                 Toast.MakeText(this, "Error in storing the values", ToastLength.Short).Show();
+                ExceptionLog.LogDetails(this, "Error in storing Details for print next method savedetailsToDB \n" + ec.Message);
                 return;
             }
             SaveDetailsToDb();
@@ -806,8 +811,8 @@ namespace FuelUED
                 vehicleTypeAdapter =
                     new ArrayAdapter(this, Resource.Layout.select_dialog_item_material, vehicleTypes.ToArray());
                 //new string[] { "Select", "Line Vehicle", "InterCard", "Loader", "Genset 1", "Genset 2", "Genset 3" });
-                vehicleTypeSpinner.Adapter = vehicleTypeAdapter;
                 //vehicleTypeSpinner.PerformClick();
+                vehicleTypeSpinner.Adapter = vehicleTypeAdapter;
                 isVehicleTypeSpinnerSelected = false;
 
                 InputMethodManager inputManager = (InputMethodManager)GetSystemService(InputMethodService);
