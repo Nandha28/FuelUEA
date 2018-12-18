@@ -85,7 +85,7 @@ namespace FuelUED
                          }
                          else
                          {
-                             Toast.MakeText(this, "Device not avalable", ToastLength.Short).Show();
+                             Toast.MakeText(this, "Device not available", ToastLength.Short).Show();
                          }
                      }
                      else
@@ -98,7 +98,7 @@ namespace FuelUED
                  }
                  catch (Exception ex)
                  {
-                     ExceptionLog.LogDetails(this, "Button fuel entry " + ex.Message);
+                     ExceptionLog.LogDetails(this, "Button fuel entry click " + ex.Message);
                      Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
                  }
              };
@@ -115,6 +115,7 @@ namespace FuelUED
             if (ExceptionLog.IsNetworkConected(this))
             {
                 ExceptionLog.LogDetails(this, "Upload server started.." + DateTime.Now);
+                ExceptionLog.LogDetails(this, IpAddress + " " + siteId + " " + deviceId);
                 UploadDetailsToServer();
             }
             else
@@ -129,6 +130,7 @@ namespace FuelUED
             {
                 if (!AppPreferences.GetBool(this, Utilities.IsDownloaded))
                 {
+                    ExceptionLog.LogDetails(this, IpAddress + " " + siteId + " " + deviceId);
                     ExceptionLog.LogDetails(this, "Download button Clicked.." + DateTime.Now);
                     SyncButton_Click();
                 }
@@ -326,7 +328,7 @@ namespace FuelUED
                     });
                     ExceptionLog.LogDetails(this, "GetVd error in fuel Activity " + ec.Message);
                     return;
-                }        
+                }
             }));
             thread.Start();
         }
@@ -362,6 +364,7 @@ namespace FuelUED
                 btnDownloadData.Clickable = false;
                 AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
             });
+            ExceptionLog.LogDetails(this, "Database created successfully");
         }
         public override void OnBackPressed()
         {

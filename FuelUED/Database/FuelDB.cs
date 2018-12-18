@@ -18,6 +18,11 @@ namespace FuelUED
         public FuelDB()
         {
             DBPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "fuel.db");
+            //localDB = new SQLiteConnection(DBPath);
+            //var cmmd = new SQLiteCommand(localDB);
+            //string pragma = "PRAGMA journal_mode = OFF";
+            //cmmd.CommandText = pragma;
+            //cmmd.ExecuteNonQuery();
         }
         //public void CreateDatabase<T>()
         //{
@@ -28,6 +33,7 @@ namespace FuelUED
         {
             localDB = new SQLiteConnection(DBPath);
             localDB.CreateTable<T>();
+            //localDB.Close();
         }
         public void InsertValues(List<VehicleDetails> vehicleDetails)
         {
@@ -139,6 +145,10 @@ namespace FuelUED
                 return table;
             }
             return null;
+        }
+        ~FuelDB()
+        {
+            Console.WriteLine("Destructor");
         }
     }
 }

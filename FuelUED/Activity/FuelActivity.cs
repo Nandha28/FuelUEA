@@ -660,18 +660,37 @@ namespace FuelUED
 
         private void SaveDetailsToDb()
         {
-            FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-            FuelDB.Singleton.CreateTable<BillHistory>();
-            var billhistory = new BillHistory
+            try
             {
-                CurrentDate = fuelDetails.CurrentDate,
-                FuelInLtrs = fuelDetails.FuelInLtrs,
-                VehicleNumber = fuelDetails.VehicleNumber,
-                IsInward = isInward
-            };
-            FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
-            FuelDB.Singleton.InsertBillHistoryValues(billhistory);
-            FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
+                FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+                FuelDB.Singleton.CreateTable<BillHistory>();
+                var billhistory = new BillHistory
+                {
+                    CurrentDate = fuelDetails.CurrentDate,
+                    FuelInLtrs = fuelDetails.FuelInLtrs,
+                    VehicleNumber = fuelDetails.VehicleNumber,
+                    IsInward = isInward
+                };
+                FuelDB.Singleton.InsertFuelEntryValues(fuelDetails);
+                FuelDB.Singleton.InsertBillHistoryValues(billhistory);
+                FuelDB.Singleton.UpdateFuel(availableFuel.ToString());
+
+                ExceptionLog.LogDetails(this, "Current Value in DB :");
+                ExceptionLog.LogDetails(this, "Total Fuel entry " + FuelDB.Singleton.GetFuelValues().ToArray().Count());
+                foreach (var item in FuelDB.Singleton.GetFuelValues())
+                {
+                    ExceptionLog.LogDetails(this, item.BillNumber + " " + item.FuelInLtrs + "  " + item.FuelType);
+                }
+                ExceptionLog.LogDetails(this, "Current Fuel Balance :");
+                ExceptionLog.LogDetails(this, FuelDB.Singleton.GetBillDetails().FirstOrDefault().AvailableLiters + " "
+                    + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillPrefix 
+                    + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillCurrentNumber);
+            }
+            catch (Exception ex)
+            {
+                Toast.MakeText(this, "Error in storing the values in DB", ToastLength.Short).Show();
+                ExceptionLog.LogDetails(this, "Error in SaveDetailsToDB " + ex.Message);
+            }
         }
 
         private PrintDetails StorePrintDetails(FuelEntryDetails fuelDetails)
