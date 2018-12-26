@@ -70,6 +70,7 @@ namespace FuelUED
         private bool isExcess;
         private bool isInward;
         private bool isVehicleTypeSpinnerSelected;
+        private LinearLayout btnStore;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -209,13 +210,19 @@ namespace FuelUED
                 }
             };
 
-            var btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
+            btnStore = FindViewById<LinearLayout>(Resource.Id.btnStore);
             btnStore.Click += (s, e) =>
             {
+                btnStore.Clickable = false;
                 try
                 {
-                    btnStore.Clickable = false;
                     ShowLoader(true);
+                    //if (FuelDB.Singleton.GetBillDetails().LastOrDefault() +
+                    //FuelDB.Singleton.GetBillDetails().LastOrDefault().BillCurrentNumber == billNumber.Text)
+                    //{
+                    //    Console.WriteLine();
+                    //}
+
                     if (fuelTypeSpinner.SelectedItem.Equals(ConstantValues.OUTWARD) &&
                     !fuelToFill.Text.Equals(".") && fuelFormSpinner.SelectedItem.Equals(ConstantValues.STOCK))
                     {
@@ -330,6 +337,7 @@ namespace FuelUED
                 {
                     Toast.MakeText(this, "Check all fields are filled...", ToastLength.Short).Show();
                     ShowLoader(false);
+                    btnStore.Clickable = true;
                 }
             };
 
@@ -637,6 +645,7 @@ namespace FuelUED
                 //Console.WriteLine(ec.Message);
                 Toast.MakeText(this, "Error in storing the values", ToastLength.Short).Show();
                 ExceptionLog.LogDetails(this, "Error in storing Details for print next method savedetailsToDB \n" + ec.Message);
+                btnStore.Clickable = true;
                 return;
             }
             SaveDetailsToDb();
@@ -662,8 +671,8 @@ namespace FuelUED
         {
             try
             {
-                FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-                FuelDB.Singleton.CreateTable<BillHistory>();
+                //FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+                //FuelDB.Singleton.CreateTable<BillHistory>();
                 var billhistory = new BillHistory
                 {
                     CurrentDate = fuelDetails.CurrentDate,
@@ -683,7 +692,7 @@ namespace FuelUED
                 }
                 ExceptionLog.LogDetails(this, "Current Fuel Balance :");
                 ExceptionLog.LogDetails(this, FuelDB.Singleton.GetBillDetails().FirstOrDefault().AvailableLiters + " "
-                    + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillPrefix 
+                    + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillPrefix
                     + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillCurrentNumber);
             }
             catch (Exception ex)
