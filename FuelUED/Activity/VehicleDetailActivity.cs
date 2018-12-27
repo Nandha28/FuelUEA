@@ -100,6 +100,7 @@ namespace FuelUED
             {
                 ExceptionLog.LogDetails(this, "enterd values null " + em.Message);
                 Console.WriteLine(em.Message);
+                return;
             }
             mainScrollView = FindViewById<ScrollView>(Resource.Id.mainScrollView);
 

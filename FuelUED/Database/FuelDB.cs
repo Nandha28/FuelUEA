@@ -18,6 +18,8 @@ namespace FuelUED
         public FuelDB()
         {
             DBPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "fuel.db");
+            CreateTable<FuelEntryDetails>();
+            CreateTable<BillHistory>();
             //localDB = new SQLiteConnection(DBPath);
             //var cmmd = new SQLiteCommand(localDB);
             //string pragma = "PRAGMA journal_mode = OFF";

@@ -71,6 +71,7 @@ namespace FuelUED
         private bool isInward;
         private bool isVehicleTypeSpinnerSelected;
         private LinearLayout btnStore;
+        private bool savedToDB;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -469,8 +470,15 @@ namespace FuelUED
                 ShortageLtr = Convert.ToDecimal(availableFuel)
             };
             SaveDetailsToDb();
-            InsertUpadatedBillDetails();
-            RefreshCurrent();
+            if (savedToDB)
+            {
+                InsertUpadatedBillDetails();
+                RefreshCurrent();
+            }
+            else
+            {
+                Toast.MakeText(this, "Error New", ToastLength.Short).Show();
+            }
         }
 
         private void InsertUpadatedBillDetails()
@@ -649,7 +657,14 @@ namespace FuelUED
                 return;
             }
             SaveDetailsToDb();
-            NavigateToPrintScreen();
+            if (savedToDB)
+            {
+                NavigateToPrintScreen();
+            }
+            else
+            {
+                Toast.MakeText(this, "Error New", ToastLength.Short).Show();
+            }
         }
 
         private void RefreshCurrent()
@@ -671,8 +686,8 @@ namespace FuelUED
         {
             try
             {
-                //FuelDB.Singleton.CreateTable<FuelEntryDetails>();
-                //FuelDB.Singleton.CreateTable<BillHistory>();
+                FuelDB.Singleton.CreateTable<FuelEntryDetails>();
+                FuelDB.Singleton.CreateTable<BillHistory>();
                 var billhistory = new BillHistory
                 {
                     CurrentDate = fuelDetails.CurrentDate,
@@ -686,19 +701,22 @@ namespace FuelUED
 
                 ExceptionLog.LogDetails(this, "Current Value in DB :");
                 ExceptionLog.LogDetails(this, "Total Fuel entry " + FuelDB.Singleton.GetFuelValues().ToArray().Count());
-                foreach (var item in FuelDB.Singleton.GetFuelValues())
-                {
-                    ExceptionLog.LogDetails(this, item.BillNumber + " " + item.FuelInLtrs + "  " + item.FuelType);
-                }
+                //foreach (var item in FuelDB.Singleton.GetFuelValues())
+                //{
+                //    ExceptionLog.LogDetails(this, item.BillNumber + " " + item.FuelInLtrs + "  " + item.FuelType);
+                //}
                 ExceptionLog.LogDetails(this, "Current Fuel Balance :");
                 ExceptionLog.LogDetails(this, FuelDB.Singleton.GetBillDetails().FirstOrDefault().AvailableLiters + " "
                     + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillPrefix
                     + FuelDB.Singleton.GetBillDetails().FirstOrDefault().BillCurrentNumber);
+                savedToDB = true;
             }
             catch (Exception ex)
             {
                 Toast.MakeText(this, "Error in storing the values in DB", ToastLength.Short).Show();
                 ExceptionLog.LogDetails(this, "Error in SaveDetailsToDB " + ex.Message);
+                btnStore.Clickable = true;
+                savedToDB = false;
             }
         }
 
