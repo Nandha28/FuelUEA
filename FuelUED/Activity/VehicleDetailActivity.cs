@@ -87,7 +87,7 @@ namespace FuelUED
             layoutMain = FindViewById<LinearLayout>(Resource.Id.layPrinterBaseLayout);
             try
             {
-                if (details != null && details.Last().IsExcess == ConstantValues.ZERO)
+                if (details != null) //&& details.Last().IsExcess == ConstantValues.ZERO)
                 {
                     enterdvalues = details?.Last();
                 }
@@ -98,7 +98,7 @@ namespace FuelUED
             }
             catch (Exception em)
             {
-                ExceptionLog.LogDetails(this, "enterd values null " + em.Message);
+                ExceptionLog.LogDetails(this, "Enterd values null " + em.Message);
                 Console.WriteLine(em.Message);
                 return;
             }

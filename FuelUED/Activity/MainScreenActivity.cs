@@ -163,7 +163,7 @@ namespace FuelUED
                     if (fuelDetails != null && fuelDetails?.Count() > 0)
                     {
                         btnUploadData.Clickable = true;
-                        btnDownloadData.Clickable = false;
+                        //btnDownloadData.Clickable = false;
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, true);
                         var result = UploadValues();
                         if (result)
@@ -173,7 +173,7 @@ namespace FuelUED
                                 Toast.MakeText(this, "Upload Success", ToastLength.Short).Show();
                             });
                             ExceptionLog.LogDetails(this, "Upload Success at .." + DateTime.Now);
-                            btnDownloadData.Clickable = true;
+                            //btnDownloadData.Clickable = true;
                             AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                         }
                         else
@@ -203,7 +203,7 @@ namespace FuelUED
                             Toast.MakeText(this, "No Data to upload", ToastLength.Short).Show();
                         });
                         btnUploadData.Clickable = true;
-                        btnDownloadData.Clickable = true;
+                        //btnDownloadData.Clickable = true;
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     }
                 }
@@ -260,10 +260,10 @@ namespace FuelUED
                         VehicleID = item.VID == string.Empty ? ConstantValues.ZERO : item.VID,
                         MeterFault = item.MeterFault == string.Empty ? ConstantValues.ZERO : item.MeterFault,
                         TotalKM = item.TotalKM == string.Empty ? ConstantValues.ZERO : item.TotalKM,
-                        IsExcess = item.IsExcess,
-                        ExcessLtr = item.ExcessLtr,
-                        IsShortage = item.IsShortage,
-                        ShortageLtr = item.ShortageLtr
+                        //IsExcess = item.IsExcess,
+                        //ExcessLtr = item.ExcessLtr,
+                        //IsShortage = item.IsShortage,
+                        //ShortageLtr = item.ShortageLtr
                     });
                 }
                 //Console.WriteLine(list);
@@ -275,7 +275,7 @@ namespace FuelUED
                     var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
                     if (vehicleList != null)
                     {
-                        CreateDatabaseOrModifyDatabase(vehicleList);
+                        CreateDatabaseOrModifyDatabase(vehicleList); 
                     }
                 }
                 catch (Exception ex)

@@ -24,9 +24,9 @@ namespace FuelUED.Modal
         public string Price { get; set; }
         public string Remarks { get; set; }       
         public string MeterFault { get; set; }
-        public string IsExcess { get; set; } = ConstantValues.ZERO;
-        public decimal ExcessLtr { get; set; } = 0.00m;
-        public string IsShortage { get; set; } = ConstantValues.ZERO;
-        public decimal ShortageLtr { get; set; } = 0.00m;
+        //public string IsExcess { get; set; } = ConstantValues.ZERO;
+        //public decimal ExcessLtr { get; set; } = 0.00m;
+        //public string IsShortage { get; set; } = ConstantValues.ZERO;
+        //public decimal ShortageLtr { get; set; } = 0.00m;
     }
 }
