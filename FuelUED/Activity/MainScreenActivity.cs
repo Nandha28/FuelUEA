@@ -99,7 +99,7 @@ namespace FuelUED
                  catch (Exception ex)
                  {
                      ExceptionLog.LogDetails(this, "Button fuel entry click " + ex.Message);
-                     Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
+                     Toast.MakeText(this, "No Vehicle Details to load", ToastLength.Short).Show();
                  }
              };
 
@@ -174,7 +174,7 @@ namespace FuelUED
                             });
                             ExceptionLog.LogDetails(this, "Upload Success at .." + DateTime.Now);
                             //btnDownloadData.Clickable = true;
-                            AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
+                            //AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                         }
                         else
                         {
@@ -218,7 +218,7 @@ namespace FuelUED
                     });
                     ExceptionLog.LogDetails(this, "Upload Exception" + DateTime.Now + ex.Message);
                     btnUploadData.Clickable = true;
-                    btnDownloadData.Clickable = true;
+                    //btnDownloadData.Clickable = true;
                     AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     return;
                 }
@@ -275,7 +275,7 @@ namespace FuelUED
                     var vehicleList = JsonConvert.DeserializeObject<List<VehicleDetails>>(resposeAfterPost);
                     if (vehicleList != null)
                     {
-                        CreateDatabaseOrModifyDatabase(vehicleList); 
+                        CreateDatabaseOrModifyDatabase(vehicleList);
                     }
                 }
                 catch (Exception ex)
@@ -297,7 +297,7 @@ namespace FuelUED
         {
             if (IpAddress.Equals(string.Empty) || siteId.Equals(string.Empty) || deviceId.Equals(string.Empty))
             {
-                Toast.MakeText(this, "Something went wrong..", ToastLength.Short).Show();
+                Toast.MakeText(this, "Configure the device first", ToastLength.Short).Show();
                 return;
             }
             RunOnUiThread(() =>
@@ -320,13 +320,13 @@ namespace FuelUED
                 {
                     RunOnUiThread(() =>
                     {
-                        Toast.MakeText(this, "Something wrong.. Check connectivity..", ToastLength.Short).Show();
+                        Toast.MakeText(this, "Check connectivity", ToastLength.Short).Show();
                         loader.Visibility = Android.Views.ViewStates.Gone;
                         mainHolder.Alpha = 1f;
                         Window.ClearFlags(Android.Views.WindowManagerFlags.NotTouchable);
                         AppPreferences.SaveBool(this, Utilities.IsDownloaded, false);
                     });
-                    ExceptionLog.LogDetails(this, "GetVd error in fuel Activity " + ec.Message);
+                    ExceptionLog.LogDetails(this, "GetVd Error in fuel Activity " + ec.Message);
                     return;
                 }
             }));

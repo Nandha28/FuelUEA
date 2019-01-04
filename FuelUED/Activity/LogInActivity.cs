@@ -42,7 +42,7 @@ namespace FuelUED
                  }
                  else if (email.Text.Equals(Utilities.CONFIG) && password.Text.Equals(Utilities.ADMIN))
                  {
-                     ExceptionLog.LogDetails(this, "Appgone to onfig " + DateTime.Now);
+                     ExceptionLog.LogDetails(this, "Appgone to Config " + DateTime.Now);
                      StartActivity(typeof(ConfigActivity));
                  }
                  else
